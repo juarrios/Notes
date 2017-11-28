@@ -1,0 +1,306 @@
+AMP stack ( David Gassner )
+Apache, MySQL and PHP
+
+Tiers:
+  Client: Web browser
+  Server:
+    HTTP server: 
+      Apache, IIS, ...
+    Application server:
+      PHP, ASP.NET, Node.js, Java EE, etc.  
+
+Handling a Web Request:      
+  Browser -> Apache -> PHP -> MySQL
+          <-        <-     <-
+
+Downloads:
+  Windows:
+    Apache: https://www.apachelounge.com
+    PHP:    http://windows.php.net/download
+    MySQL:  http://www.mysql.com/downloads
+    Pre-packaged bundle: WampServer
+  MAC:
+    Apache and PHP included
+    MySQL:  http://www.mysql.com/downloads
+    Pre-packaged bundle: MAMP
+  Linux:
+    From command line using package manager
+  Other Bundles:
+    XAMPP and Bitnami
+    
+Ports:
+  HTTP: 80
+  MySQL: 3306
+  
+Windows Installation
+  Apache:
+    Pre-requistite: 
+      Have installed VC-14 redistributable from Microsoft
+      Look for: Visual C++ 2015 Redistributable version 14
+    Download:
+      Download httpd-2.24.29-win64-VC15.zip
+      Extract folder Apache24 into C:\Apache
+    Configuration changes:
+      Edit C:\Apache\conf\httpd.conf
+      Replace "Apache24" for "Apache" globally
+      Edit "#ServerName www.example.com:80" to "ServerName localhost:80"
+    Run Server from CLI:
+      >cd c:\apache\bin
+      >httpd
+      Test on browser: localhost
+        Response is "It works!"
+      Default site directory and file:
+        c:\apache\htdocs\index.html
+    Install as windows service:
+      >cd c:\apache\bin
+      >httpd -k install [uninstall]
+    Start, stop, restart service:
+      1) From Services pane
+      2) From CLI on bin:
+        >net [start, stop, restart] apache2.4
+  PHP:
+    Download:
+      Use the Thread Safe downloads (for Apache)
+        php-7.1.32-Win32-VC14-x64.zip
+      extract ZIP to c:\php
+      php7apache2_4.dll connects to Apache on runtime
+    Configuration:
+      Edit C:\Apache\conf\httpd.conf
+        Bottom add 3 directives:
+          LoadModule php7_module "C:/php/php7apache2_4.dll"
+          AddHandler application/x-httpd-php .php
+          PHPIniDir "c:/php"
+      Create php.ini file in c:\php folder:
+        Copy and rename "php.ini-development" to "php.ini"
+        Open file and make sure setting "display_errors = On"
+      Test:
+        Create file phpinfo.php in c:\apache\htdocs folder
+          <?php
+            phpinfo();
+          ?>
+        Restart Apache
+        On browser:
+          Go to localhost/phpinfo.php
+          PHP output info shows
+  MySQL:
+    Download:
+      Go to URL and bottom page "MySQL Community Edition"
+      Go to "MySQL Community Server" and download the MSI installer
+    Install:
+      Run MSI
+        Choose "Custom" setup
+        Choose MySQLServers X64 bit version
+        Choose Applications->MySQL Workbench 64 bit version
+        Next ...
+        Config Type: select "Development Machine"
+        Next ...
+        Setup Root account password
+        Next ...
+        Windows Service Name: MySQL
+        Next ...
+        Execute and Finish installation
+    Test:
+      MySQL Workbench runs
+        Click "Local instance MySQL" block
+        Enter root password
+        Should see all information about server
+          Version, Config file, paths
+        Create a sample database "mydatabase"
+          Should list under "SCHEMAS"
+    Service:
+      Check under "Services" that "MySQL" service exists and is running
+    Command line usage:
+      Add to bin folder to PATH environment variable
+      >mysql -u root -p
+      enter password
+      mysql>use sys;
+      Database changed
+      mysql>show tables;
+      listing of system tables is shown
+      mysql>exit
+      Bye
+  Uninstall:
+    First stop service
+    >httpd -k uninstall
+    Delete c:\Apache and c:\php folders
+    Run "MySQL Installer - Community" and remove installed products
+      
+MAC Installation:
+  MAC OS already comes with Apache and PHP installed just activate
+  Apache:
+    Open Terminal
+      >sudo apachectl [start, stop, restart]
+    Test on browser
+      localhost
+      Should display "It works!"
+    Check version
+      >httpd -v
+    Configure:
+      >cd /etc/apache2
+      >sudo vi httpd.conf
+      Edit "#ServerName www.example.com:80" to "ServerName localhost:80"
+      Save and test configuration
+        >sudo apachectl configtest
+        Should display "Syntax OK"
+    Default document storage folder
+      /Library/WebServer/Documents/index.html.en
+    Create personal website folder:
+      Subfolder of home folder
+      Create Sites folder under /Users/juarrios
+    Configure
+      >sudo vi /etc/apache2/httpd.conf
+      Search for "userdir"
+      Uncomment "LoadModule userdir_module libexec/apache2/mod_userdir.so"
+      Uncomment "Include /private/etc/apache2/extra/httpd-userdir.conf"
+      Save file
+      >sudo /etc/apache2/extra/httpd-userdir.conf
+      Uncomment "Include /private/etc/apache2/users/*.conf"
+      Save file
+      >cd /etc/apache2/users
+      >ls
+      Create user config file "juarrios.conf"
+        <Directory "/Users/juarrios/Sites/"
+          Options Indexes MultiViews
+          AllowOverride None
+          Require all granted
+        </Directory>
+      >sudo apachectl restart
+    Test
+      On browser enter
+        localhost/~juarrios
+        Personal index.html file should display
+  PHP:
+    Configure Apache to use pre-installed MAC php
+      sudo vi /etc/apache2/httpd.conf
+      Search for AddHandler
+      Add "AddHandler php5-script php" 
+      Search for "php"
+      Uncomment "LoadModule php5_module libexec/apache2/libphp5.so"
+      Save file
+      >cd /prinvate/etc
+      >sudo cp php.ini.default php.ini
+      >sudo vi php.ini
+      Make sure "display_errors = On"
+      Save file
+    Test
+      Create file phpinfo.php in /Users/juarrios/Sites folder
+        <?php
+          phpinfo();
+        ?>
+      >sudo apachectl restart
+      On browser enter
+        localhost/~juarrios/phpinfo.php
+  MySQL:
+    Download:
+      Go to URL and bottom page "MySQL Community Edition"
+      Go to "MySQL Community Server" and download the "dmg" archive
+      Go to "MySQL Workbench" and download the "dmg" archive
+    Install:
+      Double click the msql...dmg install to run installation
+      Save temporary password shown at end of installation
+      Open "System Preferences" and click "MySQL" icon at bottom
+      Make sure MySQL is running, if not click "Start" button
+      Double click mysql-workbench...dmg download
+      When open drag "MySQLWorkbench" in "Applications" directory
+      After copying double click Applications directory
+      Click the "MySQLWorkbench" application
+      Login with old password and will request to change password
+      Browse "Server Status" to look at Version, folder paths, etc.
+      Under SCHEMAS can create databases and tables
+    Console:
+      From "MySQLWorkbench" path to bin folder is /usr/local/mysql.../bin
+      Go there and run test command just to test:
+        >mysql -u root -p
+        enter password
+        mysql>use sys;
+        Database changed
+        mysql>show tables;
+        listing of system tables is shown
+        mysql>exit
+        Bye
+    Uninstall:
+      For Apache and PHP just stop service:
+        >sudo apachectl stop
+      MySQL:
+        Make sure "MySQLWorkbench" is not running
+        Stop server from "System Preferences"
+        Run the following commands:
+          >sudo rm /usr/local/mysql
+          >sudo rm -rf /usr/local/mysql*
+          >sudo rm -rf /Library/StartupItems/MySQLCOM
+          >sudo rm -rf /Library/PreferencePanes/My*
+          >sudo rm -rf /Library/Receipts/mysql*
+          >sudo rm -rf /Library/Receipts/MySQL*
+          >sudo rm /etc/my.cnf
+        Double check that "MySQL" application is not present in "System Preferences"
+      MySQLWorkbench:
+        Go to Applications folder
+        Locate "MySQLWorkbench"
+        Move to "Trash"
+        
+Ubuntu installation:
+  To see version:
+    >lsb_release -a
+  Update package manager:
+    >sudo apt-get update
+  Apache:
+    Install:
+      >sudo apt-get install apache2
+    Test in browser:
+      http://localhost
+      "Apache 2 Ubuntu Default Page" shows
+    To start/stop
+      >sudo apachectl [start, stop]
+      A Warning apache2 message complains about "server's fully qualified domain name"
+    Configure:
+      >cd /etc/apache2
+      >sudo vi apache2.conf
+      At the end of the file add
+        ServerName localhost
+        Save file
+      >sudo apachectl start
+        Warning apache2 message is gone!
+      Default Apache document location:
+        /ver/www/html/index.html
+      To see it with color editor "gedit":
+        >gedit index.html
+  PHP:
+    Install:
+      >sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql
+      Configuration is done automatically just add phpinfo.php file
+      >cd /var/www/html
+      >sudo vi phpinfo.php
+        <?php phpinfo() ?>
+        save file
+    Test in browser:
+      localhost/phpinfo.php
+      PHP info page shows
+      Check that display_errors is On in page
+      If Off
+        >cd /etc/php/7.0/apache2
+        >sudo vi php.ini
+          Update "display_errors = On"
+          Save file
+        >sudo apachectl restart
+      Refresh browser and verify "display_errors is On"
+  MySQL:
+    Install:
+      >sudo apt-get install mysql-server
+      It will ask and enter for a mysql "root" password
+      When finished it will be already running
+      >sudo apt-get install mysql-workbench
+    Test:
+      >mysql-workbench
+        Click on "Local instance 3306" and enter root password
+        Add a new schema
+          Default Collation: utf8-utf8-bin
+          Apply and check that "new_schema" has been created
+        Lock it to Launcher using the "Search" window
+      >mysql -u root -p
+        mysql> use sys;
+        mysql> show tables;
+        mysql> exit;
+        Bye
+    
+      
+      

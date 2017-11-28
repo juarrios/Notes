@@ -1,0 +1,70 @@
+VIM Reference:
+Move around keys:
+UP           k
+LEFT       h   l     RIGHT
+DOWN         j
+
+:set mouse=a      Use mouse to navigate
+CTRL-]            Jump to subject
+CTRL-T or CTRL-O  Jump back
+x                 Delete character
+i                 insert text
+dw                delete word until start of next word
+de                delete word to end of current word  
+d$                delete to end of line
+2w                move cursor 2 words foward
+0 or ^            move cursor to start of line
+d2w               delete 2 words
+dd                delete line
+3dd               delete 3 lines
+u                 undo last command
+U                 undo whole line
+CTRL-R            redo
+p                 put "clipboard"
+rx                replace character
+ce                change to end of word
+c$                change to end of line
+CTRL-G            location in file and filename
+G                 Go to end of file
+gg                Go to begin of file
+#G                Go to '#' line number
+/phrase           Search for phrase fowards
+?phrase           Search for phrase backwards
+CTRL-O            Go back to previous location
+CTRL-I            Go foward to next location
+%                 Find matching parenthesis or bracket
+:s/old/new        substitute old word for new in current line
+:s/old/new/g      substitute ALL old words for new in current line
+:#,#s/old/new/g   substitute ALL old words for new in line #s range
+:%s/old/new/g     substitute ALL old words for new in whole file
+:%s/old/new/gc    substitute ALL old words for new in whole file BUT prompt for confirmation
+:!                execute external command
+:w                save file
+v                 Start Visual selection
+:r Filename       Insert contents of a file at cursor's
+:r !Command       Insert commands results at cursor's position
+o                 open a line below to start inserting
+O                 open a line above to start inserting
+a                 append text after cursor
+A                 append text at end of line
+w                 move to beginning of word
+e                 move to end of word
+b                 move back to previous word
+ge                backward to the end of word
+R                 replace more than one character
+y                 yank selection
+:set ic           set ignore case
+:set noic         disable ignore case
+:set hls is       set 'hlsearch' and 'incsearch'
+:nohlsearch       disable line above commands
+/word\c           search word case insensitive
+:set xxx          sets "xxx" option
+:set noxxx        unsets "xxx" option
+CTRL-W            jump between edit and help windows
+~                 swap case
+gu                make lowercase
+gU                make uppercase
+:help user-manual see the whole user manual
+:e                edit another file inside current edition
+CTRL-D <TAB>      complete partial command
+

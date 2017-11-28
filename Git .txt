@@ -1,0 +1,490 @@
+Git Commands Summary 
+( progit-en.866.pdf by Scott Chacon and Ben Straub )
+
+1) Getting Started:
+Version control:
+  A system that records changes to a file or files over time so that you can recall specific versions later. 
+  Many people's version-control method of choice is to copy files into another directory which:
+    Incredibly error prone.
+    It is easy to forget which directory you're in and accidentally write to the wrong file or copy over files you don't mean to.
+  Centralized Version Control Systems (CVS):
+    A single server that contains all the versioned files
+    Number of clients that check out files from central place.
+    Everyone knows what everyone else on the project is doing.
+    Administrators have fine-grained control over who can do what
+    Downside: single point of failure that centrilized server represent.
+  Distributed Version Control Systems (DVCS):
+    Fully mirror the repository
+    Every clone is a full backup of all the data
+    Deal pretty well with having several remote repositories
+    Can collaborate with different groups of people in different ways simultaneously within the same project
+  Git Goals:
+    Speed
+    Simple design
+    Strong support for non-linear development ( thousands of parallel branches )
+    Fully distributed
+    Able to handle large projects like the Linux kernel efficiently
+  Git Basics:  
+    Commits:
+      Takes a picture of what all files look like at that moment and stores a reference to that snapshot.
+      For unchanged files, it stores a link to the previous identical file already stored.
+      Data is a set of snapshots of a miniature filesystem with some incredibly powerful tools built on top of it.
+    Most Operations are Local:
+      Git only needs local files and resources to operate
+      Almost instantaneous: because the entire history is local
+    Integrity:
+      Everything is check-summed before is stored
+      Is referenced by that checksum
+      SHA-1 hash: 40 character string of hexadecimal characters
+      Git stores not by file name but by the hash value of its contents
+    Generally Only Adds Data:
+      Most actions only add data to the Git database
+      Hard to do anything that is not undoable or to make it erase data in any way.
+      We can experiment without the danger of severly screwing things up.
+    Three States:
+      Commited: data is safely stored in local database
+      Modified: have changed a file but is not yet in database
+      Staged: have marked a modified file in its current version to go into the next commit snapshot
+    Git Directory:
+      Where metadata and object database is stored
+      What is copied when a repository is cloned from another computer
+    Working Directory:
+      A single checkout of one version of the project.
+      Files are pulled out of compressed database in the Git directory and placed on disk to use or modify.
+    Staging Area:
+      A file inside Git directory that describes what will go into the next commit
+      Reffered to as the "index"
+    Git Workflow:
+      1) Modify files in working directory
+      2) Stage the files, adding snapshots of them to the staging area
+      3) Commit files, permanently store the staging area snapshots in the Git directory
+    Installation:
+      Linux:
+        Fedora: >sudo yum install git
+        Debian: >sudo apt-get install git
+      Mac three options:
+        1) Install Xcode Command Line Tools
+        2) Download from http://git-scm.com/download/mac
+        3) GitHub for Mac install. GUI Git tool option to install command line tools: http://mac.githumb.com
+      Windows:
+        1) http://git-scm.com/download/win
+        2) Installing GitHub for Windows that includes a command line version of Git: http://windows.github.com
+      From Source:
+        Dependency libraries: curl, zlib, openssl, expat, libiconv
+          Fedora: >sudo yum install cur-devel expat-devel gettext-devel openssl-devel perl-devel zlib-devel
+          Debian: >sudo apt-get install libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+        Documentation:
+          Fedora: >yum install asciidoc xmlto docbook2X
+          Debian: >apt-get install asccidoc xmlto docbook2x
+          Fedora/RHEL: >sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+        Grab Releases:
+          1) Kernel.org: https://www.kernel.org/pub/software/scm/git
+          2) GitHub: https://github.com/git/git/releases
+          Compile:
+            >tar -zxf git-2.0.0.0.tar.gz
+            >cd git-2.0.0
+            >make configure
+            >./configure --prefix=/usr
+            >make all doc info
+            >sudo make install install-doc install-html install-info
+         From Git:
+            >git clone git://git.kernel.org/pub/scm/git/git.git
+    Git Setup:
+      git config:
+        Lets get and set configuration variables in three different places:
+        1) /etc/gitconfig: values for every "--system" user
+        2) ~/.gitconfig or ~/.config/git/config: user specific "--global" options
+        3) .git/config: specific to single repository
+      Your Identity:
+        Set user name and email address because Git commit uses this information
+          >git config --global user.name "Juan Barrios"
+          >git config --global user.email juarrios@gmail.com
+        To override for specific project:
+          Go to project directory and run without "--global" option:
+            >git config user.name "Specific Name"
+      Checking settings:
+        >git config --list
+        >git config user.name
+      Getting Help:
+        >git help <verb>
+        >git <verb> --help
+        >man git <verb>
+        Example: 
+          >git help config
+        In person help:
+          Freenode IRC server (irc.free-node.net): #git or #github channel
+
+2) Git Basics:
+  Getting a Git Repository:
+    Two ways, initializing or cloning from another server.
+    Initializing:
+      Go to project's directory and type:
+        >git init
+      Creates a .git subdirectory that contains all necessary repository files
+      To specify files to track:
+        >git add *.c
+        >git add LICENSE
+        >git commit -m 'initial project version
+    Cloning an Existing Repository:
+      Gets a copy of an existing repository, receives a full copy of nearly all data that the server has:
+        >git clone [url]
+      Example:
+        >git clone https://github.com/libgit2/libgit2
+        Creates a directory named "libgit2" 
+        Initializes a .git directory inside it
+        Pulls down all the data for that repository
+        Checks out a working copy of the latest version
+        
+  Recording Changes to the Repository:
+    Protocols:
+      Different transfer protocols can be used: 
+        https://
+        git://
+        user@server:path/to/repo.git which uses SSH transfer protocol
+    Changes in Repository:
+      Each file can be: tracked or untracked
+      Tracked files statuses: unmodified, modified, staged
+        untracked->"add file"->Staged->"commit"->
+        Unmodified->"edit"->modified->"add"->Staged->"commit"->
+        Unmodified->"remove"->untracked
+    Checking Status:
+      Determines which files are in which state
+        >git status
+      "nothing to commit": means you have a clean working directory
+      "Untracket files": Git sees a file you didn't have in the previous snapshot (commit)
+      Git won't start including it in the commit until explicitly tell it to do so
+    Tracking New Files:
+      To begin tracking a new file, use:
+        >git add README
+        >git status
+        Changes to be committed:
+          new file: README
+    Staging Modified Files:
+      "git add" is a multipurpose command:
+        To begin tracking new files
+        To stage files
+        Marking merge-conflicted files as resolved
+      Think of it as "add this content to the next commit"
+    Short Status:
+      For far more simplified output. Shows two columns: staged (left) and modified (right)
+        >git status -s
+         M README             (modified and non-staged)
+        MM Rakefile           (modification staged and unstaged modification)
+        A  lib/git.rb         (new file staged)
+        M  lib/simplegit.rb   (existing file modified and staged)
+        ?? LICENSE.txt        (untracked)
+    Ignoring Files:
+      Files not tracked and not appearing as "untracked" add to ".gitignore" file using file listing patters:
+        >cat .gitignore
+        *.[oa]                (file with extension "o" or "a")
+        *~                    (files that end with tilde)
+      Rules for the patterns:
+        Blank lines or lines starting with # are ignored
+        Standard glob patterns work
+        Start with a forward slash (/) to avoid recursivity
+        End patterns with forward slash (/) to specify a directory
+        Negate a pattern by starting it with exclamation point (!)
+        Can use asteriks to match nested directories:
+          a/**/z will match a/z, a/b/z, a/b/c/z
+      GitHub list of good .gitignore examples: 
+        https://github.com/github/gitignore
+    Viewing Staged and Unstaged Changes:
+      Two main questions:
+        What have you changed but not yet staged?
+        What have you staged that you are about to commit?
+      To see changes not yet staged:
+        >git diff
+      To see staged changes for next commit:
+        >git diff --staged
+      To use a graphical or external diff viewing program ( needs to be configure in settings ):
+        >git difftool
+      Configuration difftool sample:
+        diff.tool=bc3
+        difftool.bc3.path=/C/Program Files (x86)/Beyond Compare 4/BCompare.exe
+        merge.tool=bc3
+        mergetool.bc3.path=/C/Program Files (x86)/Beyond Compare 4/BCompare.exe
+        difftool.prompt=false
+    Commiting Changes:
+      Once the staging area is set up the way you want it, you can commit changes:
+        >git commit
+        Launches your editor of choice to type a commit comment message
+        >git commit -v
+        Will show the differences between files as a remainder of what changed
+      Can type commit message inline:
+        >git commit -m "This is my commit message"
+      Commit output shows a small summary of:
+        Branch commited and checksum of the commit
+        How many files were changed and statistics about lines added and removed in the commit
+      Every commit creates a snapshot of your project that you can revert to or compare to later.
+    Skipping the Stagging Area:
+      Using the -a option Git automatically stages every file that is already tracked, no need to use "git add":
+        >git commit -am "This if my commit message"   (staging and commiting)
+    Removing files:
+      Simply removing files from working directory shows under "Changed but not updated" section.
+      Still need to stage and commit to remove in repository.
+      Shortcut is to use:      
+        >git rm myfile
+        Removes and stages the removal for next commit.
+      After commit the file is no longer tracked.
+    Moving Files:
+      Git doesn't explicitly track file movement but it smart about figuring out after the fact.
+      To rename a file:
+        >git mv file_from file_to
+      Equivalent to:
+        >mv file_from file_to
+        >git rm file_from
+        >git add file_to
+  Viewing the Commit History:
+    To look back and see what has happened.
+      >git log
+    List the commits made in that repository in reverse chronological order.
+      >git log -p -2
+      Will show the last 2 commits along with the differences introduced
+      >git log --stat
+      Will dispaly some abreviated stats
+      >git log --pretty=oneline
+      Will change the log output to a apecified output
+      >git log --pretty=format:"%h - %an, %ar : %s"
+      "format" allows to be more specific for the output
+      >git log --graph
+      Adds a nice little ASCII graph showing branch and merge history
+    Limiting Log Output:
+      Filtering the output to retrieve certain history records:
+      >git log --since=2.weeks
+      >git log --pretty="%h - %s" --author=juarrios --since="2016-09-17" --before="2016-10-17" --no-merges
+  Undoing Things:
+    To correct the last commit:
+      >git commit --amend
+      Will commit all staged changes within the last commit and allow to modify the commit message
+    Unstaging a Staged File:
+      >git reset HEAD filename
+    Unstaging all staging files:
+      >git reset
+    Unmodifying a Modified File:
+      If you don't want to keep your changes:
+        >git checkout -- filename
+        NOTE: this is a dangerous command. Will delete any changes you made not yet commited!
+      Anything that is commited in Git can almost always be recovered
+  Working with Remotes:
+    Remote repositories are versions of your project that are hosted on the Internet or network somewhere.
+    Collaborating with others involves managing these remote repositories and pushing and pulling data to
+    and from them whne you need to share work.
+    Includes knowing how to:
+      Add remote repositories
+      Remove remotes that are no longer valid
+      Manage various remote branches
+      Define branches as being tracked or not
+    Showing Your Remotes:
+      >git remote -v
+      Will show remotes along with the URLs that Git has stored for the shortname
+    Adding Remote Repositories:
+      >git remote add shortname URL
+      >git remote add myremote https://github.com/...
+    Fetching information from remote, pulls data but does not automatically merge it into your working area:
+      >git fetch myremote
+      "myremote" master branch is now accessible locally as myremote/master for mergin or checkout
+      >git pull myremote
+      Automatically fetch a remote branch and then tries to merge it into your current branch.
+      >git clone ...
+      Automatically sets up the local master branch to track the remote master branch.
+    Pushing to Your Remotes:
+      >git push origin master
+      Works only if you cloned from a server to which you have write access and if nobody has pushed in the meantime
+    Inspecting a Remote:
+      To see more information about a particular remote:
+        >git remote show remotename
+      List the URL for the remote repository as well as the tracking branch information
+    Removing and Renaming Remotes:
+      To change a remote's short name:
+        >git remote rename oldname newname
+      To remove a remote:
+        >git remote rm myremote
+  Tagging:
+    To list the available tags:
+      >git tag
+    To search for tags with a pattern:
+      >git tag -l 'v1.8.5*'
+    Two type of tags:
+      Lightweight: like a branch that doesn't change, a pointer to a specific commit.
+        Usage:
+          >git tag tagname
+      Annotated: 
+        Are stored as full objects
+        Are checksummed
+        Contain tagger name, email and date
+        Have a tagging message
+        Can be signed and verified witn GNU Privacy Guard (GPG)
+        Recommended!
+        Usage:
+          >git tag -a v1.4 -m 'my version 1.4'
+        To see data associated with tag:
+          >git show v1.4
+    Tagging Later:
+      To tag a commit, specify the commit checksum at the end of the command
+        >git tag -a v1.2 9fceb02
+    Sharing Tags:
+      By default "git push" command does not transger tags to remote servers.
+        >git push origin --tags
+    Checking out Tags:
+      To put a version of your repository in your working directory that looks like a specific tag,
+      you can create a new branch at a specific tag with:
+        >git checkout -b branchname tagname
+    Moving a Tag:
+      >git tag --force tagName toCommitId
+      ex: git tag --force v2.0 e02d2dc
+    Pushing moved tag to remote:
+      >git push --force --tags
+  Git Aliases:
+    Using "git config" can easily set up aliases for each command that is used frequently:
+      >git config --global alias.co checkout
+    Useful to create commands that you think should exist:
+      >git config --global alias.unstage 'reset HEAD --'
+      >git config --global alias.last 'log -1 HEAD'
+    To run an external "shell" command with an alias prefix command with '!':
+      >git config --global alias.visual '!gitk'
+      
+3) Git Branching:
+Branching means you diverge from the main line of development and continue to do work without messing with the main line.
+  Git repository structure:
+    A Git repository contains 4 types of objects:
+      blob: the contents of each file
+      tree: lists the contents of the directory and specifies which file names are stored as which blobs
+      commit: contains pointer to the tree and metadata for the commit
+      HEAD: a pointer to the local branch you are currently on.
+    The next commit stores a pointer to the commit that came immediately before it.  
+  Branch:
+    Is simply a lightweight movable pointer to one of the commits.
+    The default branch name in Git is "master", that points to the last commit you made.
+    The "master" branch in Git is no a special branch. It is exaclty like any other branch.
+  Creating a New Branch:
+    Creates a new pointer for you to move around:
+      >git branch testing
+    It only creates the branch but did not switch to that branch. To verify:
+    >git log --oneline --decorate
+    Shows that HEAD is still pointing to "master"
+  Switching Branches:
+    To switch to an existing branch:
+      >git checkout testing
+      Moves HEAD to point to the testing branch
+    Doing more commits, moves "testing" branch pointer and HEAD still pointing to it.
+      >git checkout master
+        Moves HEAD pointer back to point to the "master" branch
+        Reverts the files in your working directory back to the snapshot that "master" points to
+        Essentially rewinds the work you've done in your "testing" branch so you can go in a different direction
+    When you switch branches in Git, files in your working directory will change
+    Doing changes in "master" and commiting, will diverge the project history
+      > git log --oneline --decorate --graph --all
+      * c2b9e (HEAD, master) made other changes
+      | * 87ab2 (testing) made a change
+      |/
+      * f30ab add feature #32 - ability to add new formats to the
+    A branch in Git is in actuality a simple file that contains the 40 character SHA-1 checksum of the 
+    commit it points to, branches are cheap to create and destroy.
+    Because we're recording the parents when we commit, finding a proper merge base for merging is
+    automatically done for us and is generally very easy to do.
+  Basic Branching and Merging:
+    A simple workflow example of branching and merging for adding a fix:
+      1) Switch to production branch
+      2) Create a branch to add the hotfix
+      3) After it's tested, merge the hotfix branch, and push to production
+      4) Switch back to original story and continue working
+    To create a branch and switch to it at the same time:
+      >git checkout -b branchname
+    If your working directory or staging area has uncommited changes that conflict with the branch you are
+    checking out, Git won't let you switch branches.
+    Merge:
+      >git checkout master
+      >git merge hotfix
+    "Fast-forward" commit happens when there are no merging conflicts and Git just moves the pointer forward.
+    Delete branch after merging:
+      >git branch -d hotfixgit 
+    Delete remote branch
+      >git push origin --delete remoteBranch
+    "Merge commit": git creates a new snapshot that results from a common ancestor three-way merge that 
+      automatically creates a new commit that points to it.
+    Basic Merge Conflicts: if changed the same part of the same file differently in two branches and try to
+      merge, Git won't be able to merge them cleanly. Anything that has merge conflicts and hasn't been
+      resolved is listed as "Unmerged paths" by "git status" command. Git adds standard conflict-resolution
+      markers to the files that have conflicts for you to manually resolve those conflicts.
+    Could also use a GUI tool:
+      >git mergetool
+      May need to do global configuration for mergetool to use your preferred GUI application.
+    Trying to delete an unmerged branch will fail unless it is forced with the -D option
+      >git branch -d myBranch
+  Topic Branches:
+    Is a short-lived branch that is created for a single particular feature or related work.
+    You work on it doing a few commits on them and finally merge them into main branch and delete them.
+    Allows to context-switch quickly and completely, because your work is separated into silos where all the
+      changes in that branch have to do with that topic, it's easier to see what has happened during code review
+      and such.
+  Remote Branches:
+    Are pointers in your remote repositories, including branches and tags.
+    To get a full list of remote references:
+      >git ls-remote [remote]
+    Remote branches plus more information:
+      >git remote show [remote]
+    NOTE:
+      "master" is the default name for a starting branch when you run "git init"
+      "origin" is the default name for a remote when you run "git clone"
+    As long as you stay out of contact with your origin server, your origin/master pointer doesn't move.
+    To synchronize your work, run:
+      >git fetch origin
+      Fetches any data from it that you don't yet have, and updates your local database, moving your origin/master
+        pointer to its new, more up-to-date position.
+    To push a branch to your origin remote:
+      >git push origin mybranch
+      or to name branch differently on remote server:
+      >git push origin myBranch:newBranchName
+    When you do a fetch that brings down new remote-tracking branches, you don't automatically have local, editable 
+      copies of them. You only have an origin/branchName pointer that you can't modify. To merge this work into your
+      current working branch, run:
+        >git merge origin/branchName
+  Tracking Branches:
+    Tracking branches are local branches that have a direct relationship to a remote branch. Git automatically knows
+      which server to fetch and branch to merge into when running "git pull"
+    If the branch name trying to checkout doesn't exist and exaclty matches a name on only one remote, Git will create
+      a tracking branch for you with:
+        >git checkout branchName
+    To see what tracking branches you have:
+      >git branch -vv
+    To get up to date ahead and behind numbers:
+      >git fetch --all; git branch -vv
+    Pulling using "git pull" is the same as:
+      >git fetch; git merge
+    To delete a remote branch:
+      >git push origin --delete branchName
+  Rebase:
+    With rebase command, you can take all the changes that were committed on one branch and replay them on another one.
+    Rebasing makes for a cleaner history, it looks like a linear history when it actually happened in parrallel.
+      >git checkout myBranch
+      >git rebase master
+      >git checkout master
+      >git merge myBranch
+    Do your work in a branch and then rebase onto origin/master. Maintener doesn't integrate, just a fast-forward.
+    Do not rebase commits that exist outside your repository. When your rebase stuff, your're abandoning existing
+      commits and creating new ones that are similar but different. If you only rebase commits that have never been
+      available publicly, then you'll be fine.
+    To get the best of both worlds, is to rebase local changes you've made but haven't shared yet before you push
+      them in order to clean up your story.
+
+
+    
+      
+     
+      
+      
+      >git daemon --base-path=. --export-all --enable=receive-pack  ( server )
+      >git clone git://tibcodev1/Deployment                         ( client )
+      
+      >git config --global credential.helper 'cache --timeout 3600'
+      
+Delete commits:
+  Locally:
+    Last 2 commits:
+    >git reset --hard HEAD~2
+  Push to remote origin:
+    >git push origin +master
+
+Checkout from other branch:
+  >git checkout branchname -- filename list
+  

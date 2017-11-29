@@ -302,5 +302,7 @@ Ubuntu installation:
         mysql> exit;
         Bye
     
-      
-      
+WAMP Installation
+  Most popular WAMPSERVER
+    www.wampserver.com/en
+    

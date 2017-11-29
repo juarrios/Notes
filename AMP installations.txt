@@ -305,4 +305,101 @@ Ubuntu installation:
 WAMP Installation
   Most popular WAMPSERVER
     www.wampserver.com/en
+  Install
+    When running install check for Warnings for C++ redistributables, IIS, Skype
+    Choose browser and text editor
+    Installs Apache, PHP, MySQL, MariaDB and other components
+    After installer is finished
+      Double click WampServer desktop shortcut icon
+      System tray will contain a new green icon
+  Test
+    Click WampServer green icon at system tray
+    Select "Localhost" menu item
+    Chosen browser shows the WampServer default page with versions installed
+    Click "phpmyadmin" link at bottom of page
+        Use UID "root" with no password
+        Can admin MySQL and MariaDB engines from there
+    System tray's "www directory" menu item is the apache default directory
+    Other menu items
+      Start, Stop and Restart services
+      Configuration menu items for Apache, PHP
+      Easy access to diffent parts of the services
+  Installing AddOns:
+    Go to https://sourceforge.net/projects/wampserver
+    Click Files->WampServer3->WampServer 3.0.0->Addons->Php
+    Select 64 version that you don't currently have and download
+    Install and if wampserver icon diappears click desktop icon
+    Check that new version menu item exits and can be used
+  Create Alias directories:
+    Create c:\mysite folder
+    Add phpinfo.php file to folder
+    Click Wampserver->Apache->Alias directories->Add an alias
+      Enter alias name "mysite"
+      Enter folder path with forward slash and trailing slash
+        c:/mysite/
+      "Alias created" message shows and window exists
+    Test in browser
+      http://localhost/mysite
+      Folder contents are shown
+      Click phpinfo.php link to show PHP information page
+    Analysis:
+      httpd.conf entry at bottom contains
+        Include "${INSTALL_DIR}/alias/*"
+      Check in explorer c:\wamp\alias folder
+        Alias files are present there
+      
+MAMP installation:
+  Download from https://www.mamp.info/en/downloads
+  Click Downloads tab and then MAMP Download for Mac OS X
+  Double click installation file
+  In Applications folder delete MAMP PRO folder
+  Test
+    In Applications select MAMP folder
+    Double click MAMP application
+    MAMP windows opens and also browser in localhost:8888
+    Check versions and open Tool->phpMyAdmin
+    Default documents folder is in MAMP->htdocs folder
+    Copy phpinfo.php file and test with localhost:8888/phpinfo.php
+    MySql is running in port 8889
+    The "Preferences" button allow to change:
+      Start/Stop behavior
+      Ports for Apache, Nginx and MySQL
+      PHP versions
+      Web Server engine Apache or Nginx and Document root folder
+  Uninstall
+    Open application and click "Stop Servers"
+    Go to Applications folder
+      Copy htdocs documents to save your pages
+      Remove MAMP folder
+      
+Troubleshooting Ports:
+  Windows:
+    For all ports:
+      >netstat -a -o | find "LISTENING"
+    For port 80:
+      >netstat -a -o | find "LISTENING" | find ":80"
+    In Task manager search by PID for application
+  MAC OS:
+    >sudo lsof -n -i4TCP:80 -sTCP:LISTEN
+    Use ActivityMonitor to find more information on PID
+      Make sure View->All Processes
+      
+Documents folder location:
+  MAC
+    >cd /etc/apache2
+    >sudo vi httpd.conf
+    Search for DocumentRoot setting and maybe <Directoy tag also
+    If changed, restart httpd
+    
+Changing mySQL password:
+  Go to mySQL bin directory
+    >mysqladmin -u root -p "oldPassword" password "newPassword"
+  Test
+    >mysql -u root -p
+  
+    
+    
+    
+    
+    
     

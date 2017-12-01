@@ -1,0 +1,107 @@
+Progressive Web Apps (Pete Lapage from Google)
+
+Introduction:
+  Most people install few Apps and thats it
+  Combine best of web and best apps
+  Reliable, fast and engaging experience using the web
+  Reliable: work quickly even on slow or no network
+  Fast: scroll and animate smoothly
+  Engaging: sending push notifications
+  Integrating: showing on home screen and loading as full screen app
+  Architecture: 
+    App shell model
+      Separates content from data
+      Ensure data loads as quickly as possible
+    Service workers:
+      Caching: strategies for different needs
+    WebApp manifest:
+      Makes web app installable
+  Progressive enhancement will give a standard experience
+
+Why Build a Progressive Web App?
+  Web advantages:
+    Easy distribution
+    Immediate redeployment
+    Simple AB testing
+  Single tap web app access
+    No need for App store and signing up
+    
+Technologies Behind:
+  Service Workers:
+    Seat between browser and server
+    Act as client side proxy
+    Written in JavaScript
+    Cache locally to load near instantly
+    Responds to network requests
+    Can define events that can wake it up
+      Push messages
+      Seamless data synchronization when connection restored
+    Don't relay on browser or web app being open
+    Exists beyond the browser
+  Web App Manifest File:
+    Control how web app appears to user
+    Hot to launch it
+    Installs banner and prompts to add to home screen
+    Feels like a native app
+
+What is an App Shell?
+  Separates core UI and infrastructure from data
+  All UI and infrastructure cached locally using service worker
+  Minimum HTML, CSS and JS required for UI progressive web app
+  Allows minimum pixels on screen without the network
+  Ensures reliably good performance
+  First load is quick and immediately cached
+  Repeat visit only needs to retrieve necessary data
+  Simmilar to a native app package that loads to a store
+  Allows to focus on speed
+    Instant loading
+    Regular updates without an app store
+
+Why use an App Shell?
+  Use www.webpagetest.org to test a web app performance loading   
+  Shows advantage on different network speeds when repeat loading
+  
+Design the App Shell
+  Doing AJAX style data loading
+    Content refresh regularly but managed separately
+  Break design into core components
+  What need to be on screen immediately?
+    UI components key to app
+    Supporting resources: JS, CSS, etc
+      
+Storage Options:
+  Local Storage:
+    Available in most browsers
+    Value-pair only strings, 
+    Synchronous: blocks response
+    Non-transactional: can overwrite important data
+    Avoid it!
+  Cache Storage:
+    Asyncronous, fast
+    Non-transactional: can overwrite important data
+    Not available in some browsers
+      Feature detect and polyfill
+  IndexDB:
+    Complex data
+    Asynchronous
+    Transactional
+    Available everywhere
+    Best fit
+    Drawback: 
+      lots of setup required
+      call backs to handle
+      Repo libraries to simplify:
+        localForage (Mozilla): Local storage like API
+        Lovefield (google): SQL like API
+
+Persistence:
+  Browsers data can be wiped out anytime
+  Sync critical data to cloud ASAP
+  Advantage:
+    Settings are the same from other device
+    Can continue with data from last session
+
+    
+   
+
+    

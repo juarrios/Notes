@@ -101,6 +101,43 @@ Persistence:
     Settings are the same from other device
     Can continue with data from last session
 
+Service Workers
+  A JS file run by browser in the background that handles events
+  Fetch events
+    Intercepting and responding to network requests
+    Proxy between network and browser
+    Can provide content even when offline
+    Can respond to push msgs from server to browser
+  How SW work?
+    WebPage register SW
+    Installed in browser
+    Activated
+    Idle
+      Fetch
+      Push / Msg
+      Terminated -> Idle
+  HTTPS:
+    SW requires https except when local
+    Ensures SW can not be manipulated during journey across network
+  Registering SW:
+    Code snipped using progressive enhancement:
+      if ('serviceWorker' in navigator) {
+        navigator.serviceworker.register('service-worker.js')
+          .then(
+            function(registration) {
+              console.log('Service Worker Registered', registration);
+            }
+          );
+      }
+  SW Scope:
+    Limited to the scope provided during registration
+    examples:
+      Entire domain
+        .register('/sw.js')
+      Limited to folder URLs:
+        .register('/folder/sw.js')
+  SW Events & Debugging:
+    Work in "incognito" mode to ensure no cache is present
     
    
 

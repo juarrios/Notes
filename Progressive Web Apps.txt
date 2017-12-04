@@ -138,7 +138,201 @@ Service Workers
         .register('/folder/sw.js')
   SW Events & Debugging:
     Work in "incognito" mode to ensure no cache is present
+    Tool: chrome://serviceworker-internals/
+      Shows installed service workers state
+      Allow to update or delete
+      Careful when using many browser pages since all will use same SW
+        Check skip waiting and client's claim to avoid this
+    Can also use Resources tab->Service Workers from DevTools
+    If not using incognito use chrome://settings/cookies to erase everything
+  Caching AppShell on Install:
+    When SW registers, triggers an 'install' event
+    Use 'install' event to add AppShell to cache
+      Add HTML, CSS and JavaScript:
+        var cacheName = 'myAppShell';
+        var filesToCache = [...];
+        
+        self.addEventListener('install', function(e) {
+         e.waitUntil(
+          caches.open(cacheName).then(function(cache) {
+            return cache.addAll(filesToCache};
+          });
+        ...
+    "addAll()" 
+      takes a list of URLs to load 
+      it is atomic, if a file fails, whole call fails
+  Updating the Cache:
+    Use 'Activated' event to clean old cache versions
+      self.addEventListener('activate', function(e) {
+        e.waitUntil(
+          caches.keys().then(function(keylist) {
+           return Promise.all(keyList.map(function(key) {
+            if (key!==cacheName && key!==dataCacheName} {
+              return caches.delete(key);
+            }
+      ...
+    Disadvantages:
+      Update cache key every time an AppShell resource is changed
+      Entire cache is invalidated when a single file changes
+  Handling the Fetch Event:
+    Use fetch event to intercept all network requests in SW
+    Then serve all requested resource from the cache:
+      self.addEventListener('fetch', function(e) {
+        console.log('[ServiceWorker] Fetch', e.request.url);
+        e.respondWith(
+          caches.match(e.request).then(function(response) {
+            return response || fetch(e.request);
+      ...
+    "match()" evaluates request
+      checks if is available in the cache
+      response will be filled if available in cache
+  Caching Strategies:
+    Cache First:
+      First look at cache
+      If not found request network
+      For commonly used resource
+      Careful with:
+        Application data
+        Resources that change frequently
+    Network first:
+      First look at network then cache
+      When desiring freshest data if available
+      Rather have stale data than no data at all
+      Good for content that updates frequently
+      Drawback:
+        Slow network
+    Cache Only:
+      Grab only from cache otherwise fail
+      When guarantee that no network request will be made
+      example: saving battery on mobile devices
+    Network only:
+      Grab only from network, otherwise fail
+      Ideal for things with no offline equivalent:
+        analitic pings
+        non-get request
+    Cache and Network race:
+      AKA "fastest"
+      Responds with whichever returns first
+      Usually cache is first but when network completes cache is updated
+    Cache then Network
+      Show cached data first and update when network data arrives
+  Offline:
+    Jake Archibald's offline web applications course
+  Service Worker Precache Library:
+    Node module library for auto-generating a SW to precache AppShell
+    Configuration parameters
+      Define runtime caching options
+      Can be use with Gulp or Grunt build scripts or CLI
+      Creates SW and saves results to a file
+    Gulp Example:
+      Install sw-precache
+        >npm install sw-precache --save-dev
+      Add sw-precache to Gulp file
+        var swPrecache = require('sw-precache');
+      Add new task to build SW:
+        gulp.task('generate-sw', funtion() {
+          var swOptions = {
+            staticFileGlobs: [
+              './*.html',
+              './images/*.{png,svg,gif,jpg}',
+              './scripts/**/*.js',
+              './styles/**.*.css'
+            ],
+            stripPrefix: '.',
+            runtimeCaching: [{
+              urlPattern: /^https:\/\/publicdata-weather.\.firebaseio\.com/,
+              handler: 'networkFirst',
+              options: {
+                cache: {
+                  name: 'weatherData'
+                }
+              }
+            }]
+          };
+          return swPrecache.write('service-worker.js', swOptions);
+        });
+      CLI commands:
+        >gulp serve
+        Uses browser sync to serve the files locally
+        When files are changed
+          service worker is rebuilt automatically
+          browser refreshes automatically
+      
+Web App Manifest:
+  JSON file that controls 
+    how web app appears to users
+    behavior when launched from home screen
+  Configuration
+    Minimum
+      "name": "Weather",
+      "short_name": "Weather"             (used in home screen)
+      "start_url": "/index.html?hs=true", (make sure is AppShell cached)
+      "icons": [{
+        "src": "/icons/icon-128.png",     (recommend 8 sizes)
+        "sizes": "128x128",               (48,96,128,144,192,256,384,512)
+        "type": "image/png"
+        }, {...}]
+      "background_color": "#3E4EB8",      (use for splash screen)
+      "theme_color": "#2F3BA2",           (UI elements)
+      "display": "standalone",
+      "orientation": "portrait"
+  Validation:
+    Use URL https://manifest-validator.appspot.com
+  Link to application:
+    In the head of each page add:
+      <link rel="manifest" href="manifest.json">
+  Install Banner:
+    Chrome looks for heuristics to show "Add To Home Screen" banner:
+      Service Worker
+      Web App Manifest File
+      Engaged User:
+        Two navigations within at least five minutes
+    Defering or cancelling banner:
+      Until a convenient time to avoid breaking flow
+    Testing:
+      Disable engagement checks
+      Enable: #bypass-app-banner-engagement-checks
+  Safari:
+    Using meta tags in html document head
+    Icons:
+      Placing file named apple-touch-icon.png in document folder
+    Tags:
+      <link rel="apple-touch-icon" sizes="60x60" href="apple-60.png" />
+      To cover all apple devices need 6 sizes:
+        60x60,76x76,120x120,152x152,167x167,180x180
+    Hide browser UI components:
+      <meta name="apple-mobile-web-app-capable" content="yes">
+    Minimize status bar:
+      <meta name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent">
+      Add some padding since status text is still there
+    Check Apple's Safari Web Content Guide:
+      "Configuring Web Applications"
+  HTTPS Host:
+    Service Worker registration require HTTPS
+    Options:
+      Add HTTPS to server
+      Hosting provider that use HTTPS
+        GitHub pages
+        Firebase
+        Google app engine
+    Firebase deploy steps:
+      Create account and add new project
+      Install Firebase CLI tools
+      Check hosting docs in the instructor notes for quick quide
+        https://www.firebase.com/docs/hosting
+      Authenticate using CLI 
+        >fcirebase login
+      Initialize with 
+        >firebase init
+        app name, directory, etc.
+      Deploy wiht 
+        >firebase deploy
+        will upload everything
+        
     
-   
-
+    
+      
+  
+  
     

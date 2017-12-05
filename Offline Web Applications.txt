@@ -1,0 +1,82 @@
+Offline Web Applications
+
+The Benefits of Offline First
+  Intro
+    The internet network is not always available
+    Using SW (Service Worker) to intercept network traffic
+    Tame IDB (In Browser Database)
+    User experience strategies for network conditions
+  The Problem
+    Lie-Fi: no network connection
+    Connection limbo
+    Keep waiting hoping to load
+    Path to data server has many failing points
+    Network connectivity is a huge unknown
+  Benefits of Offline First
+    Getting as much sturff as possible from cache first
+    Update page when network content is available
+    Also update cache with the new data
+    If no network, stale data is better than nothing
+    User is happy offline or online
+  Installing Demo App
+    >node --version
+    >git clone https://github.com/jakearchibald/wittr.git
+    >cd wittr
+    >npm install
+    >npm run serve
+    Two ports are available: 8888 and 8889
+  Running the App:
+    Browser: localhost:8888
+    Control: localhost:8889
+      Simulate connectivity:
+        Perfect
+        Slow
+        Lie-fi
+        Offline
+      Test results:
+        text box to do some test
+
+Introducing the Service Worker:
+  Overview:
+    A javascript file that sits between webapp and web request
+    Web worker that runs separately from page
+      Not visible to user
+      Can not access the DOM
+      Does control pages by intercepting requests
+        Send request to network
+        access a kind of cache
+        or a combination
+    Registration:
+      Use
+        navigator.serviceWorker.register('/sw.js')
+      Returns a promise to add callback for success and failure
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+          console.log('Yay!');
+        }).catch(function(err) {
+          console.log('Boo!');
+        });
+    Scope:
+      '/my-app/' (has to have trailing slash)
+        will ignore 'shallow' paths
+      Can have multiple SWs with different scopes
+      Determined by location of service script
+    Events:
+      self.addEventListener('install', function(event) {...});
+      self.addEventListener('activate', function(event) {...});
+      self.addEventListener('fetch', function(event) {...});
+    Browser support by features:
+      https://jakearchibald.github.io/isserviceworkerready/
+      https://caniuse.com/
+    Progressive enhancement friendly
+      Wrap code in feature detect
+        if (navigator.serviceWorker) {
+          navigator.serviceWorker.register('/sw.js');
+        }
+  Service Worker Lifecycle:
+    Current service worker stays in browser until page is unloaded
+    New service worker stays in 'waiting' until page is unloaded
+    New service worker is activated after page reload (not refreshed)
+  
+    
+  
+  

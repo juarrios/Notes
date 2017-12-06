@@ -1,4 +1,4 @@
-Offline Web Applications
+Offline Web Applications (Jake Archibald)
 
 The Benefits of Offline First
   Intro
@@ -76,7 +76,127 @@ Introducing the Service Worker:
     Current service worker stays in browser until page is unloaded
     New service worker stays in 'waiting' until page is unloaded
     New service worker is activated after page reload (not refreshed)
-  
+    Shift->Refresh also loads the new service worker
+  Hijacking Requests:
+    Intercepting all requests to server by SW:
+      self.addEventListener('fetch', function(event) {
+        event.respondWith(
+          New Response('Hello World!', {
+            headers: {'foo','bar'}
+          })
+        );
+      });
+    XMLHttpRequest object is awkard to use, too much setup:
+      var client = new XMLHttpRequest();
+      client.addEventListener('load', function() {
+        console.log(client.response);
+        });
+      client.addEventListener('error', function() {
+        console.log("It failed!");
+      });
+      client.responseType-'jston';
+      client.open('GET','/foo');
+      client.send();
+    Same call using the fetch command and promises:
+      fetch('/foo').then(function(response) {
+        return response.json();
+      }).then(function(data) {  // when server responds
+        console.log(data);
+      }).catch(function() {     // when no response at all
+        console.log('It failed!');
+      });
+    fetch API performs normal browser fetch
+    documentation: "MDN request"
+    debug: 
+      console.log(event) to see all event fields
+      console.log(event.request) to see reqeust fields
+    Can create custom rules for all requests and responses
+  Caching and Serving Assets:
+    Cache API allows to store anything in browser
+    caches.open('my-stuff').then(function(cache) {
+      //... returns promise for cache with 'my-stuff' name
+    });
+    Add items:
+      cache.put(request, response);
+      cache.addAll(['/foo', '/bar' ]); // atomic
+    Get items:
+      cache.match(request);
+      caches.mastch(request);   // looks at all caches
+    When to cache?
+      Using the SW 'install' event
+      self.addEventListener('install', function(event) {
+        event.waitUntil(
+          caches.open('name').then(function(cache) {
+            return cache.addAll(urlsToCache);
+          })
+        );
+      });
+    When to serve from cache?
+      Using SW fetch event
+      self.addEventListener('fetch', function(event) {
+        event.respondWith(
+          caches.match(event.request).then(function(response) {
+            return response || fetch(event.request);
+          })
+        );
+      });
+    Other items to cache:
+      Unobtrusive app updates
+      Get the user onto the latest version
+      Continually update cache of posts
+      Cache photos
+      Cache avatars
+    Name of all caches:
+      caches.keys();
+  Unobtrusive app updates: When to update cache?
+    In new SW activate event
+    self.addEventListener('activate', function(event) {
+      // delete old cache versions and insert new cache version
+      event.waitUntil(
+        caches.keys().then(function(cacheNames) {
+          return Promise.all(
+            cacheNames.filter(function(cacheName) {
+              return cacheName.startsWith('wittr-') &&
+                cacheName != staticCacheName;
+            }).map(function(cacheName) {
+              return cache.delete(cacheName);
+            })
+          ); 
+        });
+      );
+    });
+    CSS caching recomendation:
+      Use a script to append a content generate suffix to CSS and WS filenames
+  Get the user onto the latest version:
+    Instead of waiting for new SW to install show a button to refresh app
+      if (reg.waiting) {
+        // there's an update ready!
+      }
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      reg.unregister();
+      reg.update();
+      reg.installing; // update in progress
+      reg.waiting;    // update waiting
+      reg.active;
+      reg.addEventListener('updatefound', function() {
+        // reg.installing has changed
+      });
+    });
+    SW states:
+      installing, installed, activating, activated, redundant
+      sw.addEventListener('statechange', function() {
+        // sw.state has changed
+        if (this.state == 'installed') {
+          // there's an update ready!
+        }
+      });
+    SW that controls page:
+      navigator.serviceWorker.controller
+      if no controller, page did not use a SW
+     
+    
+
+
     
   
   

@@ -1,0 +1,116 @@
+Javascript Promises (Cameron Pittman)
+
+Creating Promises:
+  Introduction:
+    A way to handle asychronous work with confidence and ease.
+    Javascript Promises (JsP) have
+      Flexibility
+      Intuitive syntax
+      Easy error Handling
+  Callbacks vs Promises:
+    "The Promise object is used for deferred and asynchronous computations" MDN
+    Callbacks
+      Default JS technique for asynchronous work
+      Call a function at a later time when a condition is met
+      How do you handle errors?
+        Your job to define and implement error strategy
+      How do you create a sequence of work?
+        "Pyramid of Doom" 
+          When linking callbacks within callbacks!
+          Frustrating to debug
+    .then
+      Promise clean way to handle callbacks
+      var sequence = get('example.json')
+        .then(doSomething)
+        .then(doSomethingElse);
+  Structures of Promises:
+    Wrapping
+    Thening->Action
+    Catching->Recovery
+    Chaining->Promise->Promise
+    Reference by Jake Archibald:
+      https://developers.google.com/web/fundamentals/primers/promises
+    Four promise states:
+      Fulfilled (Resolved): It worked! :)
+      Rejected: It didn't work :(
+      Pending: Still waiting ...
+      Settled: Something happened!
+  Promise Timeline
+    Action for resolution executes for all Promise resolves
+    Only settles once
+    Execute in the main thread, potentially still blocking
+    Is a technique for deciding what will happen when an asynchronous task settles
+      Like try-catch wrappers around asynchronous work
+  Syntax
+    Promise is a constructor
+      Pass a function with two parameters
+        resolve: callback when worked
+        reject: when something failed
+      Promise is settle after either resolve or reject has been called
+      Afterwards 'then' or 'catch' is executed
+      Example:
+        new Promise(function(resolve, reject) {
+          var img = document.createElement('img');
+          img.src = 'image.jpg';
+          img.onload = resolve;
+          img.onerror = reject;
+          document.body.appendChild(img);
+        })
+        .then(finishLoading)
+        .catch(showAlternateImage);
+    If a value is passed to either resolve or reject, it is also passed to linked chain
+    If a Promise is passed, Promise executes first and result will be passed to linked chain
+   Fetch API:
+    XHR is annoying to use
+    Fetch API simplifies using promises
+      fetch('some/url'), {
+        method: 'get'
+      }).then(function(response) {
+        // work with data
+      }).catch(function(err) {
+        // Error :(
+      });
+    .then() also returns promises, also called "thenable"
+    "thenables":
+      a powerful technique to simplify complex sequences of asychronous work
+            
+Chaining Promises:
+  Chains of asynchronous work
+  Error Handling Strategies:
+    Full definition of 'then' method:
+      get('example.json).then(resolveFunc, rejectFunc);
+    However is better to use '.catch()' since easier to spot
+    Resolve does not always mean sucess
+  Chaining can be in
+    Series: one after the other
+    Parallel: at the same time
+  All Promises:
+    Takes an array of Promises, executes them, returns array of values in same order
+      Promise.all(arrayOfPromises)
+      .then(function(arrayOfValues) {
+      ...
+      });
+    Fails fast! As soon as the first Promise rejects!
+    Example:
+      getJSON('.../earth-like-results.json')
+      .then(function(response) {
+        /*
+        var arrayOfPromises = response.results.map(function(url) {
+          getJSON(url);
+        })
+        return Promise.all(arrayOfPromises);
+        */
+        return Promise.all(response.results.map(getJSON));
+      })
+      .then(function(arrayOfPlanetData) {
+        arrayOfPlanetData.forEach(function(planet) {
+          createPlanetThumb(planet);
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    Promise.all guarantees the order of the result array
+  Summary:
+    Promises is easiest technique for handling asynchronous work in JavaScript
+    

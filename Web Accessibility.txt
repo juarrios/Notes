@@ -1,0 +1,58 @@
+Web Accessibility (Alice Boxhall and Rob Dodson)
+
+Accessibility Overview
+  Short spelling A11y
+  Use what is built in HTML for accessible and robust interfaces
+  Advance techniques for polished experiences
+  Interfaces more easy to use for everyone
+  What is an Accessible Site
+    Content is available to everyone
+    Functionality can be operated by everyone
+  Developer's bad assumptions
+    Everyone can use a mouse
+    Everyone can swipe
+    Everyone can see the interface
+    Creates experience for a narrow range of people
+  Accessibility
+    People who's access or experience is different
+    Contain some type of impediment or disability
+    Makes no difference whether impediment is:
+      Situational
+      Temporary
+      Permanent
+  Make experience better for everyone by addressing accessibility!
+  Accessibility is making sure that the content in web site we create
+    is usable to people with various impariments or abilities.
+  WCAG
+    Web Content Accessibility Guidelines
+    Guidelinse and Best practices
+    What Accessibility means in a methodical way
+    Four core principles (POUR):
+      Perceivable
+        Aware of content
+      Operable
+        Use UI components and navigate content
+      Undertandable
+        Interface is clear and avoids confusion
+      Robust
+        Consume by wide variety of user agents
+        Does it work with assistive technology?
+    WCAG guidelines into an easy to follow checklist for web content
+      https://webaim.org/standards/wcag/checklist
+    What actually matters is the user experience!
+  Three main topics
+    Focus
+      Important for motor impairments
+      Keyboard accessibility
+    Semantics
+      UI robust for assistive technology
+    Styling and visual design
+      UI flexible and usable as possible
+      
+Focus
+  Refers to control that receives input from keyboard or clipboard
+  Act of clicking or navigating to a textfield is what focus is
+  Well implemented focus strategy will lead to a better experience
+  
+      
+    

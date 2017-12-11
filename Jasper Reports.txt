@@ -1,0 +1,50 @@
+Jasper Reports
+Energy Accounting Systems (EAS)
+
+Communication
+  EMS Administrator: Jeannette Lockard
+  GE Vendor:  Jen Petrut Colin Hickey
+              colin.hickey@ge.com
+  Server Administrator: Antonio Barrio
+  Network Engineering: Valente Munoz
+  Security Engineer: Manual Ayala
+Servers
+    sodvveas01: development
+      Jasper SSL/LDAP, TDF/EA app, Oracle, VS2012
+    soqaeas01: test/QA
+      Jasper SSL/LDAP, TDF/EA app, Oracle
+    sopreas01: Jasper prod  172.20.110.10 SOCC
+    bupreas01: Jasper prod  172.20.238.10 BUCC
+      DMZ, Jasper SSL/LDAP, TDF/EA app, Oracle
+Paths:
+    Jasper Configuration dev:
+      c:\Users\Public\JaspersoftWorkspace
+    Jasper Config server:
+      c:\Jaspersoft\jasperreports-server-cp-6.2.0
+    LDAP config
+      ...\apache-tomcat\webapps\jasperserver\WEB-INF
+        applicationContext-externalAuth-LDAP
+    SSL config
+      ...\apache-tomcat\conf\server
+    TFS
+      sodvvsql01\Eterra
+Jasper Studio:
+  Similar to SSRS
+    IDE design
+    XML design (JRXML) -> Compile (Jasper) -> Deploy
+  Server 
+    Reports path: 
+      root->Reports->Administration
+  URLs: 
+    https://soqaeas01:8445/jasperserver/log_settings.html
+    https://soqaeas01:8443/web-server/ui/Application.html
+      Perpective
+      Determinant (Data tables)
+      Create data models ...
+  LiveLink:
+    https://csapp1p/contentserver10/cs.exe?func=ll&objId=24246155&objAction=browser&viewType=1
+    
+Tutorial:
+  GitHub code:
+    https://github.com/TIBCOSoftware/jasperreports/tree/master/jasperreports
+  

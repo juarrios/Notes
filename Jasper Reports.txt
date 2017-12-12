@@ -44,7 +44,12 @@ Jasper Studio:
   LiveLink:
     https://csapp1p/contentserver10/cs.exe?func=ll&objId=24246155&objAction=browser&viewType=1
     
-Tutorial:
+Documentation:
+  https://community.jaspersoft.com/documentation?version=46991
   GitHub code:
     https://github.com/TIBCOSoftware/jasperreports/tree/master/jasperreports
+  JasperServer:
+    Default admin account:
+      jasperadmin/jasperadmin
+    
   

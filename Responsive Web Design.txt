@@ -1,0 +1,20 @@
+Responsive Web Design (RWD) ( Pete Lepage & Cameron Pittman)
+
+Web sites that look and feel great regardless of device
+Examples:
+  https://skinnyties.com/
+  http://alistapart.com/
+    Great resource for web developers
+  http://cameronwp.com/
+    Cameron Pittman web site
+RWD is an art, not a science!
+Approach RWD systematically from the start, instead of afterthought
+Make your content work across any device
+
+Emulators, Simulators and Real Devices
+  Chrome, iOS
+  Cloud based services
+    https://www.browserstack.com/
+
+  
+  

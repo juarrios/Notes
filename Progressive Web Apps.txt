@@ -322,11 +322,11 @@ Web App Manifest:
       Check hosting docs in the instructor notes for quick quide
         https://www.firebase.com/docs/hosting
       Authenticate using CLI 
-        >fcirebase login
+        >firebase login
       Initialize with 
         >firebase init
         app name, directory, etc.
-      Deploy wiht 
+      Deploy with
         >firebase deploy
         will upload everything
         

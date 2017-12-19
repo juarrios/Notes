@@ -15,6 +15,187 @@ Emulators, Simulators and Real Devices
   Chrome, iOS
   Cloud based services
     https://www.browserstack.com/
+  Udacity Front End Feedback Extension
+Remote Debugging Intro
+  Android:
+    Turn ON developer mode:
+      Settings->About device->
+        Build number: click 7 times
+    Developer Options->USB debugging
+    Laptop Chrome: chrome://inspect
+      Open site in mobible device
+      Connect laptop to mobile device using USB
+      Confirm to allow USB debugging
+    Can interact with device pages, inspect and change HTML
+  IOS:
+    Using iOS web kit debug proxy:
+      https://github.com/google/ios-webkit-debug-proxy
+    Safari Dev Tools:
+      https://www.smashingmagazine.com/2014/09/testing-mobile-emulators-simulators-remote-debugging/2/
+Viewport:
+  Window area that browser refreshes
+  DIP: Device Independent Pixels
+    Unit that relates to real distance
+    Will take same amount of space regardless of display's density
+  Unoptimized web site:
+    Viewport is not set, browser assumes 980 DIPs wide 
+      Content is scaled to fit and site pages look small
+    Font boosting:
+      Browser guesses primary content on page and scale it up
+    Users waste time pinching to zoom and interact with content
+  Setting the viewport:
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+  Use Relative dimensions instead of absolute dimensions such as width=100%
+  Catch all for CSS:
+    img, embed, object, video {
+      max-width: 100%;
+    }
+  Finger average width is around 40px
+    Tap target should be bigger than the average finger
+    Make buttons at lest 48px and spaced 48px or 1.5em to avoid pressing 2 at same time
+    nav a, button {
+      min-width: 48px;
+      min-height: 48px;
+    }
+  Start small:
+    Prioritize content!
+      Key content always on the page!
+    Design:
+      Start designing for smallest screen
+      Analyze bigger screen to see if they need a new design
+    Code:
+      Also from smallest to largest
+    Performance:
+      Making sure content is present fast
+Building Up:
+  Design page layouts
+    Think what information to present
+    How to arrange elements
+    More an art than a science
+  Media Queries:
+    Provide different styles depending on device characteristics:
+      Width, Height, Pixel ratio
+    Include additional style sheet in page:
+      <link rel="stylesheet" media="screen and (min-width:500px)"
+        href="over500.css">
+      Many small files but many HTTP request
+    Embedded in CSS page:
+      @media screen and (min-width: 500px) {
+        body { background-color: green; }
+      }
+      Bigger files but fewere HTTP requests
+    For responsive web design:
+      max-width: applied when value is less than value
+      min-width: applied when value is more than value
+    Breakpoint:
+      Point where page changes layout due to media query
+      Look at content to find the right breakpoints
+        Use content as a guide
+        Observe content as browser window expands from small to big
+    Patterns:
+      Grid fluid system:
+        Columns wrap to next line as browser's width shrinks
+          Bootstrap
+          960 pixel grid layout system
+        Check grid based layouts tutorials:
+          https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout
+    Flexbox:
+      Powerfool tool for layout
+      Candidate recommendation and supported by most browsers
+      Ability to fill the space available
+        Elements will expand or shrink
+      Usage in CSS:
+        .class {
+          display: flex;
+          flex-wrap: wrap;
+        }
+        @media screen and (min-width: 700px) {
+          .dark_blue { order: 4; }
+          .light_blue { order: 5; }
+          .green { order: 2; }
+          .orange { order: 3; }
+          .red { order: 1; }
+        }
+Responssive Patterns:
+  Column Drop
+    Columns go into rows as browser's width shrinks
+    Rows go into columns as browser's width expands
+    Margins added after a breakpoint defined width
+  Mostly Fluid
+    Similar to column drop but more grid like
+      More columns and fitted in different ways
+    margins added after given breakpoint
+  Layout Shifter
+    Most responsive with multiple breakpoints
+    CSS "order" is used to change content positions
+  Off Canvas
+    Places less frequent used content off screen
+      Navigation
+      App Menus
+    Only shows it if screen is large enough
+    On smalls screens:
+      Hamburger icon shows off screen
 
-  
-  
+Optimizations:
+  Images:
+    The take 65% of every web site
+    Use cases:
+      Same image different resolution depending on device
+        Chrome book pixel, Retina iMac
+        Using source set attribute of image tag
+      Different crop of image AKA "Art Direction"
+        New picture element using media queries
+        Selects which image to use
+      Responsive images course
+  Tables:
+    Hidden Columns
+      Hides unimportant columns as viewport gets smaller
+      Try abreviated data instead of hidding completelly
+    No More Tables
+      Below a certain viewport width, table collapses into a list
+      All data is visible regardless of viewport size
+        @media screen and (max-width: 500px) {
+          table, thead, tbody, th, td, tr {
+            display: block;
+          }
+          thead, tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+          }
+          td {
+            position: relative;
+            padding-left: 50%
+          }
+          td:before {
+            position: absolute;
+            left: 6px;
+            content: attr(data-th);
+            font-weight: bold;
+          }
+        }
+        <td data-th="Row LabelX">...</td>
+    Contained Tables:
+      Table inside a DIV with same width that scrolls right
+        div.contained_table {
+          width: 100%;
+          overflow-x: auto;
+        }
+  Fonts:
+    Ideal Measure: 
+      length of a line
+      45-90 characters per line (cpl)
+      ~65 cpl for the web
+    Line length considerations for choosing breakpoints
+    Font size big enough to read across devices
+      base line: 16px, 1.2em height
+      Increase it for text heavy sites
+        18px, 1.25em
+      Too small: 14px or less
+  Minor Breakpoints:
+    To adjust little things
+    Adding margins or padding
+    Increase font-size
+      easier reading
+      better layout look
+    

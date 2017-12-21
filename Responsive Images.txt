@@ -93,6 +93,7 @@ Units, Formats, Environments
       Uses pngquant
       Can reduce 24-bit png to 8-bit
     Tools can be automated using Grunt
-    
+    Many references links below video
+  PageSpeed Insights to check image optimization
       
   

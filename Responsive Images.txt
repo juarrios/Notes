@@ -1,0 +1,98 @@
+Responsive Images ( Sam Dutton, Cameron Pittman )
+
+Introduction
+  Embedded images make the web take off
+  Google Art Project: https://www.google.com/culturalinstitute/beta/
+  Need to think about how to use images
+  
+Why Responsive Images?
+  Images consume 62% of bandwidth
+    http://httparchive.org/interesting.php#bytesperpage
+  Don't always work well on different screen sizes
+  Images should work well where ever they are seen
+    Avoid 
+      Pixelation
+      Cropping when resizing
+      Unloaded images
+  Quote from Brian Fling:
+    "Create a product, don't re-imagine one for small screens.
+    Great mobile products are created, never proted"
+  DevTools reference:
+    https://developers.google.com/web/tools/chrome-devtools/
+
+Units, Formats, Environments
+  Optimize images to take as little bandwidth as possible
+  Save images with lowest possible quality and size
+  How to reduce file size while maintaining quality?
+  Relative sizing:
+    Set image to 100% of container
+    When enlarging, start to get pixelated and blurry
+    Fix:
+      max-width: 100%;
+      Expands up to natural width
+    To create space between 2 images:
+      img {
+        margin-right: 10px;
+        max-width: 426px;
+        width: calc((100% - 10px)/2);
+      }
+    To avoid margin on last image:
+      img:last-of-type { margin-right: 0; }
+  Landscape and Portrait:
+    Don't assume viewport will always stay the same
+  Viewport CSS units:
+    vh: 1% of viewport height
+    100vh: 100% viewport height
+    vw: 1% of viewport width
+    100vw: 100% viewport width
+    To fit smaller of width or height:
+      width: 100vmin;
+      height: 100vmin;
+    To fit whole viewport without streching or squashing:
+      width: 100vmax;
+      height: 100vmax;
+  Raster and Vector images:
+    Raster:
+      Grid of individual dots of color
+      Photographs
+      Created with camara, scanner or canvas
+    Vector:
+      Describe geometry of image
+      Set of curves, lines, shapes, fill colors and gradients
+      Created with Adobe illustrator, Inkscape or SVG
+      SVG:
+        Responsive vector graphics
+      Scales without quality degradation
+      Perfect at any size
+  File formats:
+    WebP
+      better compression
+      alpha transparencies
+      animation with lossy and lossless compression
+    For Logos:
+      SVG if possible
+      Otherwise PNG rather than GIF
+        More colors
+        Better compression
+        No licensing issues
+    References:       
+      https://litmus.com/blog/png-gif-or-jpeg-which-ones-should-you-use-in-email
+      https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization
+      https://developers.google.com/speed/webp/?csw=1
+  Compression, Optimization and Automation:
+    ImageMagick
+      Good processing tool for raster and vector images:
+      http://www.imagemagick.org/script/index.php
+      Converting formats
+      Cropping
+      Apply filters
+    ImageOptim
+      Lossless image optimization
+      Uses Pngout, pngcrush, jpegoptim, Giftical ...
+    ImageAlpha
+      Uses pngquant
+      Can reduce 24-bit png to 8-bit
+    Tools can be automated using Grunt
+    
+      
+  

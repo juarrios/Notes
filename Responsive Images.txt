@@ -95,5 +95,44 @@ Units, Formats, Environments
     Tools can be automated using Grunt
     Many references links below video
   PageSpeed Insights to check image optimization
-      
-  
+Images with Markup
+
+Full Responsiveness
+  srcset: 
+    x unit: reacting to device pixel ration
+      image attribute to load correct pixel density image depending on display resolution
+      <img src="image_2x.jpg" srcset="image_2x.jpg 2x, image_1x.jpg 1x" alt="a cool image">
+    w unit: reacting to image width
+      download correct size image depending on viewport width
+      <img src="image_200.jpg" srcset="image_200.jpg 200w, image_100.jpg 100w" alt="a cool image">
+  sizes:
+    If image is not full viewport size retrieve correct image size depending on tag img's width
+    Gives browser one more piece of information to ensure it downloads the right image file based on
+      the eventual display width of the image.
+    vw unit: 
+      <img  src="images/great_pic_800.jpg"
+        sizes="(max-width: 400px) 100vw, (min-width: 401px) 50vw"
+        srcset="images/great_pic_400.jpg 400w, images/great_pic_800.jpg 800w"
+        alt="great picture">   
+  picture element:
+    wrapper around <img> element to provide optional file sources depending on browser's capabilities
+    <picture>
+      <source srcset="kittens.webp" type="image/webp">
+      <source srcset="kittens.jpeg" type="image/jpeg">
+      <img src="kittens.jpg" alt="Two grey tabby kittens>
+    </picture>
+  art direction:
+    Choosing a different image using media queries depending on viewport size
+    <picture>
+      <source media="(min-width: 650px)" srcset="kitten-large.png">
+      <source media="(min-width: 465px)" srcset="kitten-medium.png">
+      <img src="kitten-smal.png" alt="Cute kitten">
+    </picture>
+  Accessibility:
+    Adding "alt" attributes to images to describe for the visually impaired
+      Should be descriptive for important images
+      Should be empty for decoration images
+      Should be set on every image
+      Screen Readers:
+        Lynx
+        ChromeVox

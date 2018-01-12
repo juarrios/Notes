@@ -1,0 +1,11 @@
+1) Define your "user"
+  Imagine that user and attach an imaginary persona.
+  Beware, don't think of yourself or your friends with shared backgrounds and tastes.
+  Expand your target user base beyond your preconceptions.
+
+2) Create set of stories of iteractions between this persona and the app, your big wish list.
+  Reduce to a subset of must-haves for the app to be successful:
+    Minimum Viable Product
+   
+3) Get a team leader able to recruit and cover all technical angles to reach a cohesive whole.
+  

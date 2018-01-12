@@ -1,0 +1,87 @@
+Web Performance Optimization (Ilya Grigorik and Cameron Pittman)
+
+Introduction
+  Understan how the browser works
+  Critical Rendering Path (CRP)
+    How browser construct's the page
+      DOM (Document object model)
+        JavaScript
+      CSSOM (CSS object model)
+      Render Tree
+      Layout
+      Paint
+  Sample code:
+    https://github.com/udacity/frontend-nanodegree-mobile-portfolio
+    
+The Critical Rendering Path
+  Browser's steps to convert HTML, CSS and JS into pixels to render page
+  Converting HTML to the DOM:
+    Tokenizer:
+      Characters->Tokens->Nodes->DOM
+    DOM:
+      Tree structure that captures the contents and properties of HTML and
+        all relationships between the nodes
+      Full parsed representation of the HTML markup
+    Browser constructs DOM incrementally
+      Take advantage of this to speed up rendering of pages
+      This is how Google search pages work
+        Sends page header first before doing search
+        Search results are received later and browser renders them
+      Partial HTML delivery is a good performance optimization
+    Flushing:
+      Server sends initial part of HTML to the client before the response is ready
+      Results in page that feels faster.
+      Should occur 
+        After the initial response has enough content to keep the browser busy
+        Before the expensive parts of the back end execute
+      Should contain some resources and some visible content.
+    Chunk Scatter:
+      Tool to analyze chunks over time:
+        http://scatter.cowchimp.com/
+      Github project:
+        https://github.com/cowchimp/chunk-scatter
+    Chrome's Performance Dev Tools does more detailed analysis
+  Converting CSS to the CSSOM
+    Tokenizer convert tokens to nodes
+    Children inherit parent styling rules: cascading rules
+    CSS is render blocking:
+      Browsers blocks until all CSS has been parsed.
+  Render Tree
+    Only captures visible content and their styles
+  Layout
+    Positions elements on the page
+    It can be an expensive process
+    Can be triggered by
+      device orientation
+      window resize
+      any action that modified the DOM
+  Paint
+    Draws the page
+    Cardinal rule of performance:
+      Measure first, then optimize!
+    
+Optimizing the CRP
+  Steps:
+    1) Minify the file for smaller size
+      Preprocessing/minification/context-aware optimization
+      Inventory of different content types
+        Consider content-specific optimization to reduce size
+        Automate in build/release processes
+    2) Compress file
+      GZIP supported by all browsers
+      Server be configured to enable GZIP compression
+      Performs best on text-based content
+    3) Insure they are Cached by browser
+  CSS render blocking:
+    Whether the browser has to hold initial rendering on CSS resource.
+    Separating CSS styles on different files and using media queries:
+      <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="style-print.css" media="print">
+  Optimizing JavaScript:
+    Parser blocking scripts
+      Inline JS script interrupting DOM parser
+    JS blocks DOM construction unless explicity declared as async
+      <script src="analytics.js" async></script>
+      However inline scripts will always block on DOM
+    Book High Performance Browser Networking:   
+      http://hpbn.co/

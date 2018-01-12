@@ -1,0 +1,184 @@
+GitHub for Windows Users (MVA)
+Jeremy Forster and Briana Swift 
+
+1) Basic Concepts and the GitHub Workflow
+  It is about collaboration not just code or languages
+  Start with https://github.com/explore to see main project showcases
+  Wealth of projects to learn new techonologies. Jump right in!
+  Distributed Version Control:
+    Everyone has everything
+      Master branch, other branches, complete copy of history
+    Commits are snapshots
+      Changes are stored in snapshots, not deltas
+    Remote repository
+      It is source of shared truth
+  Once on GitHub, have access to collaboration tools: issues, code review
+  GitLFS: git large file storage
+  Git vs GitHub:
+    git is for version control
+    GitHub is for collaboration, built on top of git
+      Issues
+      Pull Requests
+      Orgs & teams
+      Code review UI
+      Integrations ( Heroku, Travis CI)
+  GitHub Flow:
+    Start looking at: https://guides.github.com/introduction/flow/
+    Short lived branches, branch early, branch often. 
+    Start by creating branch
+      Don't want to make changes on master branch, the blessed version of code
+      Feature branch
+    Add commits
+      Atomic amount of change
+      Small units of change
+      Commits should tell a story
+    Pull request:
+      Conversation about code, ask for feedback
+    Discussion and review of code:
+      Commits part of pull request
+    Deploy:
+      After tests, verify changes in production
+      If issues, roll it back by deploying existing master into production
+    Merge:
+      Nothing broken, merge pull request back into master branch
+  Open Source:
+    GitHub is a "home" for open source
+    So much more than just code base
+    Idea of people working together and making products better as a community
+    Finding projects to contribute to, learning about them and giving back
+    Researchers that need contribution
+    Microsoft: https://microsoft.github.io
+    Setup a structure or guide to know how to contribute and keep and eye on issues
+     
+2) GitHub in the Browser
+  Creating a Repository:
+    Click "New Repository"
+    Name should make sense, short and sweet
+    Description a better explanation
+    Public or Private
+    Initialize repository with a README: it is displayed on home page of repo
+    Add .gitignore for language select template
+    Adding a license matters:
+      Learn what is the difference between them
+      GPL, MIT, Apache
+      How am I trying to open source a project
+    Confirm "Create Repository"
+    Code tab: main directory
+    Issues tab:
+      Uses for more than bug reports
+      Replaces email
+      Planning
+      Any conversation
+      Cross linking and @mentioning adds context
+      Markdown supported
+    Pull request tab:
+      Look like issues but they include actual code
+      Great place to do code review
+    Wiki tab:
+      Create documentation and show progress of project
+      More expanded article of multiple things
+      Tell contributors or users how to do different tasks
+    Pulse tab:
+    Graphs tab:
+    
+  User vs. Organization Accounts
+    Organizations have more permissions
+    Different workflows for contributors
+    Invite users and accepting collaboration 
+    
+3) GitHub Desktop
+  Introducting GitHub Desktop:
+    Available on Windows and Mac
+    Manage local repos
+    Create, Branch/Merge, Commits, Pull Requests
+    Stagging by line
+    Excellent history view, good visual
+    No conversations, no Issues
+  Installation:
+    Go to https://desktop.github.com/
+    Installs GitHub desktop and git PowerShell console
+    Git Shell runs a ps1 script that installs posh-git
+    
+  Repositories
+  Branches and Changes
+  Other desktop tools
+    Tortoise Git
+    SourceTree
+    Git Extensions
+    SmartGit
+    git-cola
+    GitEye
+    Git Kraken: good visual of all commits
+  
+4) GitHub Ingegrations with Visual Studio
+  GitHub Extension for Visual Studio
+  Bing Developer Assistant
+    Brings together Sample Browser and Bing Code Search to enable developers to find and reuse millions of code snippets.
+    Code is pulled from MSDN, StackOverflow, GitHub and more!
+  Visual Studio Code
+    Lighter developed in Node.js and TightScript using the Electron Environment and crossplatform
+    Projects as collections of files
+    Integration Points:
+      Changes
+      Diffs
+        Side-by-side and inline
+        Stage selected lines
+      Push, pull and sync
+      Branches
+      Git output
+      Extensions
+  Visual Studio Code Extensions
+  
+
+5) GitHub on the Command Line
+  gh tool to be able to create / remove repositories from console
+  Cheat sheet: https://services.github.com/kit/downloads/github-git-cheat-sheet.pdf
+  
+  
+6) Beyond the Basics
+  Every repository has a built in web site page, looks for gh-pages branch and make sure you have index.html file
+  http://juarrios.github.io/projectname
+  Log history: a story of how the project developed
+  Danger Zone: Changing History
+    Watch out for changing commits IDs
+    git revert: undo, OK for changuing history
+    cherry-pick: warn if changing commit ID
+    rebase: warn if changing commit ID
+    reset: warn if changing commit ID 
+      reset hard: loose something beyond getting it back
+    commit ammend: warn if changing commit ID
+    git reflog: can save you in a lot of situations, where HEAD has been pointing to
+    Commits only last between 30 (orphan) and 90 (parent) days, once trash collection comes, they are gone too
+  Git configuration:
+    Three levels:
+      system: for entire computer
+      global: based on your user account
+      local: for just that repository
+    Commands:
+      git config --global user.name "First Last"
+      git config --global user.email "you@email.com"
+      Windows: git config --global core.autocrlf true
+      Mac:     git config --global push.default simple ???
+      git config --global push.default simple
+    Sample configs from Briana Swift:
+      user.name=Briana Swift
+      user.email=brianamarie@github.com      
+      github.user=brianamarie
+      push.default=simple
+      credential.helper=osxkeychain
+      core.autocrlf=input
+      core.editor=atom --wait
+      core.pager=cat
+      alias.s=status
+      alias.lol=log --oneline --graph --decorate --all
+      filter.lfs.smudge=git-lfs smudge $f
+      filter.lfs.required=true
+      filter.lfs.clean=git-lfs clean $f
+      fetch.prune=true
+  Multiple Remotes:
+    Fetch from one repository and push into another repository
+    Pushing to a deployment server
+    >git remote -v
+    >git push azure master
+    
+  

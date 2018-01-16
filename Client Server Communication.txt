@@ -1,0 +1,199 @@
+Client-Server Communication (Surma, Richard Kalehoff )
+
+Intro
+  Understand the "web", part of the internet
+  How HTTP Requests and Responses work
+HTTP Request
+  Internet has been around for long
+    FTP, email
+    No common way to publish and access documents
+  Tim Berners-Lee
+    Wanted a common way to publish, comment and edit docs
+    Link documents called Hyper Text Documents
+    Created:
+      HTML: Hyper Text Markup Language, subset of SGML
+      HTTP: Hyper Text Transfer Protocol to transfer HTML docs
+    Ref: 
+      https://www.ted.com/speakers/tim_berners_lee
+      https://www.w3.org/People/Berners-Lee/
+Netcat Command
+  Command line utility for sending and receiving messages
+  Example:
+    >nc google.com 80
+    GET / HTTP/1.1
+    ( press ENTER twice to get result)
+  HEAD: returns just the head part of request
+    Lets check size of response of if cache is still up to date
+      Example:
+        HEAD / HTTP/1.1
+  OPTIONS: returns list of methods accepted in current URL
+    Not every service supports this
+    Example:
+      OPTIONS / HTTP/1.1
+  Common Response Headers:
+    Content-Length: size of body in the response
+    Content-Type: what type of document is being sent
+    Last-Modified: date when document was last changed
+    ETag: entity tag, unique identifier for the content of the file
+    Cache-Control: how long the client will cache the response
+      Complex beast
+      Just focus on "cacheability" and "max-age"
+    If-Modified-since: skip sending actual content if document has not changed
+    If-None-Match: similar but for ETags, more reliable
+REST API:
+  REST: REpresentational State Transfer
+  Basic entities are collections and objects inside
+    GET <collection name>/<item name>
+      Retrieve: GET persons/Richard
+      Update:   PUT /persons/Richard
+      Create:   POST /persons/
+        Response is redirect to newly created record
+      Delete:   DELETE /persons/Surma
+Performance Basics:
+    Network Architecture Protocols:
+      HTTP:
+        Application layer, provides basic request/response semantics
+        Depends on lower layers to start working
+      TCP: 
+        Transport layer, provides 
+          guaranteed delivery
+          duplicate suppression
+          in-order delivery
+          flow-control
+          congestion avoidance
+        allows to have multiple independent streams of data between machines
+        streams distinguished by port numbers
+        make sure packages are not lost and arrive in correct order
+        precautions that cost time and resources
+        TCP's 3-way handshake to open a new connection:
+          1) I want to talk to you
+          2) I heard you want to talk?
+          3) That's correct!
+      IP: 
+        allows to talk to other machines
+      Ethernet:
+Performance Details:
+  Time to First Byte (TTFB):
+    time waiting for a request's answer
+  Head-of-line-blocking:
+    doing more request calls and waiting for more resources
+    periods of time waiting not used efectively
+    head of line blocks the crest of requests
+    browsers can wait up to 6 parallel connections
+      still a band aid for head-of-line-blocking
+    huge bottle neck to website performance
+  keep-alive:
+    header to ask server to keep connection open after response
+    allows to reuse established connection for additional requests
+    still can not send request before getting response from last request
+  bundles & sprites:
+    try to save number of request by concatenating data
+    bundles:  javascript and CSS obtained in one request
+    sprites: many images obtained in one request
+HTTPS:
+  HTTP 
+    Is very easy to read even for humans if someone is doing eavesdrop
+    Wi-fi makes it more easier since is broadcasting on radio waves
+    Encrypting Wi-Fi helps but old encryptions are easily breakable
+  HTTPS
+    One freature is encryption:
+    Provids encryption such that only connected server can decrypt request
+  Man-in-the-middle-attack (MITM):
+    Intermediate server will 
+      decrypt request
+      read private information
+      re-encrypt request
+      redirect to destination
+      vice-versa
+    Client nor server will know that there is a middle server
+  Authentication:
+    Another feature to avoid MITM attack
+    Only destination server can authenticate itself to the client
+  HTTPS = HTTP & TLS (SSL)
+    TLS: Transport Layer Security
+    Encrypts communication that can only be read by intended recepients
+    Chain of Trust: 
+      A certificate used to validate server 
+        Little metadata about server's identity
+        Fingerprint of the encryption 
+        Issued by well know authority
+      "Let's Encrypt"
+        Offers certificates for free
+  TLS:
+    Has Encryption and Hashing
+    Encryption:
+      Asymmetric: public key encryption
+        Public key to encrypt
+        Private key to decrypt
+    Hashing:
+      Transform data into a short representaion of original data
+      Smallest chnage in original data has big change in the hash
+      If two documents yield same hash value, it is the same document
+      Hash:
+        Helps browsers know if data has been altered
+        Can't be Reversed to original data
+        Imposible to find a different document yielding same hash value
+        Most common function is SHA
+          SHA-256
+          SHA-512
+  Certificate Authority Signatures:
+    CA has reviewed and verified the contents of the document
+    Have some kind of proof that document was seen or created by an entity
+    Signed document:
+      Server signs a document and encrypts with private key
+      For big document, just the hash is encrypted
+        Validate by hashing bid document and comparing with decrypted hash
+    Bad SSL examples site:
+      https://badssl.com/
+  Mixed content:
+    Having an HTTPS page that refers HTTP resources
+    DevTools can help detect those cases
+    
+HTTP/2:
+  HTTP/1:
+    An average of 100 request are needed to display a web site correctly
+    HTTP/1 does not work well with lots of requests
+    Round-trip: between 20-50 ms on good connection
+    Head-of-Line-Blocking: main overhead to display a web page
+  HTTP/2:
+    TLS is required
+    Headers replaced by bits instead of text
+    Muliplexing: 
+      solves head-of-line-blocking
+      combines multiples singnals into a single signal
+      simultaneous transmission of several messages along a single channel
+      uses on single connection instead of six but used differently than HTTP/1
+      Requests are "stream frames" multiplexed into a single connection
+    Compressor:
+      Headers and data share same compressor: HPACK
+    Backwards compatible to HTTP/1
+    Concatenation of files no longer needed and affects headers
+    
+Security:
+  JavaScript:
+    Not allow to access data of any other origin but its own
+  Origin made up of 3 parts:
+    Data Scheme: https
+    Hostname: server 
+    Port: 443 ( SSL )
+  Changing origin, changes rules
+  Mixed content uses mixed origing
+  Same origin policy:
+    Can't make fetch/read requests to other origins
+    Can't inspect iFrames or windows from other origins using JS
+  CORS: Cross Origin Resource Sharing
+    JSPNP: JSON with padding
+      Returns a script containing the data
+      Include function name as query parameter
+      Server returns script calling the function named in parameter
+    Primary way to share resources by API providers
+    Preflight request: ?
+      When it uses the OPTIONS method
+  CSRF: Cross Site Request Forgery
+    CSRF token appended to a form by server
+    Only executes request if tokens match
+  XSS: Cross-site scripting
+    JS being injected into another site to have access to all the data
+    Validate user's input in server's side
+    
+ 

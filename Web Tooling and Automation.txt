@@ -1,0 +1,226 @@
+Web Tooling and Automation (Paul Bakaus, James Williams)
+
+Introduccion
+  Being tune up to be as productive and happy as possible
+  Becoming a better and efficient web developer
+  Setting up developer environment to achieve the perfect flow
+  Delegate the build process to a task
+  Using automatic optimizations
+  
+  Some optimization not worth doing
+  Scenarios that setup for failure:
+    Building a better tool from scratch
+      Even if you can is not worth it
+      Hundreds of engineering years already invested in current API libraries
+    Using a freash tool that is faster
+      Idealistic vs Pragmatic
+      Sticking to a tool that is weel supported by a community
+      Answers to questions in the web, plugins
+      Existing tool to be maintained by its creators
+      Consider long term value for your project
+    A "self-contained" tool that does everything we want right now
+      No connection points to API modules
+      Ecosystem that you can not escape from
+      Your success depends on it
+    Micro optimizations the are not worthed
+      Investing more time in saving less time
+      
+Productive Editing
+  IDE vs editor
+    IDE: Integrated Development Environment
+      Attempt for a development productivity Swiss army knife
+      XCode, Android Studio, Visual Studio
+      Can do it all: 
+        editing, debugging, building, compiling, optimizing
+      Do all at expense of tools that do one thing really well
+    Editor:
+      Using tools that do one thing really well
+      Overwhelming options and religious development battles
+        Sublime text 3
+          More popular
+          Extendable, fast
+          Well supported by community
+        Atom editor:
+          GitHubs free editor
+  Invest time to know your editor
+    Long time relationship
+    Avoid frustration
+    Try shortcuts and features even if it seemed an overkill
+      Observe yourself
+        Which ones stick?
+        Which ones you need to force yourself to use?
+      Get a pretty good feel for what matters
+  Shortcuts:
+    Jump around editor to get different things done
+    Searching and Finding
+      Go for zero mouse input
+      Faster than clicking a tab
+      Looks more complex but it is faster and simpler
+    Tab completion
+      Typing less and finishing faster
+      expanding into full tag with less strokes
+    Multiple select using shortcuts
+  Extending your Editor
+    Extend functionality
+    Coming from community of developers
+    Specializing it into your code language
+    Using the package control
+    
+Powerful Builds:
+  Build tools
+    Bash script is the most simple
+      Series of terminal commands
+    Make
+      File management and more
+    XML configured
+      Ant
+      Maven
+      Gradle
+    Javascript configured:
+      Node JS build tools
+      Grunt
+      Gulp
+  Tool desired properties:
+    Fast
+    Community-driven
+    Modular & Extensible
+    Feature-rich out of the box
+  Gulp
+    Config looks like JavaScript
+    Executes tasks in parallel
+    Concept of streams with less IO and faster
+  Sass
+    Easy way to handle CSS
+
+Expressive Live Editing:
+  Auto refresh as you code
+  Three ways:
+    Every keystroke in Sublime
+    Every save via Gulp
+    All in the browser
+  
+How to Prevent Disasters:
+  Linting:
+    Automatically check JS code for errors  
+      via editor (live linting)
+      via build process
+      via pre-commit hook in version control
+    Code style vs Syntax or structural linting
+    Only checks for potential error
+    Popular JS Linters
+      JSHint
+      JSCS
+      ESLint
+        supports modern ES6 code
+        can be extended
+        output easy to understand
+  Unit TEST:
+    Programatically test an API or program aspect
+    Another way to prevent mistakes
+    Running automatically
+      Front end requires browser
+      PhantomJS is a headless version of Webkit
+    gulp-jasmine-phantom environment
+      www.npmjs.com/package/gulp-jasmine-phantom
+    Continuous integration
+      Code to be integrated with a remote repository
+      So across team always have a stable build
+    Cloud 
+      great place for time intensive tasks
+    Jenkins:
+      watches commits into repository
+      triggers terminal commands
+      testing runs in different cloud computer
+      receive email if test failed
+
+Awesome Optimizations:
+  Take raw source code and polish it for production
+  Release
+    Unifying source files
+    Optimizing images for screen combinations
+    Impossible to do by hand or take too long
+  Split tasks into development and production
+  Developers use different App version than users
+  Make sure to test production version from time to time
+  Create structure to hold development and production separately
+  Don't want source and distribution files to co-mingle
+    Dist/
+      CSS/
+      js/
+      index.html
+      
+  CSS Concatenation:
+    Handled by Sass along with minimize (compression)
+  JS Concatenation:
+    Solves two problems
+      Reduces number of HTTP requests
+        Big deal for mobile connections
+      Single script block to generated output file
+  JS minification:
+    Use uglifyJS
+  GZipping:
+    Compressing minified JS into further smaller size
+    Browser will uncompress seamlesssly
+  Using latest JS spec ECMAScript6
+    Transpiler to convert JS into browser's support JS
+    Using tomorrow's features today!
+    BabelJS:
+      Popular, feature rich and well supported
+      ECMAScript:
+        Arrow functions, generators, classes
+  Source Maps:
+    Maps optimized CSS/JS files to original source file code
+    Map a combined/minified file back to an unbuilt state
+  Image Optimization:
+    Images make website pages huge
+    63% of a website size are images
+    Imagemin:
+      Does lossless compression of JPEGs, GIFs, PNGs and SVGs
+    Lossy Compression:
+      Gives smaller size at expense of image quality
+    PNG quantization:
+      Takes adavantage of colors that our brain perceives as similar
+      Remaps them to new optimized colors
+      A quality threshold can exit the optimization
+    Progressive rendering:
+      Loads an image in layers
+      Each layer is more detailed
+      Image feels that loads faster
+    SVG conversion:
+      Convering image to an SVG XML format
+      Scales infinitely without size increase and quality loss
+      
+Conclusion:
+  Automate the automation
+  Creating a starting point structure for your project
+    Like the Visual Studio project templates
+    But using Open Source tools
+  Premade scaffolding tools:
+    HTML5 boilerplate:
+      https://html5boilerplate.ocm
+      Basis for HTML, CSS and JavaScript
+      It ships with JQuery
+      Simple build script to combine and minify files
+      No Gulp or any other advanced build tool
+    Web Started Kit:
+      https://developers.google.com/web/tools/starter-kit/
+      (no longer supported!)
+      Opiniated solution from Google
+      Contains live editing
+      Won't fit every project
+    Yeoman:
+      http://yeoman.io/      
+      For advanced users
+      Most flexible solution
+      Used with socalled "generators"
+        >yo webapp
+          questions about what you need ...
+      Builds emptry project template based on your preferences
+      Fancier version of copy and paste
+  Summary:
+    Setup editor to code like a pro
+    Got familiar with Gulp
+    Improve workflow with live editing
+    Setup safety nets for easier teamwork and quality control
+    Optimize site for production shiping
+    

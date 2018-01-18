@@ -1,0 +1,193 @@
+Browser Rendering Optimization (Paul Lewis, Cameron Pittman)
+
+Introduction:
+  How to approach performance issues
+  It is just more than JS
+  Apps that runs smooth at 60 frames/sec
+  Avoid juddering
+  Browser's rendering pipeline
+    What goes into creating each frame
+  How to approach performance at different stages in app's life cycle
+ 
+  Juddering:
+    Users notice small delays
+    Bad performance kills good sites
+    Most requested feature is "Smooth" navigation
+    Causes of:
+      Sticking scrolling
+      Flickering updates
+      Juddering animations
+
+Critical Rendering Path:
+  Frames:
+    Smooth animation is done at 60fps ~ 16ms per frame
+      Browser has other housekeeping activities to do
+      In practice 10-12ms to create frame and display
+    People are good at noticing missing frames
+    If it is really bad, whole screen can lock up!
+  Making a frame:
+    Get request to the server
+    Server responds with HTML
+    Browser does look ahead parsing
+      DOM as a tree
+      CSS
+    Recalculate styles
+      Combine DOM + CSS
+    Render Tree
+      Similar to DOM but some tags missing
+      Or some xtra tags added
+  Layout:
+    Turns render tree into collection of boxes in viewport
+    One element can affect others:
+      Example width of body affects children's width
+    Also called "Reflow"
+  Paint:
+    Vector to Raster
+    Filling individual pixels
+    Rasterizer's job
+  Composite layers:
+    Sometimes drawing parts at different layers
+  Painting is actually done into a grid of tiles
+    Not controlled by developers
+    From CPU to GPU
+  Rendering pipeline:
+    JS->Style->Layout->Paint->Composite
+    Animations:
+      Javascript
+      CSS
+        animations
+        transitions
+      Web Animations API
+ 
+App Lifecycles:
+  RAIL: Response, Animations, Idle, Load
+  LIAR: Load, Idle, Animation, Response
+    Load: to be done under one second
+    Idle: Post-Load
+      Waiting for user to interact
+      Do defered actions to meet 1 sec time
+      Times to do heavy lifting
+      Around 50ms
+    Response:
+      Reacts to user's input without delay
+      Have 100ms to avoid noticed delay
+    Animations:
+      Have 16ms to create frame
+      In reality 10-12 ms
+      FLIP: First, Last, Invert, Play
+      
+Weapons of Jank Destruction
+  Main tool is Chrome DevTools->Timeline
+  Identify exactly where jank is happening
+    Track frames per second
+    What is involved on each frame   
+  Test strategy:
+    Quit other apps
+    Go incognito
+    Measure first, then optimize
+    Focus on the cause of bottlenecks, not symptoms
+
+JavaScript:
+  JS is run through Just In Time (JIT) compiler
+  Avoid Micro-optimizations
+    Code that seems will run faster
+    Don't loose time saving nano seconds
+  requestAnimationFrame:
+    Go to tool to request animations
+    Old school animation:
+      setTimeout & setInterval
+      Ignoring browser's rendering pipeline
+      Not good fit for animations
+    New way using requestAnimationFrame method:
+      Call it with a function to run
+      Browser takes care when to run and how
+      Example:
+        function animate() {
+          // Do you animation here ...
+          requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+  JS Profile:
+    Great tool in Chrome DevTools to see JS method calls
+    Which functions, where and for how long
+    Only use it when problem with long running JS
+    Easier to find bottlenecks
+  Web Workers:
+    Provide interface for spawning scripts to run in the background
+    Run on different thread
+    Communicate with main thread via messages
+    Isolate long running JS and avoid interrumpting main thread
+  JS Memory Management:
+    JS is garbage collected
+    When garbage collector (GC) runs
+      Nothing else runs
+      Cat trigger visible pauses in rendering the page
+    Chrome DevTools can help see when GC runs
+  QR Code App:
+    Sample to try out Web Worker functionality
+    
+Styles and Layout:
+  Introduction:
+    Tackling recalculate styles
+    Solving issue with style calculations
+    Creating the render tree
+  Selector Matching:
+    Figuring out if some styles apply to a DOM element
+    Simple selectors vs complex selectors
+      .b-3  vs :nth-child(3)
+    Matter when large number of elements are affected by style
+    Complex selectors add to browser's workload
+    Block Element Modifier (BEM):
+      A way of writing CSS
+      Uses single class names to style elements
+        .box--three
+      Keep selector matching simple
+    References:
+      https://en.bem.info/methodology/key-concepts/
+      https://www.sitepoint.com/bem-smacss-advice-from-developers/
+  Layout Trashing:
+    Executing layout in JS
+    JS->Style->Layout...->Paint->Composite
+    Forced synchronous layout:
+      Run layout inside JS section
+      Then recalculate style
+    Some properties when accessed will cause layout
+      Then run layout again
+    Helper function to convert DOM collectdion to JS Array:
+      function getDomNodeArray(selector) {
+        // get the elements as a DOM collection
+        var elemCollection = document.querySelectorAll(selector);
+        // coerce the DOM collection into an array
+        var elemArray = Array.prototype.slice.apply(elemCollection);
+        return elemArray;
+      };
+      var divs = getDomNodeArray('div');    
+    Read layout properties first then batch style changes
+    Layout trashing:
+      Doing many forced synchronous layout many times in quick succession
+    Reference:
+      http://gent.ilcore.com/2011/03/how-not-to-trigger-layout-in-webkit.html
+      
+Compositing and Painting:
+  Painting can kill frames/sec
+  CSS triggers ref: https://csstriggers.com/
+  Paint problems can be worse than any other performance problems
+  DevTools->Rendering->Show paint rectangles
+    Shows when and where painting is happening
+    Look for green flashes to see paint events
+  Compositing:
+    Adding layers to separate different parts of drawings
+    May want to promote a painting to its own layer
+  Layers:
+    How to make another layer?
+      Chrome and FireFox "will-change" CSS property:
+        circle { will-change: transform; }
+        Expect visual changes for transform ( a hint)
+        Prepares for that and may create a new layer
+      Older browsers use transform property:
+        transform: translateZ(0);
+  Compositing Budget:
+    For critical work like animations, aim for no more than 2ms for:
+      update layer tree
+      compositing
+    

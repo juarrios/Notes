@@ -1,0 +1,54 @@
+JavaScript Testing (Mike Wales)
+
+Introduction
+  Manually testing is a slow and inaccurate process
+  Programatically checking App's functionality
+  How to write own unti tests
+  Test-driven development
+    You first write test for features before writting code
+What is a Test:
+  Validating an expectation
+  Faling a test is not bad
+    Tells you something
+    Helps you build with confidence
+  Identifying Expectations to add to test suit
+  Refactoring
+    Red-Green-ReFactor cycle
+      Having tests to tell if something is missing
+    Being sure that potential errors have being discovered
+  Being confident not breaking anything
+  Test will always tell if everything is OK
+  More importantly when things break!
+
+Writing Test Suites:  
+  Jasmine
+    Library that provides JS testing functionality
+  Source files:
+    Your application's files
+  Spec files:
+    Are the test files
+  Jasmine Test Methods:
+    Create sort of an outline
+    describe: identify a suit of related specs
+      Provide an organization tool
+      A level of identation
+    it: identify a specification
+      Passes if all tests return true
+    expect: launching point of any test
+      action: expect function
+      matcher: comparison method
+
+Write tests first:
+  Called Red-Green-Refactor cycle
+    Red: because to start all fail since no code present
+    Green: test start passing as code is written
+    Refactor: safely add new features
+  Add code to pass all specs definitions
+
+Removing Redundant Code:
+  beforeEach: test initialization code
+Asynchronous Test:
+  It needs passing some callback function to flag when done
+
+Summary:
+  Confidence is what testing is all about!

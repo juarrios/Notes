@@ -1,7 +1,7 @@
 Web Performance Optimization (Ilya Grigorik and Cameron Pittman)
 
 Introduction
-  Understan how the browser works
+  Understand how the browser works
   Critical Rendering Path (CRP)
     How browser construct's the page
       DOM (Document object model)

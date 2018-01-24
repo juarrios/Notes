@@ -1,0 +1,464 @@
+Introduction to DevOps (Dwayne Lessner, Karl Krueger)
+
+Introduction:
+  Creating better workflows to save time
+  Changing working environment for the better
+  Tools for those workflows
+    Deployment
+    Automation
+    Monitoring
+  How to measure benefits of DevOps in use
+  
+Purpose of DevOps:
+  Movement experience-based, decentrilized and open to all
+  Scariest phrase: "We have always done it that way!"
+  The pace of innovation has accelerated
+  Old methodologies can't keep pace
+  Continously updating software online
+  People expect fixes to happen quickly without disruption to daily lives
+  Roadblocks like access to infrastructure have been eliminated
+  Virtualization has changed the game for operational teams
+  Can create servers in minutes and harness their full resources power
+  Development teams have opportunity to create
+    templates
+    clones
+    snapshots
+    roll back
+    destroy environments
+  Services to test code
+    AWS
+    Digital Ocean
+  If site does not work or App is buggy
+    Multiple ways to tarnish your brand's image
+  Extreme pressure on developers, Operations, PMs and business people
+  How to manage as this new pace?
+  How to change old habits and organizational structures and processes?
+  Agile development
+    Constant feedback
+    Iterative approach
+    Find problems quickly
+    Covers first part of application life cycle (development)
+  With people still working in Silos, bottlenecks remain 
+  Breaking all those silos to allow collaboration in all stages of development
+  
+Definition of DevOps:
+  "Practice of development and operation engineers participating together in the
+    entire service life cycle. From design to development and to production
+    support"
+  "A cultural and professional movement, focused on how we build and operate high
+    velocity organizations, born from the experiences of its practitioners"
+  CAMS: Culture, Automation, Measurement, Sharing
+  References:
+    the agile admin: https://theagileadmin.com/what-is-devops/
+    CHEF: https://www.chef.io/solutions/devops/
+    
+NOT DevOps;
+  Ops going away
+  Devs taking over Ops responsibilites
+  Just a bunch of tools
+    Using tools not the same thing as doing DevOps
+    Tools help you accomplish a GOAL you already have!
+    Organizational change that is supported by those tools
+    
+Software Development Lifecycle:
+  Plan->Code->Test->Release->Deploy->Operate
+              Automation...->
+  Collaboration between cross-functional teams
+  Agile Development, Continuous Integration + Delivery
+  Automating all the way to relase
+  Control user testing and release software when all tests pass
+  Automated scalable way to run operations
+  Monitoring: To improve whole process over time has to be measured 
+  Actionable: communication and culture of sharing between all teams involved
+  Reference: https://blog.chef.io/2010/07/16/what-devops-means-to-me/
+  History: https://www.youtube.com/watch?v=o7-IuYS0iSE
+  Talk: https://vimeo.com/69079272
+  
+DevOps Project Overview
+  Tools for smooth work flow
+    Common development
+    Packaging
+    Deployment
+    Monitoring
+  Building and launching changes to a web application
+  Difference between development and production environments
+  Golden images to be used by both environments
+  Launch a local development server for a web app
+  Build a continuous integration service
+    System that watches check-ins of new code
+    Automatically run tests and package it up
+    Team repository changes integration environment
+  Monitoring system to see how system is performing
+    Things to monitor dependes on your role
+  Walking in the shoes of different people
+    Understand challenges other teams face
+    How to communicate with them better
+    Work together to solve problems
+
+CAMS:
+  C is for Culture
+    People over process over tools
+    When no communication, no collaboration, no feedback
+      Huge waste of time and resources
+    Lean
+      Streamlining operations
+      Reducing waste
+      End goal of maximizing customer value
+    Improve the whole flow
+      Not just separate points in production pipeline
+    Focus on customer as main goal
+      Common ground for all concerned parties
+    Great culture 
+      Important in fostering respect
+      Understand and empathize on both Dev and Ops teams
+      Focus energies on positive outcomes
+      
+  A is for Automation
+    Code to perform a task that otherwise is done by hand
+    Steps both in development and operations can be automated
+      Eg: Deployment
+        Setting up a server to run an application
+    Need automation just to get the job done
+    Deployment process:
+      unit testing 
+      acceptance testing
+      continuous integration
+    Eliminate boundary between Dev and Ops side automations
+      Same service with one compatible view
+      
+  M is for Measurement
+    To improve something you need to measure it
+      Eg. New Software Release
+        Expected to make application faster
+        How to know if it is actually faster?
+        Not rational to think it will be better because it is expected
+    To know if a service has improved
+      Take measurements of its performance
+    Traditional infrastructure monitoring has been Ops responsibility
+      server crashed, application unavailable, disk is filling up
+      Limited view of what's worth measuring
+      Services is more than just servers
+    Developer team participation can add better monitoring
+      Apps export useful data
+      Write services to integrate with systems to record and analyze data
+    Monitoring into release process
+      Rollback if software slows down
+      Release when less traffic is available
+    Business metrics
+      customer activity
+      transactions per second
+      customer happiness
+    Effectiness of our own tools
+      Measure and find out which is better
+    Operations
+      Measure errors and failures
+      Measure if new adopted practices are reducing them
+      
+  S is for Sharing
+    Align all stakeholders toward the same goals
+    Shared view of current situation
+      What are the goals
+      Current practices and flows
+    Work together to formulate the end goals
+    Shared input creates shared responsibility and ownership
+    People willing to work together if their thoughts and opinions are heard
+    Shared view on problems
+      Identify and eliminate bottlenecks
+      Can view inside departments or between them
+      Not importan as long as they are being addressed
+    Shared benefits amongst the team
+    Have all stakeholders to get the benefit of a new product release
+      Define and Measure Key Performance Indicators
+      For whole crossfunctional team
+    Can not improve whant can not be measured!
+    
+DevOps Environment:
+  Roles and Perpectives
+    Developer: 
+      write code
+      incentive is feature oriented
+      big launches as accomplishment
+      take new risks with new technologies
+    Operations:
+      Run services
+      incentive is stability oriented
+      new untested technology is a potential problem for stability
+      visible to company only noticed when something does not work
+    Product Managers:
+      More featured oriented than Devs
+      May made external promises with talking to operations
+    Security:
+      More change adverse than Ops
+      Fear of intruducing new unknown vulnerabilities
+      willing to down service downtime to patch vulnerabilities
+    Business Management:
+      Budgeting and buying resources
+      cost-benefit
+    Getting all parties understand all perpectives
+      Work towards a shared goal
+      Offline service is bad for everybody!
+  Different Environments:
+    Dev and Ops not talking early in the development process
+      Results in ending up with incompatible environments
+    Dev and Ops work together
+      Come up with common deployment environment
+      Work well in both environments
+  Solving the Environment Problem:
+    Golden image:
+      Virtual Machine:
+        With app, libs and OS
+        Can be used and reused without need to reconfigure each machine
+          Both in dev workstaions and production machines
+        full system image
+        contains all dependencies
+        produced by build automation
+      Containers:        
+    Config-Management system:
+      Automatic installation and configuration of software 
+        Libs, apps
+      Making sure that all machines have same configuration
+      Installation should start with same OS base image
+    Automation with Repo system
+      Easier to recreate the system
+  Practice Project Overview
+    dependencies->build script->tests->web app
+    Packer: can create "golden images" for different build targets
+      VirtualBox and VMWare
+      For use in workstation and cloud providers
+        Google Compute Engine
+        Amazon AWS
+        DigitalOcean
+        Microsoft Azure
+      Can run the exact same OS, libs and app no matter where is deployed
+    Vagrant: to bring out virtual machine on own computer from image
+      share a folder with it
+      connect to it
+      see app running
+      change app if wished, build and run test on it
+  Packer Overview:
+    Template: 
+      JSON file defines one or more builds
+      configures various components of Packer
+      creates multiple machine images in parallel
+    builders:
+      components to create an image for a single platform
+        virtualbox-iso
+        amazon-ebs
+        googlecompute
+        digitalocean
+    provisioners:
+      install and configure software within a running machine
+      prior to that machine being turned into a static image
+      major work of making the image contain useful software
+        Eg. shellscripts, Chef or Puppet scripts
+    post-processors:
+      take result of builder or another post-processor
+      process to create a new artifact
+        Eg. compress/compress artifacts
+          upload/upload artifacts
+          vagrant/vagrant box
+    artifacts:
+      results of a single build
+      usually a set of IDs or files to represent a machine image
+      every builder produces a single artifact
+    built:
+      single task that produces an image
+      same package can run builds for different platforms
+    summary
+      builders->for each build->image->provisioner for machine->
+        modified image->post-processors->final artifact
+  Using Image Locally:
+    Vagrant:
+      tag line: "Development environments made easy"
+      Allows to create, run and connect to development environments easily
+      >cd virtualbox
+      >vagrant box add ubuntu-14.04.2-server-amd64-appserver_virtualbox.box --name dev
+      // bring up dev environment and mount shared folders
+      >vagrant up
+      // log into it    
+      >vagrant ssh 
+    References:
+      https://classroom.udacity.com/courses/ud611/lessons/4218629363/concepts/82469424680923
+    Summary:
+      Expect a standard compatible environment no matter where is the deployment
+      It will work the same!
+      
+Continuous Integration & Delivery (CI & CD):
+  Systems for managing software life cycle
+  Taking app code all the way from repository, to testing, to production
+    Trying to automate all of the steps in between
+  Jenkins: CI tool
+  Graphite: monitoring and data visualization
+  Development environments:
+    How many to maintain will be driven by use cases
+    Most cases at least six environments:
+      local: starting place for all code, developer's workstation
+      development: a server to deploy own branch of code and play around, AKA sandbox
+      integration: CI build target or to test side effects
+        Where app gets built and tested
+        Where changes are merged back into main working branch
+        Can have separate test for:
+          Functional
+          Performance
+          QA: quality assurance
+          UA: user acceptance
+      staging area:
+        Mirror production with fairly recent copy of live data
+      production:
+        Serves end users and clients
+        Can have scale and size not able to test in other environments
+      production canaries:
+        subset of production servers where new version gets deployed
+        ability to test deploy with real workload 
+          limiting the impact of any negative things that might come up
+    Some difference between environments:
+      Old data vs new data
+      software pathces out of sync
+  Flow to Production
+    Use of version control systems to track changes and keep them in sync
+      Distributed VCS as Git
+      Change commited to their fork or branch of the project
+      Pull request to reviewed by a colleague
+      After reviewed is merged in to main branch
+        writing code->local tests->larger tests
+          ->code review->commit to main branch->integration
+          ->staging->more tests->production
+      Good idea to do rollouts incrementally
+      Ability to rollback is very important
+    Many steps in this flow process
+    Manual it is slow and potentially error prone
+      create bottlenecks
+      errors create extra unplanned work 
+        uses up time to do planned work
+    Automate as much as possible
+      Making sure people can fix their bottlenecks in their work process
+      DevOps practices give us time to do more productive work
+  Continuous Ingegration:
+    Automated process to 
+      get changes into code
+      building
+      running tests
+    Goal not to create a backlog when deploying
+    A boring deployment is a Success!
+      No surprises is a good thing!
+    Best practives to do this:
+      Maintain a code repository
+      Automate the build
+      Test the build
+      Commit changes often
+      Build each commit
+      Fix bus right away while fresh in mind
+      Test in a clone environment
+    Most are automatable using tools
+    Commiting code still a manual process
+      Commit often to avoid human problems
+  Continuous Integration tools:
+    Jenkins: open source written in Java
+    Travis CI
+    Circle CI
+    Watch the code repo or branch
+    Looking for new commits
+      Grabs new commit 
+      Spawns build process
+      Creates binaries or files  artifacts)
+      Runs tests on build artifacts
+      reports results 
+  Testing:
+    Unit test:
+      tests written alongside code
+      test behavior of individual units
+      check that it does what was intended
+      designed to be automated
+      run repeately as part of development process
+    Regression test:
+      Written as part of debugging and trouble shooting
+      Making sure bugs don't come back
+      Running test to chekc particular bugs
+      automated and run frequently
+    Smoke test:
+      Runs after a build
+      Sanity check to make sure system basically works
+      before doing any more refined testing
+      Eg. Home page runs
+    System Integration test:
+      Test not just our code
+      Testing backend, dependencies, data
+      Often run on dedicated test machines
+      Spin off VMs dynamically when needed
+    Automated acceptance test:
+      a feature does what the user expects
+      Can not replace everything a human QA tester might do
+    Manual QA acceptance testing:
+      May give the approval for rollout
+    Bug system:
+      Shared bug tracking system
+      Accessible to everyone
+      Improve communication among teams
+  Continuous Delivery:
+    Automating the software relaase
+    Some QA is a manual process which avoids automic completely
+      Need a manual trigger in pipeline to deploy to next stage
+      Usually a staging server with a real database
+      Triggers can be fired from chatbots like Slack and HipChat
+        Integrated with Jenkins, Circle CI or other
+        Send build test information to chat room
+        React to commands in the chat
+        Easy and fast to coordinate with team
+        Fast and transparent release process
+    Monitoring 
+      Data Sources:
+        Logs:
+          Can not read thousands of msgs in many log files
+          Can not react between unacceptable level of errors
+          Can notice or care about something happening that fast
+        External probing, test queries
+        Application-level stats
+          queries per second, latency
+        Environment stats
+          JVM memory profile
+        host/container stats
+          load average, disk errors
+      Data Products:
+        alerting
+        charts/graphs performance analysis
+        capacity prediction
+        growth measurement
+        debugging metrics
+    Availability and Performance Monitoring
+      Ops infrastructure resources
+        Individual servers
+          CPU utilization
+          RAM usage
+          Hardware temperature
+        Network
+          Network bandwidth: 
+            if infrastructure is overloaded
+            warning before is overloaded
+        Storage
+          Disk space
+          Disk I/O error rate
+            Predicts disk failure
+      Application side
+        How many requests each server is handling
+        Monitoring can sum up to get total requests
+        Latency: how fast it responds
+        Requests
+          Succeeds: 200s
+          Fails: 500s
+        Calculate how much CPU for average transaction
+        How latency repondes to increased RAM
+      Coninuous Delivery Automation
+        Can use those metrics above to
+        Load test release to avoid more resource intensive
+    Monitoring Systems
+      Nagios, InfluxDB, Grafana, OpenTSDB, Graphite
+      Make them accessible in the organization
+      Flexible approches
+        Key-Value datastore to dump in values to monitor
+          Graphite, InfluxDB
+      Frontends to visualize data
+
+Conclusion:
+  References: https://www.udacity.com/wiki/ud611#!#additional-resources
+
+      

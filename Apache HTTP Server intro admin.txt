@@ -1,0 +1,79 @@
+Install
+  >sudo apt-get update
+  >sudo apt-get upgrade
+  >sudo apt-get -f install
+  >lsb_release -a  ( Ubuntu version  )
+  >sudo apt-get install apache2
+  >apt-cache show apache2 ( view installation )
+  >apt-cache showpkg apache2 ( view packeage installation )
+  >service apache2 status
+
+Basic configuration
+  >ls -l /etc/apache2/
+  >a2enconf ( enable configuration )
+    >sudo a2enconf serve-cgi-bin.conf
+    >service apache2 reload
+  >a2disconf ( disable configuration )
+    >sudo a2disconf serve-cgi-bin.conf
+    >service apache2 reload
+
+Install and enable a module:
+  >sudo apt-get install libapache2-mod-auth-mysql
+  >sudo a2enmod auth_mysql
+  >service apache2 restart
+  
+Create New Website:
+  >cd /var/www
+  >sudo mkdir newWebsite
+  >cd newWebsite
+  >sudo vi index.html
+    <html>...<p>Juan Barrios new website</p>...</html>
+  >cd /etc/apache2/sites-available
+  >sudo cp 000-default.conf newVirtualHost.conf
+  >sudo vi newVirtualHost.conf
+    ServerName jbsite
+    ServerAdmin webmaster@jbsite
+    DocumentRoot /var/www/newWebsite
+    ErrorLog ${APACHE_LOG_DIR}/newWebsite_error.log
+    CustomLog ${APACHE_LOG_DIR}/newWebsite_access.log combined
+  >sudo a2ensite newVirtualHost.conf
+  >sudo service apache2 reload
+  >sudo vi /etc/hosts
+    10.211.55.9 jbsite
+  Browser's URL: http://jbsite
+    Should display: "Juan Barrios new website"
+    
+Configure SSL:
+  >sudo a2enmod ssl
+  >sudo a2ensite default-ssl
+  >sudo service apache2 restart
+
+Configure as Foward Proxy:
+  >sudo a2enmod proxy proxy_http proxy_connect
+  >cd /etc/apache2/mods-enabled
+  >sudo vi proxy.conf
+    ProxyRequests On
+    <Proxy *>
+      AddDefaultCharset off
+      Require all denied
+      Require local
+    </Proxy>
+  >cd /etc/apache2/sites-available
+  >sudo vi forward_proxy.conf
+    <VirtualHost*:8080>
+      ProxyRequests On
+      ProxyVia On
+      <Proxy "*">
+        Require ip 192.168
+      </Proxy>
+      
+      ErrorLog ${APACHE_LOG_DIR}/error_forward_proxy.log
+      CustomLog ${APACHE_LOG_DIR}/access_forward_proxy.log combined
+    </VirtualHost>
+  >cd /etc/apache2
+  >sudo vi ports.conf
+    Listen 8080
+  >sudo a2ensite forward_proxy
+  >sudo service apache2 restart
+  
+

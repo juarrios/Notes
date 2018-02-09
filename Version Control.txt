@@ -1,0 +1,46 @@
+Version Control (Carolyn Buckey, Sarah Spikes)
+
+Introduction
+  Giant undo button for project
+  Easy to save different versions at different points in time
+  Easier to collaborate with other people
+    No more sending huge zip files back and forth
+  
+Differences
+  Command line tools to compare:
+    Windows: fc
+      >fc /N game_old.js game_new.js
+    Linux: diff
+      >diff -u game_old.js game_new.js
+Commits
+  Snapshot of repository at the time of commit
+  Recommended to do "one commit per logical change"
+  Each commit has one purpose that is easily understood
+Git
+  Add color to diff command:
+    >git config --global color.ui auto
+HEAD
+  The commit you are currently working on
+  Can be detached to other pervious commits
+Checkout
+  Sort of restoring a previous version
+  Resetting all files to how they were at the previous commit's time
+  Helpful to revert and see when a new bug was not present
+  
+Git Cheat Sheet:
+  https://github.com/github/training-kit/blob/master/downloads/github-git-cheat-sheet.pdf
+  
+Detached HEAD:
+  When looking at a commit that is not at the branch's tip
+
+Show difference with parent node:
+  >git show commitId
+Aborting a merge
+  >git merge --abort
+
+Pulling:
+  >git pull origin master, is this same as:
+    >git fetch origin
+    >git merge master origin/master
+  
+  

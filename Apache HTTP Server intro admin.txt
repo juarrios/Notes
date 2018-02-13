@@ -75,5 +75,7 @@ Configure as Foward Proxy:
     Listen 8080
   >sudo a2ensite forward_proxy
   >sudo service apache2 restart
-  
+    Error found and had to run to know source of error:
+      >systemctl status apache2.service
+    A syntax error was found in "forward_proxy.conf"
 

@@ -1,0 +1,34 @@
+Using HyperSQL (HSQLDB)
+
+>cd temp/hsqldb-2.4.0/hsqldb
+
+Create properties file
+  Name: server.properties
+  Content:
+    server.database.0=file:hsqldb/hemrajdb
+    server.dbname.0=testdb
+    
+Create database:
+  >java -classpath lib/hsqldb.jar org.hsqldb.server.Server
+  Created subfolder hsqldb with files/folder
+    hemrajdb.lck
+    hemrajdb.log
+    hemrajdb.properties
+    hemrajdb.script
+    hemrajdb.tmp (folder)
+    
+Connect with existing database:
+  >Ctrl-C
+  >java -classpath lib/hsqldb.jar org.hsqldb.server.Server --database.0 file:hsqldb/hemrajdb --dbname.0 testdb
+  Starts DB server
+  
+Run Manager
+  >cd bin
+  >runManagerSwing.bat
+  On Popup set values:
+    Setting Name: Conn_Testdb
+    Type:         HSQL Database Engine In-Memory
+    Driver:       org.hsqldb.jdbc.JDBCDriver
+    URL:          jdbc:hsqldb:hsql://localhost/testdb
+    User:         SA
+    Password:

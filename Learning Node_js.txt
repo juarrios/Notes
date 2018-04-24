@@ -1,0 +1,515 @@
+Learning Node.js (Alexander Zanfir on Lynda.com)
+
+Introduction to Node
+  Open source runtime environment for server side and networking apps
+  Build on top of Chrome's V8 Javascript engine
+  Can write backend and frontend in the same JS language
+  nodejs.org docs has reference about API
+  Building a sample "Chat" application
+  Install by downloading installer from nodejs.org
+    Check version
+      >node -v
+      V9.11.1
+      
+  Why is JS Node's language?
+    Web Apps already use JS in browsers
+    Advantage having both Frontend and Backend in JS:
+      Syntax is the same
+      Shared code and data structure
+        Shared library
+        Custom function or algorithm
+        Data structure or object definitions
+    JS Benefits and Features
+      Front end and back end share language
+      Front end and back end share code
+      Dynamic Language:
+        Type determine by value, not declaration
+        Loosely typed
+      JSON works well and is natural to JS
+
+  Asynchronous tasks and callbacks
+    Ability to run tasks in parallel, no blocking
+    Most delayed tasks:
+      Networking access
+      File system access
+    In web apps these are the most common functions
+    
+    Sample demo code: sync-demo.js vs async-demo.js:
+      (01_06) "this comes after" output line at different positions
+      
+Understanding npm: Node Package Manager
+  Packages: one or more modules bundled together
+    (02_02) Popular package: Lodash
+      >npm install lodash
+    Create demo.js file to use lodash
+      var _ = require('lodash');
+      console.log(_.random(1,100));
+    Run code:
+      >node demo.js
+  Some packages types work as CLIs ( use -g flag for global):
+    >npm install -g nodemon 
+    >nodemon demo.js
+    [nodemon] 1.17.3
+    ...
+    [nodemon] starting 'node demo.js'
+    68
+    Keeps waiting to execute any other changes in demo.js automatically
+  Package JSON file:
+    Stores list of packages that your project depends on
+    Command "npm install" will install the list automatically
+    To create a package.json file
+      >npm init
+      Asks questions to customize package but can select defaults (return)
+        package name: (02_03)
+        version: (1.0.0)
+        description:
+        entry point: (index.js)
+        test command:
+        git repository:
+        keywords:
+        author:
+        license: (ISC)
+        ...
+        Is this ok? (yes)
+    To quickly create with all defaults:
+      >npm init --yes
+      
+Reading and Writing Files
+  Read from Files
+    Two ways (03_01):
+      1) require('fs') and then fs.readFile('FilenamePath','utf-8', callback)
+      2) var data = require('filenamePath')
+  Access directories: 
+    (03_02) example summary: fs.readdir('dirPath', callback(err, data))
+  Write to a file:
+    (03_03) example summary: fs.writeFile('filename', stringData, callback(err))
+    
+Exploring Web Frameworks
+  Node.js frameworks
+    Framework: supporting structure that allows to build on top of it
+    Provide structure and components to quickly and easily develop
+    Web API
+      Service that allows to get and save data to a server or back end
+        EX: create users, serve a list of users, etc
+    Popular Node.js frameworks:
+      Express, Sails, Koa
+  Express framework:
+    URL: expressjs.com
+    Allows to send request to the server
+    Support for Web Applications and APIs
+    Web Applications:
+      Have both front end and back end functionality
+      Are distributed across front and back 
+    Express.js
+      Runs within Node.js, and is just on the back end
+      Is well-supported and well-documented
+      Uses more traditional development features
+  Socket.io framework:
+    Enables realtime, bidirectional, event based communication
+    Can push notifications from server to client when an event happens
+    Two parts:
+      Client library: runs on browser
+      Server library: for node.js
+    Both libraries have API nearly identical and event driven
+    
+Building Your Demo App Chat Client for the Browser
+  (05_01) code folder
+  Static serving with Express:
+    >npm install --yes
+    >npm install -s express
+    Create server.js file
+      Main commands:
+        var app = express()
+        app.use(express.static(__dirname))
+        app.listen(port, callback)
+    >nodemon server.js
+  Create your browser app:on
+    (05_02) code folder
+    Create simple UI with boostrap CSS and jQuery scripts using local data
+  Create a get messages service:
+    (05_03) code folder
+    In server.js: 
+      add data variable:
+        var messages = [{obj1}, {obj2}, ...]
+      map URL path (REST) to data response:
+        app.get('/messages', callback (req, res) => { res.send(messages) })
+      listen for requests:
+        app.listen(port, callback)     
+    In index.html:
+    getMessages(): 
+      $.get('http://localhost:3000/messages', callback(data) => {
+        data.forEach(addMessages })
+        
+  Create a post messages service (05_04):
+    In server.js:
+      Add post service:
+        app.post('messages'), (req, res) => {
+          messages.push(req.body)
+          res.sendStatus(200
+         }
+      Use Chrome's "Postman" app to test post message:
+        set URL: localhost:3000/messages
+        set POST action
+        set Body tag to "raw"
+        set Text to JSON
+        add JSON object in text field
+          {"namae": "Jane", "message": "from Postman"}
+        click "Send"
+        return Status is "200 OK"
+      Add body parser package:
+        >npm install -s body-parser
+      Add lines:
+        var bodyParser = require('body-parser')
+        ...
+        app.use(bodyParser.json()) // expect JSON with http request
+        app.use(bodyParser.urlencoded({extended: false})) // browser's data is URL encoded
+    In index.html:
+      Add function postMessage(message) {
+        $.post('http://localhost:3000/messages', message )
+      }
+      Alter input fields to create proper message:
+        <input id="name" class="form-control" placeholder="Name">
+        <textarea id="message" class="form-control" placeholder="Message"></textarea>     
+      Modify "send" click event:
+        $("#send").click(() => {
+          var message = { name: $("#name").val(), message: $("#message").val()}
+          postMessage(message)
+        })
+    Test:
+      Use 2 browser's tabs to "chat" 
+        Missing: Need to refresh to "getMessages" from server
+
+  Connect to Socket.io from the browser app:
+    Polling is one method from client to request server for new data
+    Better if the server notifies client when new data is available
+      How WebSockets work
+      Socket.io library 
+        works for both browser and node
+        able to notify clients when new data is available
+        old browsers will default back to polling
+    Code modifications (05_05)
+      Install socket.io:
+        >npm install -s socket.io
+      server.js:
+        Trickier because needs to tie in with "express"
+          var http = require('http').Server(app)
+          var io = require('socket.io')(http)
+        Change listening method to use http instead of "app" express:
+          var server = http.listen(3000, () => { ...
+        Set up callback for socket IO 'connection' event:
+          io.on('connection', (socket) => {
+              console.log("a user connected")
+            })
+      index.html:
+        <script src="/socket.io/socket.io.js"></script>
+        ...
+        var socket = io() // make connection to socket IO server at same URL
+      Test:
+        Refreshing browser should server console log "a user connected"
+        
+  Create your Socket.io event (to connectd all clients at once) (05_06)
+    Emit event from server to all clients
+      In server.js app.post method add line:
+        io.emit('message', req.body)
+    In index.html add event listener:
+      socket.on('message', addMessage) // listen for server's message events
+
+Exploring Databases:
+  Different DBs: MongoDB, MySQL, Veras ...
+  Two categories:
+    SQL: 
+      cares about structure
+      up-front design
+      performance and query benefits
+      performance hits from overhead of design
+    NoSQL:
+      No structure, just collection of any data
+      less or no up-front design
+      sometimes performance gains
+  No perfect solution:
+    Depends on knowing and understanding the requirements
+    NoSQL is good choice to start with: MongoDB
+  Set up MongoDB:
+    Register in https://mlab.com for free
+    Create DB named learning-node
+    Add DB user: user/user
+  Mongoose:
+    Allows to work with MongoDB DB using object schemas
+    Object schemas are JS objects that represent type of data saved in DB
+    NoSQL with a little bit of structure
+      Gives benefits for easily interacting with data through objects
+      Validation
+    Install Mongoose (06_03):
+      >npm install -s mongoose
+    In server.js:
+      var mongoose = require('mongoose')
+      ...
+      var dbUrl = 'mongodb://user:user@ds161038.mlab.com:61038/learning-node'
+      ...
+      mongoose.connect(dbUrl, (err) => {
+        console.log('mongo db connection', err)
+      })
+    Test:
+      >nodemon server.js
+      ...
+      mongo db connection null
+  Saving data to MongoDB with Mongoose (06_03 also):
+    Setup a bit of structure which is a model and schema for message object:
+      var Message = mongoose.model('Message', {
+        name: String,
+        message: String
+    })
+    Create object based on that model and save data to MongoDB:
+      app.post('/messages', (req, res) => {
+        var message = new Message(req.body)
+
+        message.save((err) => {
+          if (err)
+            sendStatus(500)
+          
+          io.emit('message', req.body)
+          res.sendStatus(200)         
+        })
+    Retrieve data from MongoDB instead of messages array:
+      app.get('/messages', (req, res) => {
+        Message.find({}, (err,messages) => {
+            res.send(messages)
+        })
+      })
+    Remove definition of "messages" array since is no longer used
+  
+Improving Asynchronous Code
+  Nested callbacks:
+    Callbacks within callbacks makes the code look complex to read and understand
+  Promises:
+    Another way to work with asynchronous code
+    Return objects that promise to do some work
+      Has callbacks for success and for failure
+    Allows to work in a more synchronous way for asynchronous code
+    Can be combined into dependency chains
+    Code easier to read since it flows downwards and not inwards!
+    Code changed to use Promises (07_02):
+      app.post('/messages', (req, res) => {
+        var message = new Message(req.body)
+        message.save()
+        .then(() => { 
+          console.log('saved')
+          return Message.findOne({message: 'badword'})
+        })
+        .then( censored => {
+          if (censored) {
+            console.log('censored word found', censored)
+            return Message.remove({_id: censored.id})
+          }
+          io.emit('message', req.body)
+          res.sendStatus(200)         
+        })
+        .catch((err) => {
+          res.sendStatus(500)
+          console.error(err)
+        })
+      })
+  Async/await
+   Makes asynchronous code look even more synchronous
+   Need to declare Express function as "async":
+    app.post('/messages', async (req, res) => {
+      var message = new Message(req.body)
+      var savedMessage = await message.save()
+      console.log('saved')
+      var censored = await Message.findOne({message: 'badword'})
+      if (censored)
+        await Message.remove({ _id: censored.id })
+      else
+        io.emit('message', req.body)
+      res.sendStatus(200)         
+    })
+    
+Error Handling and Debugging
+  Try/catch
+    Generic form of handling errors and exceptions
+    Works with async/await and makes code looks more synchronous and easy to read
+    Test code (08_01):
+      Wrap good code inside the "try" block
+      Error handling code inside "catch" block
+      Test it with a "throw 'some error" statement inside "try" block
+        app.post('/messages', async (req, res) => {
+          try {
+            throw 'some error' // TESTING catch block!
+            var message = new Message(req.body)
+            ...
+          } catch (error) {
+            res.sendStatus(500)
+            console.error(error)    
+          }
+        })
+  Finally block
+    Gets executed regardless if the try/catch block fails or passes
+    Used mainly if a resource needs to be closed or released
+    Test code (08_01 still)
+      Added console.log to test it is called regardless of success or failure
+      ...
+      } finally {
+          console.log('finally: message post called')
+      }
+  Visual Studio Code Editor debugging features:
+    Using editors debugger allows for a more controlled tracing of code
+      Breakpoints
+      Look at variables on Variables window or by hovering
+        More information than simple console.log printing
+      Call stack trace
+        Look at which JS code is the higher hierarchy from packages
+      Add-Ins
+        Some allow to connect with the browser for client's JS debugging
+
+Testing
+  Simple "calc" test with Jasmine
+    Unit test: a test that validates a single thing
+    Jasmine can automate many manual tests
+    Failures make it easy to see what needs to be fixed
+    Install Jasmine:
+      >npm install --save-dev jasmine
+    Initialize it to create testing folder and configuration files:
+      Could use Jasmine CLI and install it but another way is through node modules
+      >./node_modules/.bin/jasmine init (linux)
+      >.\node_modules\.bin\jasmine.cmd init ( windows )
+      Creates "spec" folder with "jasmin.json" configuration file
+    Modify package.json file under "scripts"."test":
+      "scripts": {
+        "test": "jasmine",
+    Environment Test:
+      >npm test
+      Started
+      No specs found 
+        No test specifications found!
+    First simple 'calc' test:
+      Under "spec" folder add file "server.spec.js"
+      Include simple calc code:
+        describe('calc', () => {
+          it('should multiply 2 and 2', () => {
+            expect(2*2).toBe(4)
+          })
+        })
+      Run test:
+        >npm test
+        ...
+        Started
+        1 spec, 0 failures
+        Finished in 0.006 seconds
+      Test failure:
+        Change "toBe(4)" to "toBe(5)"
+        >npm test
+        Started
+        F
+        Failures:
+        1) calc should multiply 2 and 2
+          Message:
+            Expected 4 to be 5.
+          Stack:
+            Error: Expected 4 to be 5.
+                at <Jasmine>
+                at UserContext.it (D:\Code\Node_JS\Manual Exercises\09_01\spec\server.spec.js:3:17)
+                at <Jasmine>
+        1 spec, 1 failure
+        Finished in 0.016 seconds
+        
+  Async test with Jasmine (09_02)
+    Need to do http callbacks to test requests, install library "request":
+      >npm install --save-dev request
+    Add test code in "server.spec.js" to make http request:
+      var request = require('request')
+      ...
+      describe('get messages', () => {
+        it('sould return 200 OK', (done) => {
+          request.get('http://localhost:3000/messages', (err, res) => {
+            expect(res.statusCode).toEqual(200)
+            done()
+          })
+        })
+        it('sould return a list, thats not empty', (done) => {
+          request.get('http://localhost:3000/messages', (err, res) => {
+            expect(JSON.parse(res.body).length).toBeGreaterThan(0)
+            done()
+          })
+        })  
+      })
+    Start server:
+      >nodemon server.js
+    Do some "failure" tests to check validations are working
+    
+  Introduction to Test first development:
+    Adding new features using test driven development
+      Add test first to make it fail
+      Implement the feature to make the test pass
+    Adding a call to get messages from specific owner (juan):
+      describe('get messages from user', () => {
+      it('should return 200 OK', (done) => {
+        request.get('http://localhost:3000/messages/juan', (err, res) => {
+          expect(res.statusCode).toEqual(200)
+          done()
+        })
+      })
+    Run test:
+      >npm test
+      ...
+      Failures:
+      1) get messages from user should return 200 OK
+        Message: 
+          Expected 404 to equal 200.     
+      Got 404, "not found" because call does not exists yet!
+    Add new request call in server.js file ( adding :user to path):
+      app.get('/messages/:user', (req, res) => {
+        Message.find({}, (err,messages) => {
+            res.send(messages)
+        })
+      })
+    Run test:
+      >npm test
+      Started
+      4 specs, 0 failures
+      Passed because call path exists but still not testing user's messages
+    Add another specification:
+      In server.specs.js:
+        it('name should be juan', (done) => {
+          request.get('http://localhost:3000/messages/juan', (err, res) => {
+            expect(JSON.parse(res.body)[0].name).toEqual('juan')
+            done()
+          })
+        })
+      In server.js:
+        app.get('/messages/:user', (req, res) => {
+          var user = req.params.user
+          Message.find({name: user}, (err,messages) => {
+              res.send(messages)
+          })
+        })
+      Run test:
+        >npm test
+        Failed: Cannot read property 'name' of undefined
+        No message found with "juan"
+        Go back to web application and add message with user "juan"
+        >npm test
+        5 specs, 0 failures
+    Ideal goal:
+      Test suite sets the server and database the way it should be before tests are run
+      Having a "before" function that sets up the database with test data
+      Having a "after" function to remove test data
+    Also try calling new http methods with browser:
+      http://localhost:3000/messages/juan
+      returns text: 
+        [{"_id":"5adf53e5b48243de8886c5d4","name":"juan","message":"Que tal!","__v":0}]
+
+Conclusion:
+  Covered basics with "node" and some advanced features
+  Basic robust Chat application:
+    Post messages
+    automatically synchronized with other browsers using socket.io
+  Database frameworks such as mLab using MongoDb
+  Understanding between synchronous and asynchronous
+    Callbacks, Promises, Async/await
+  New way of development: test driven development
+  Frameworks that use these front end / back end development:
+    React
+    Angular
+  Recomended course: "Building Angular and Node Apps with Authentication"
+  
+    

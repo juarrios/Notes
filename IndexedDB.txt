@@ -1,0 +1,59 @@
+IndexedDB (https://developer.mozilla.org)
+
+Basic concepts:
+  IndexDB is a way to persistently store data inside a user's browser.
+  Provide rich query abilities regardless of network availability.
+  Useful for applications that don't need persistent Internet connectivity to work.
+  
+Overview of IndexedDB
+  Indexed table system.
+  Store and retrieve objects indexed with a "key".
+  Changes happen within transactions.
+  Follows "same-origin policy".
+  Asynchronous API
+  
+Big Concepts
+  Stores key-value pairs:
+    Values can be complex structured objects.
+    Keys can be properties of those objects and can be binary.
+  Transactional database model:
+    Everything happens in the context of a transaction.
+  Mostly asynchronous:
+    Pass a callback function to retrieve data.
+  Uses a lot of requests:
+    Objects that receive the success or failure DOM events.
+    Have event listener properties: 
+      onsuccess, onfailure ...
+      call addEventListener(), removeEventListener() on them
+      readyState, result, errorCode for status
+      result is context dependent
+  Uses DOM events for notification:
+    type property: success or error
+    target property: where event is headed, mostly IDBRequest object
+    error events bubble up and can be cancelled
+    success events don't bubble up
+  Is object-oriented:
+    Create object stores persisted with JS objects.
+    Each has indexes to query and iterate across.
+  NoSQL system:
+    Queries on an index that produces a cursor.
+  Adheres to same-origin policy:
+    Origin is URLs domain, application layer protocol and port.
+    Each origin has own set of databases with names.
+    Security boundary!
+    
+Tutorial:
+  IndexedDB allows to persistently store data inside the browser.
+  Can create web applications with rich query abilities regardless of network availability.
+  Web Apps can work both online and offline.
+  
+Basic pattern:
+  1) Open a database
+  2) Create an object store in the database
+  3) Start a transaction
+    Make a request to do some database operation like adding or retrieving
+  4) Listen for operation completion through a DOM event.
+  5) Work with the results found in the request object.
+  
+
+    

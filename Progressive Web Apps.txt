@@ -1,13 +1,13 @@
 Progressive Web Apps (Pete Lapage from Google)
 
 Introduction:
-  Most people install few Apps and thats it
-  Combine best of web and best apps
+  Most people install few Apps and that's it
+  Combine best of web and best of Apps
   Reliable, fast and engaging experience using the web
-  Reliable: work quickly even on slow or no network
+  Reliable: load quickly even on slow or no network
   Fast: scroll and animate smoothly
   Engaging: sending push notifications
-  Integrating: showing on home screen and loading as full screen app
+  Integrating: showing on home screen and loading as top level full screen app
   Architecture: 
     App shell model
       Separates content from data
@@ -24,7 +24,8 @@ Why Build a Progressive Web App?
     Immediate redeployment
     Simple AB testing
   Single tap web app access
-    No need for App store and signing up
+    No need for App store or signing up
+  Top level, task switcher, home screen
     
 Technologies Behind:
   Service Workers:
@@ -50,9 +51,10 @@ What is an App Shell?
   Minimum HTML, CSS and JS required for UI progressive web app
   Allows minimum pixels on screen without the network
   Ensures reliably good performance
-  First load is quick and immediately cached
+  First load is quick and immediately cached using service worker
   Repeat visit only needs to retrieve necessary data
-  Simmilar to a native app package that loads to a store
+  Simmilar to a native app package that loads from a store
+    Core components to show App but without data
   Allows to focus on speed
     Instant loading
     Regular updates without an app store
@@ -65,34 +67,79 @@ Design the App Shell
   Doing AJAX style data loading
     Content refresh regularly but managed separately
   Break design into core components
-  What need to be on screen immediately?
+    What need to be on screen immediately?
     UI components key to app
     Supporting resources: JS, CSS, etc
-      
+  Quiz: some HTML, some CSS, some JS, some Images, No Data
+
+The Weather App Shell
+  Download code: https://www.github.com/udacity/ud811
+  Run using 
+    Web Server for Chrome: 
+      https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb
+    Python's SimpleHTTPServer
+    Apache
+  Look at 1-12-skeleton folder
+  
+  Quiz How well ...: getForecast, updateForecastCard, toggleAddDialog, 2
+  Building accessibility is part of the process and should not be done at the end!
+  
+Get Data on Screen ASAP:
+  Progressive WAs should start fast and be usable immediately.
+  To be useful it needs data.
+    
+Server-Side Rendering:
+  Fastest way to go
+  Challenge for App-Shell model because data is already embedded in UI
+    If App catches UI results in outdated content
+    
+Data with AJAX request:
+  Extra HTTP request fired after JS has been downloaded and run
+  It is slow in 2G or 3G
+  
+Inject the Data:
+  Combination of Server-Side Rendering and AJAX request
+    Server injects data into App's JS
+    Data is separate from UI and good for App Shell model
+      Eliminated need for xtra HTTP request
+      Still run little JS to display the data
+      Later can make AJAX requests for more recent data
+  
+  Quiz: 
+    insert "injectedForecast" variable at top of app.js
+    add "app.updateForecastCard(injectedForecast);" at bottom of app object definition
+    
+Storage Intro:
+  Every App needs to store data
+    Simple preferences
+    Complex relational datasets
+    There is not a "one size fits all"
+  
 Storage Options:
   Local Storage:
-    Available in most browsers
-    Value-pair only strings, 
-    Synchronous: blocks response
+    Name-Value pair only strings
+    Available in most browsers 
+    Synchronous: calls blocks and can affect preformance
     Non-transactional: can overwrite important data
     Avoid it!
   Cache Storage:
     Asyncronous, fast
     Non-transactional: can overwrite important data
     Not available in some browsers
-      Feature detect and polyfill
-  IndexDB:
+      Feature detect and potentially polyfill
+  IndexedDB:
     Complex data
     Asynchronous
     Transactional
     Available everywhere
     Best fit
     Drawback: 
+      ugly API
       lots of setup required
-      call backs to handle
+      callbacks to handle
       Repo libraries to simplify:
         localForage (Mozilla): Local storage like API
-        Lovefield (google): SQL like API
+        Lovefield (google): SQL like API (Arthur Hsu)
 
 Persistence:
   Browsers data can be wiped out anytime
@@ -101,13 +148,24 @@ Persistence:
     Settings are the same from other device
     Can continue with data from last session
 
+  Quiz:
+    Use localForage: simple, easy to use and takes JS objects
+    Insert <script> URL to localforage at html bottom
+    Insert "app.saveSelectedCities" function in aap.js to save array
+    Update 'butAddCity' event handler to call app.saveSelectedCities()
+    Add 'DOMContentLoaded' event handler to retrieve/initialize 'selectedCities' using localForage
+    
+    
 Service Workers
-  A JS file run by browser in the background that handles events
+  A JS file run by browser in the background separate from web page that handles events
   Fetch events
     Intercepting and responding to network requests
     Proxy between network and browser
     Can provide content even when offline
     Can respond to push msgs from server to browser
+    Future:
+      Periodic Sync
+      Geo fencing
   How SW work?
     WebPage register SW
     Installed in browser
@@ -122,13 +180,14 @@ Service Workers
   Registering SW:
     Code snipped using progressive enhancement:
       if ('serviceWorker' in navigator) {
-        navigator.serviceworker.register('service-worker.js')
+        navigator.serviceworker.register('/service-worker.js')
           .then(
             function(registration) {
               console.log('Service Worker Registered', registration);
             }
           );
       }
+      
   SW Scope:
     Limited to the scope provided during registration
     examples:
@@ -136,6 +195,7 @@ Service Workers
         .register('/sw.js')
       Limited to folder URLs:
         .register('/folder/sw.js')
+        
   SW Events & Debugging:
     Work in "incognito" mode to ensure no cache is present
     Tool: chrome://serviceworker-internals/
@@ -145,6 +205,7 @@ Service Workers
         Check skip waiting and client's claim to avoid this
     Can also use Resources tab->Service Workers from DevTools
     If not using incognito use chrome://settings/cookies to erase everything
+    
   Caching AppShell on Install:
     When SW registers, triggers an 'install' event
     Use 'install' event to add AppShell to cache
@@ -161,8 +222,11 @@ Service Workers
     "addAll()" 
       takes a list of URLs to load 
       it is atomic, if a file fails, whole call fails
+      
   Updating the Cache:
-    Use 'Activated' event to clean old cache versions
+    Use 'Activate' event to clean old cache versions:
+    
+      var cacheName = 'weatherPWA-v3';
       self.addEventListener('activate', function(e) {
         e.waitUntil(
           caches.keys().then(function(keylist) {
@@ -172,52 +236,94 @@ Service Workers
             }
       ...
     Disadvantages:
-      Update cache key every time an AppShell resource is changed
+      Update cache key (cacheName) every time an AppShell resource is changed
+        Otherwise old content will be served
       Entire cache is invalidated when a single file changes
+      
   Handling the Fetch Event:
-    Use fetch event to intercept all network requests in SW
-    Then serve all requested resource from the cache:
+    Use 'fetch' event to intercept all network requests in SW
+    Then serve all requested resource from the cache
+    
       self.addEventListener('fetch', function(e) {
         console.log('[ServiceWorker] Fetch', e.request.url);
         e.respondWith(
           caches.match(e.request).then(function(response) {
             return response || fetch(e.request);
-      ...
+      ...      
     "match()" evaluates request
       checks if is available in the cache
       response will be filled if available in cache
+      otherwise uses fetch(e.request) to get from network
+           
+    Quiz:
+      Feature detect & register SW
+      Add install event handler to SW
+      Add activate event handler to SW
+      Add fetch event handler to SW
+      No errors in console & tested in many browsers
+      
   Caching Strategies:
     Cache First:
       First look at cache
       If not found request network
       For commonly used resource
+        Key components of App Shell
       Careful with:
         Application data
         Resources that change frequently
+        Otherwise might get stale data
+        
     Network first:
       First look at network then cache
       When desiring freshest data if available
       Rather have stale data than no data at all
       Good for content that updates frequently
+        Not part of the App Shell
       Drawback:
         Slow network
+        
     Cache Only:
       Grab only from cache otherwise fail
       When guarantee that no network request will be made
       example: saving battery on mobile devices
+      
     Network only:
       Grab only from network, otherwise fail
       Ideal for things with no offline equivalent:
         analitic pings
         non-get request
+        
     Cache and Network race:
       AKA "fastest"
       Responds with whichever returns first
       Usually cache is first but when network completes cache is updated
+      
     Cache then Network
-      Show cached data first and update when network data arrives
+      Important to get data on screen ASAP
+      Show cached data first then update cache and page when network data arrives
+      
+    QUIZ:
+      Inventory and prices for an ecommerce site:           Network only
+      Images required by the app needed for first render:   Cache only
+      Social media timeline data:                           Cache, then network
+      Game leader board data:                               Network first, then cache
+    
+  Assignment:
+  Weather App will run as "Cache first, then network" strategy to update with latest data
+    1) Modify getForecast method: feature detect 'caches' object and retrieve data from it
+    2) Modify updateForecastCard method: 
+      make sure old data won't overwrite new data
+      compare date values to decide
+    3) Add "data-dt" attribute to "date" tag to store timestamp when was updated
+    4) In service-worker.js: 
+      update cacheName version
+      add new "dataCacheName" for storing the data
+      in 'activate' event handler and check for "dataCacheName" also to avoid deleting it
+      in 'fetch' retrieve data, cache it and return
+  
   Offline:
     Jake Archibald's offline web applications course
+    
   Service Worker Precache Library:
     Node module library for auto-generating a SW to precache AppShell
     Configuration parameters
@@ -230,7 +336,7 @@ Service Workers
       Add sw-precache to Gulp file
         var swPrecache = require('sw-precache');
       Add new task to build SW:
-        gulp.task('generate-sw', funtion() {
+        gulp.task('generate-sw', function() {
           var swOptions = {
             staticFileGlobs: [
               './*.html',
@@ -269,7 +375,7 @@ Web App Manifest:
       "start_url": "/index.html?hs=true", (make sure is AppShell cached)
       "icons": [{
         "src": "/icons/icon-128.png",     (recommend 8 sizes)
-        "sizes": "128x128",               (48,96,128,144,192,256,384,512)
+        "sizes": "128x128",               (48,96,128,144, 192,256,384,512)
         "type": "image/png"
         }, {...}]
       "background_color": "#3E4EB8",      (use for splash screen)
@@ -278,10 +384,12 @@ Web App Manifest:
       "orientation": "portrait"
   Validation:
     Use URL https://manifest-validator.appspot.com
-  Link to application:
+  Link manifest to application:
     In the head of each page add:
       <link rel="manifest" href="manifest.json">
+          
   Install Banner:
+    Ability to quickly and seamlessly add Web App to the home screen
     Chrome looks for heuristics to show "Add To Home Screen" banner:
       Service Worker
       Web App Manifest File
@@ -292,6 +400,7 @@ Web App Manifest:
     Testing:
       Disable engagement checks
       Enable: #bypass-app-banner-engagement-checks
+      
   Safari:
     Using meta tags in html document head
     Icons:
@@ -308,6 +417,7 @@ Web App Manifest:
       Add some padding since status text is still there
     Check Apple's Safari Web Content Guide:
       "Configuring Web Applications"
+      
   HTTPS Host:
     Service Worker registration require HTTPS
     Options:

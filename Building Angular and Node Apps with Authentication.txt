@@ -1,0 +1,1221 @@
+Building Angular and Node Apps with Authentication ( Alexander Zanfir )
+Welcome
+  Using token authentication for user registration
+  Login with simple authorization
+  Building a message board style application
+  Using official Angular CLI to generate starting template
+  
+1) Setting Up the Infrastructure
+  Architecture overview
+    Backend: 
+      web api to post new messages
+      stored in server memory
+    Front End:
+      Using Angular to make requests and post new messages
+      Custom message list component to display messages
+      Component to set and change user name and store in browser's local storage
+  Download and install Node
+    >node -v
+    v9.11.1
+  Creating and configuring the Angular 2 project
+    Using Angular CLI to setup project
+      Sets up all basics
+      Uses typescript instead of JS
+        Provides more features on top of JS
+    Install with npm:
+      >npm install -g @angular/cli
+    Use Angular CLI (command ng) to create front end project:
+      >ng new frontend
+    Open up web app with the starter template:
+      With Visual Studio Code open "frontend" folder
+      >ng server -o   ***********
+      or also
+      >npm start
+      Will automatically open browser with web app
+    Any changes will automatically get updated
+      In file frontend/src/app/app.components.ts change:
+        title = 'my app'
+      Go back to browser and title already changed to "Welcome to my app"!
+   
+2) Displaying Data in Angular 2
+  Creating the component
+    Components allow to create different view
+    Used to post and display messages in messageboard
+    Main type of elements next to services, directives and modules
+      Basic building block of a UI in an Angular application
+      Always have a template
+      Angular application is a tree of components working together
+    Decorator allows to mark the class as Angular component
+      Provides additional metadata how the component should behave
+    Code:
+      Create new file /frontend/src/app/messages.component.ts
+      Insert code:
+        import { Component } from '@angular/core'
+        @Component({
+          selector: 'messages',
+          template: 'this is the messages component'
+        })
+        export class MessagesComponent {
+
+        }
+      Remove file app.component.html
+      In main AppComponent decorator, replace "templateUrl" by "template"
+        import { MessagesComponent } from './messages.component'
+        ...
+          template: '<h1>Hello {{title}}</h1><messages></messages>',
+      Register component in app.modules file
+        Add MessageComponent class to declarations array of @NgModule decorator
+          import { MessagesComponent } from './messages.component'
+          ...
+              declarations: [
+                AppComponent, MessagesComponent 
+              ],
+          ...
+    Check browser for display of 'this is the messages component' text
+  Show our Data
+    In MessagesComponent class add messages array with some static data and in template
+    directive some html to display this array as raw data:
+      @Component({
+        selector: 'messages',
+        template: 'this is the messages component <div *ngFor="let message of messages">{{message.text}} by:{{message.owner}}</div>'
+      })
+      export class MessagesComponent {
+        messages = [{text: 'some text', owner: 'Juan'}, { text: 'other message', owner: 'Carmen'}];
+      }
+    Check browser for the messages
+    
+  Refining your layout with Angular Material
+    Nicer looking UI with Angular Material
+    Angular Material is fast and not too verbose as Bootstrap
+    Go to https://material.angular.io/ and follow instructions:
+      Install Angular Material and Angular CDK
+        >npm install --save @angular/material @angular/cdk
+      Install Animations
+        >npm install --save @angular/animations
+      Import the component modules in app.modules:
+        import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+        import {
+          MatButtonModule, 
+          MatCardModule,
+          MatInputModule,
+          MatSnackBarModule,
+          MatToolbarModule
+        } from '@angular/material';
+        ...
+        @NgModule({
+          ...
+          imports: [
+            BrowserModule, BrowserAnimationsModule, 
+            MatButtonModule, MatCardModule, MatInputModule, MatSnackBarModule, MatToolbarModule
+          ]...
+      Include a theme in styles.css
+        @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+        body {
+          background: #eeeeee;
+        }
+     Use Angular components to enhance UI:
+      In messages.component convert string literal into template literal 
+        using backticks and add some angular components:
+        template: `
+          <div *ngFor="let message of messages">
+            <mat-card style="margin:8px">
+              <mat-card-title>{{message.owner}}</mat-card-title>
+              <mat-card-content>{{message.text}}</mat-card-content>
+            </mat-card>
+          </div>
+        `
+3) Getting Your Data from Node
+  Set up Express
+    Express:
+      Flexible framework that allows to easily create web apps and APIs
+      Handle routing, request, response and implement custom middleware
+    Create "backend" folder under "messageboard" fodler:
+      Open with Visual Studio Code
+    Intitialize Node:
+      >npm init
+      "package.json" file is created
+    Install express:
+      >npm install express --save
+      "express" package added to dependecies list in package.json
+    Add server.js file with basic testing code:
+      var express = require('express');
+      var app = express();  // create Express app
+
+      // generic route to test Express working
+      app.get('/', (req, res) => {
+        res.send('hello')
+      })
+
+      // start up Express application
+      app.listen(1234)
+    Run web app:
+      >node server.js
+    Test in browser:
+      http://localhost:1234/
+  Create a service
+    Define an endpoint to provide messages for frontend
+    In server.js create messages array copied from frontend:
+      var messages = [{text: 'Vivir con alegria ...', owner: 'Juan'}, 
+        { text: 'Nada te turbe, nada te espante ...', owner: 'Carmen'}
+      ];
+    Rename service to '/messages' and return "messages" array in json format:
+      app.get('/messages', (req, res) => {
+        res.json(messages);
+      })
+    Test in browser:
+      http://localhost:1234/messages
+      Should return messages array in json text format
+  Updating Angular to get data from your service
+    Create a service in Angular to separate UI and data services concerns
+    In app folder create file 'web.services.ts'
+    Add code to call http service using Angular with an "Injectable" decorator:
+      import { Http } from '@angular/http';
+      import { Injectable } from '@angular/core';
+      import 'rxjs/add/operator/toPromise';
+      @Injectable()
+      export class WebService {
+        constructor(private http: Http) {} // inject instance of http service
+        getMessages() {
+          return this
+            .http.get('http://localhost:1234/messages')   // returns Observable
+            .toPromise();                                 // convert to a Promise
+        }
+      }
+    Register component in app.modules:
+      ...
+      import { WebService } from './web.service'
+      import { HttpModule} from '@angular/http'
+      ...
+      @NgModule({
+        ...
+        imports: [
+          ...
+          HttpModule
+        ],
+        providers: [WebService],
+        ...
+    Use WebService provider in MessagesComponent class:
+      ...
+      import { WebService } from './web.service'
+      ...
+      export class MessagesComponent {
+        constructor(private webService: WebService ) {}
+        async ngOnInit() {
+          var response = await this.webService.getMessages();
+          this.messages = response.json();
+        }
+        messages = [];
+      }
+    Enable cross-origin resource sharing (CORS) due to using different ports:
+      In backend server.js file:
+      ...
+      app.use((req, res, next) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+      })
+      ...
+      app.get( ...
+    Modify tsconfig.json file to use ES6 features async/await:
+      {
+        "compileOnSave": false,
+        "compilerOptions": {
+          ...
+          "target": "es6",
+          ...
+
+4) Saving Your Data to Node
+  Create a post service
+    Install body parser:
+      >npm install --save body-parser
+    Add code to backend server.js to receive post requests:
+      ...
+      var bodyParser = require('body-parser');
+      ...
+      app.use(bodyParser.json());
+      ...
+      app.post('/message', (req, res) => {
+        console.log(req.body);
+        res.sendStatus(200);
+      })
+      ...
+    Test with "Postman" application to send a Post test message request:
+      Settings:
+        URL: localhost:1234/message
+        Body Raw JSON text: {"text": "test", "owner" : "Juan"}
+      Click "Send"
+        Should return "200 OK"
+      In backend console log should display:
+        { text: 'test', owner: 'Juan' }
+  Save data to a list
+    In backend server.js push post message to messages array:
+      ...
+      app.post('/message', (req, res) => {
+        messages.push(req.body);
+        res.sendStatus(200);
+      })
+      ...
+    Test with Postman and refresh frontend to see new test message
+  Creating an express router
+    In backend server.js add api router and modify code to use it:
+      ...
+      var api = express.Router();
+      api.get('/messages', (req, res) => {
+      ...
+      api.post('/messages', (req, res) => {
+      ...
+      app.use('/api', api);
+      ...
+    In frontend web.services file update to use new api URL:
+      ...
+      .http.get('http://localhost:63145/api/messages')
+      ...
+    Test with Postman and refresh frontend to see test message
+    
+5) Creating a Form in Angular
+  Create the component
+    A form to allow users to:
+      create messages
+      identify themselves
+      send message to backend with HTTP POST
+    Create file new-messages.component.ts under "app" folder and define component:
+      import { Component } from '@angular/core'
+      import { WebService } from './web.service'
+      @Component({
+        selector: 'new-message',
+        template: `
+          <mat-card class="card">
+            <mat-card-content>
+              <mat-input-container>
+                <input matInput placeholder="Name">
+              </mat-input-container>
+              <mat-input-container>
+                <textarea matInput placeholder="Message"></textarea>
+              </mat-input-container>
+              <mat-card-actions>
+                <button mat-button color="primary">POST</button>
+              </mat-card-actions>
+            </mat-card-content>
+          </mat-card>
+        `
+      })
+      export class NewMessageComponent {
+        constructor(private webService: WebService ) {}
+      }      
+    Register component in app.modules:
+      ...
+      import { NewMessageComponent } from './new-message.component';
+      ...
+          declarations: [
+            AppComponent, MessagesComponent, NewMessageComponent 
+      ...
+    Render it in app.component:
+      ...
+      import { NewMessageComponent } from './new-message.component';
+      ...
+          template: `
+            <h1>Message Board</h1>
+            <new-message></new-message>
+            <messages></messages>
+          `,
+      ...
+    Test it in browser
+  Get Our Input data
+    "Form Builder" with reactive forms is a way to get data from input fields
+    Add Angular Forms to main module in app.module
+      ...
+      import { FormsModule } from '@angular/forms';
+      ...
+          imports: [
+          ...
+            HttpModule, FormsModule
+          ...
+    Adding in new-message.component individual binding
+      message object
+      post method 
+      Angular's double binding syntax [(...)] using "ngModel" directive
+      binding click button with post method:
+      ...
+          <input [(ngModel)]="message.owner" matInput placeholder="Name">
+          ...
+          <textarea [(ngModel)]="message.text" matInput placeholder="Message"></textarea>
+       ...
+          <button (click)="post()" mat-button color="primary">POST</button>
+       ...
+       export class NewMessageComponent {
+        ...
+         message = {
+            owner: "test",
+            text: ""
+          }
+        ...
+          post() {
+            console.log(this.message);
+  Communicate between multiple components with Angular Output and ViewChild
+    Add postMessage method in frontend web.services
+      ...
+        postMessage(message) {
+          return this.http.post(this.BASE_URL + 'messages', message).toPromise();                               
+        }
+    Import and use Angular's Output and EventEmitter in new-message.component:
+      import { Component, Output, EventEmitter } from '@angular/core'
+      ...
+        @Output() onPosted = new EventEmitter();
+      ...
+          post() {
+            this.webService.postMessage(this.message);
+            this.onPosted.emit(this.message);
+          }
+    In parent component app.component
+      import { Component, ViewChild } from '@angular/core';
+      ...
+          <new-message (onPosted)="onPosted($event)"></new-message>
+      ...
+      export class AppComponent {
+        @ViewChild(MessagesComponent) messages : MessagesComponent;
+        onPosted(message) {
+          this.messages.messages.push(message);
+        }
+      }
+  Create a data store in our service
+    Store messages into the web.service class
+      ...
+        messages = [];
+      ...
+        async getMessages() {
+          var response = await this.http.get(...).toPromise();
+           this.messages = response.json()
+      ...
+          async postMessage(message) {
+            var response = await this.http.post(..., message).toPromise();      
+            this.messages.push(response.json());                         
+          }
+    In messages.component
+      remove ngOnInt() method
+      remove messages[] array
+      modify template to use webServices.messages 
+      ...
+          <div *ngFor="let message of webService.messages">
+    In backend server.js for post method return req.body instead of 200
+      ...
+      api.post('/messages', (req, res) => {
+        messages.push(req.body);
+        res.json(req.body);
+      })
+    In app.component remove code associated with ViewChild component
+      import { Component } from '@angular/core';
+      ...
+          <new-message></new-message>
+      ...
+      export class AppComponent {}
+    In new-messages.component also clean up Output and EventEmitter components
+      import { Component } from '@angular/core'
+      ...
+      remove //  @Output() onPosted = new EventEmitter();
+      ...
+      remove //  //  this.onPosted.emit(this.message);
+  Handle errors with try or catch
+    Add try/catch errors in "async/await" calls in web.services component
+    Display error using the MatSnackBar Angular material component
+      ...
+      import { MatSnackBar } from '@angular/material';
+      ...
+        async getMessages() {
+        try {
+        ...
+        } catch (error) {
+          this.handleError('Unable to get messages');
+        }
+        ...
+        async postMessage(message) {
+          try {
+          ...
+          } catch (error) {
+            this.handleError('Unable to post message');
+          }
+        }
+
+        private handleError(error) {
+          console.error(error);
+          this.sb.open(error, 'close', {duration : 5000});
+        }
+
+6) Navigating with Router
+  Create a nav bar
+    Under App folder add file "nav.component.ts"
+    Import from Angular's core
+    Add class 'NavComponent' with selector 'nav' and template using 'mat-toolbar':
+      import { Component } from '@angular/core'
+      @Component({
+        selector: 'nav',
+        template: `
+          <mat-toolbar color="primary">
+            Message Board
+          </mat-toolbar>
+        `
+      })
+      export class NavComponent {
+        constructor() {}
+      }
+    Register NavComponent with main module 'app.module':
+      ...
+      import { NavComponent } from './nav.component';
+      ...
+        declarations: [
+          AppComponent, MessagesComponent, NewMessageComponent, NavComponent
+      ...
+    Add it to the top of app.component:
+      ...
+      import { NavComponent } from './nav.component'
+      ...
+        template: `
+          <nav></nav>
+          <new-message></new-message>
+          <messages></messages>
+        `,
+      ...
+    Edit style.css to align navigation and cards vertically:
+      ...
+        margin-top: 8px;
+  Set up routes
+    Setting up Angular router
+    Insert new file home.component to declare the HomeComponent class
+    It will host the messages instead of the app.module:
+      import { Component } from '@angular/core';
+      import { MessagesComponent } from './messages.component';
+      import { NewMessageComponent } from './new-message.component';
+      @Component({
+        selector: 'home',
+        template: `
+          <new-message></new-message>
+          <messages></messages>
+        `,
+        styleUrls: ['./app.component.css']
+      })
+      export class HomeComponent {
+      }
+    In app.component 
+      get rid of 'new-messages' and 'messages' components and their imports
+      add router-outlet component
+      ...
+      @Component({
+        selector: 'app-root',
+        template: `
+          <nav></nav>
+          <router-outlet></router-outlet>
+        `,
+    In main module (app.module) import Angular's router and setup routes:
+      ...
+      import { RouterModule } from '@angular/router'
+      ...
+      import { HomeComponent } from './home.component';
+      ...
+      var routes = [{
+        path: '',
+        component: HomeComponent
+      }];
+          imports: [
+            ...
+            HttpModule, FormsModule, RouterModule.forRoot(routes)
+          ...
+            declarations: [
+              ... NavComponent, HomeComponent
+      ...
+  Add a message route
+    In app.moudules add new 'messages' route in the routes array:
+      ...
+      var routes = [
+        {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'messages',
+        component: MessagesComponent
+      }
+      ];
+    In nav.component add buttons to 
+      navigate between "home" and "messages" routes using "routerLink":
+      ...
+        template: `
+          <mat-toolbar color="primary">
+            <button mat-button routerLink="/">Message Board</button>
+            <button mat-button routerLink="/messages">Messages</button>
+          </mat-toolbar>
+       ...
+     When navigating between routes, no "page reload" is needed!
+   Pass a route parameter
+    Pass user name as a URL parameter in the route
+    Make the name linkable to change route to that user in messages.component:
+      ...
+      <mat-card class="card">
+        <mat-card-title 
+          [routerLink]="['/messages', message.owner]" 
+          style="cursor: pointer">
+            {{message.owner}}
+         </mat-card-title>
+       ...
+     Update app.module routes array to accept new 'name' route:
+       ...
+       var routes = [
+          {
+          path: '',
+          component: HomeComponent
+        },
+        {
+          path: 'messages',
+          component: MessagesComponent
+        },
+        {
+          path: 'messages/:name',
+          component: MessagesComponent
+        }
+        ];
+    Retrieve a route parameter
+      Retrieve parameter to filter data by using ActivatedRoute component
+      In messages.component add ActivatedRoute as a route member:
+        ...
+        import { ActivatedRoute } from '@angular/router'
+        ...
+        export class MessagesComponent {
+          constructor(private webService: WebService, 
+                      private route: ActivatedRoute ) {}
+          ngOnInit() {
+            console.log(this.route.snapshot.params.name);
+          }
+        }
+      Test in browser and when clicking in a name it is displayed in the log
+
+7) Reactive Programming
+  HTTP get with Observable
+    By default both POST and GET return an observable
+    We have converted them to a Promise to use async/await calls
+    Observable subscribe method can be think of a try / catch block 
+      first parameter is the try
+      second parameter is the catch
+    Convert web.services getMessages() method to filter by user using Observable:
+      ...
+        getMessages(user) {
+          user = (user) ? '/' + user : '';
+          this.http.get(this.BASE_URL + 'messages' + user)
+          .subscribe( 
+            response => { this.messages = response.json();}, 
+            error => { this.handleError('Unable to get messages');}
+           )
+        }
+      ...
+    In backend server.js add new method that takes user URL parameter:
+      ...
+      api.get('/messages/:user', (req, res) => {
+        var user = req.params.user;
+        var result = messages.filter(message => message.owner == user);
+        res.json(result);
+      })
+      ...
+    In messages.component change noOnInit to get message by user:
+      ...
+        ngOnInit() {
+          var name = this.route.snapshot.params.name;
+          this.webService.getMessages(name);
+        }
+      ...
+  Broadcast with Subject
+    A "Subject" allows Observables to subscribe to it
+    We can send the "messages" array through it when an HTTP update occurs
+    In web.services encapsulate the messages array:
+      ...
+      import { Subject } from 'rxjs/Rx'
+      ...
+        private messages = [];            // private now
+        messageSubject = new Subject();   // to encapsulate messages
+      ...
+        getMessages(user) {
+          user = (user) ? '/' + user : '';
+          this.http.get(this.BASE_URL + 'messages' + user).subscribe( response => {
+            this.messages = response.json();
+            this.messageSubject.next(this.messages); // Encapsulation here!
+      ...
+    Subscribe to messageSubject in messages.component:
+      ...
+        template: `
+          <div *ngFor="let message of messages">  // loop through local copy
+      ...
+      export class MessagesComponent {
+        messages;                                 // store array locally
+      ...
+        ngOnInit() {
+          ...
+          this.webService.getMessages(name);
+          this.webService.messageSubject.subscribe( messages => {
+            this.messages = messages;
+        ...
+  Observable and the async pipe
+    Securing the Subject as private an exposed as an Observable
+    In web.services file:
+      ...
+        private messagesStore = [];
+        private messageSubject = new Subject();
+        messages = this.messageSubject.asObservable();
+      ...
+        async postMessage(message) {
+          try {
+            var response = await this.http.post(this.BASE_URL + 'messages', message).toPromise();      
+            this.messagesStore.push(response.json());
+            this.messageSubject.next(this.messagesStore);  // broadcast change event                   
+      ...
+    In messages.component use async pipe to retrieve messages and
+      remove previous messages variable and subscribe() from ngOnInit()
+      ...
+        template: `
+          <div *ngFor="let message of webService.messages | async">
+      ...
+        ngOnInit() {
+          var name = this.route.snapshot.params.name;
+          this.webService.getMessages(name);
+        }
+      ...
+    Test in browser
+
+8) Creating Reactive Forms in Angular
+  Create a register layout
+    Add file register.component.ts with code using a templateUrl:
+      import { Component } from '@angular/core';
+      @Component({
+        moduleId: module.id,
+        selector: 'register',
+        templateUrl: 'register.component.html'
+      })
+      export class RegisterComponent {
+      }
+    Add register.component.html file with template tags:
+      <mat-card>
+        <mat-input-container>
+          <input style="width:350pzx" matInput placeholder="First Name">
+        </mat-input-container>
+        <mat-input-container>
+          <input style="width:350pzx" matInput placeholder="Last Name">
+        </mat-input-container>
+        <mat-input-container>
+          <input style="width:350pzx" type="email" matInput placeholder="Email">
+        </mat-input-container>
+        <mat-input-container>
+          <input style="width:350pzx" type="password" matInput placeholder="Password">
+        </mat-input-container>
+        <mat-input-container>
+          <input style="width:350pzx" type="password" matInput placeholder="Confirm Password">
+        </mat-input-container>
+      </mat-card>
+    Create route for RegisterComponent in app.module:
+      ...
+      import { RegisterComponent } from './register.component';
+      ...
+      var routes = [
+      ...,
+      {
+        path: 'register',
+        component: RegisterComponent
+      }
+      ];
+      ...
+        declarations: [
+          ..., HomeComponent, RegisterComponent
+      ...
+  Reactive forms with FormBuilder
+    Two ways to achieve form validation with Angular 2:
+      1) Putting validation parameters and logic inside template or HTML file
+      2) Using reactive-forms or model-driven forms
+        The model itself will contain the validation rules within it
+    In register.component add "FormBuilder" functionality:
+      ...
+      import { FormBuilder } from '@angular/forms';
+      ...
+      export class RegisterComponent {
+        form;
+        constructor(private fb: FormBuilder) {
+          this.form = fb.group({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+          })
+        }
+
+        onSubmit() {
+         console.log(this.form.value); 
+        }
+      }
+    In register.component.html:
+      wrap input fields in a "form" tag,
+      bind to "formGroup" to form property, "ngSubmit" event to onSubmit method,
+      and add bindings to FormBuilder group fields using "formControlName" property,
+      add Register button:
+      <mat-card>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <mat-input-container>
+                <input style="width:350pzx" matInput placeholder="First Name" formControlName="firstName">
+                ...
+              </mat-input-container>      
+              <br>
+              <button mat-raised-button color="primary">Register</button>
+        </form>
+      </mat-card>
+    In app.module add ReactiveForms module:
+      ...
+      import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+      ...
+        imports: [
+          HttpModule, FormsModule, ReactiveFormsModule, RouterModule.forRoot(routes)
+      ...
+    Test in browser that form group values are logged when Register is clicked!
+  Validate with reactive forms
+    Add Angular forms validators in register.component.ts and isValid method:
+      ...
+      import { FormBuilder, Validators } from '@angular/forms';
+      ...
+      @Component({
+        ...
+        styles: [`.error { background-color: #fff0f0 }`]
+      })
+      ...
+        constructor(private fb: FormBuilder) {
+          this.form = fb.group({
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required],
+            email: ['', Validators.required],
+            password: ['', Validators.required],
+            confirmPassword: ['', Validators.required]
+          })
+        }
+      ...
+        isValid(control) {
+          return this.form.controls[control].invalid && this.form.controls[control].touched;
+        }
+    In register.component.html add "ngClass" to each input tag to validate:
+      ...
+         <input style="width:350pzx" [ngClass]="{'error': isValid('firstName')}" matInput placeholder="First Name" formControlName="firstName">
+      ...
+  Validate passwords with a custom validator
+    In register.component.ts add custom "matchingFields" function to compare passwords
+    Plug in this validator function in formBuilder group as second parameter:
+      ...
+        constructor(private fb: FormBuilder) {
+          this.form = fb.group({
+            firstName: ['', Validators.required],
+            ...
+          }, { validator: matchingFields('password', 'confirmPassword')})
+        }
+      ...
+      function matchingFields(field1, field2) {
+        return form => {
+          if(form.controls[field1].value !== form.controls[field2].value)
+            return { mismatchedFields: true };
+        }
+      }
+    In register.component.html add span to display mismatched error:
+      ...
+        <br>
+        <span *ngIf="form.errors?.mismatchedFields">Passwords do not match</span>
+      ...
+    Test in browser with Password and Confirm Password fields
+  Validate emails with a custom validator:
+    In register.component.ts add "emailValid" method and bind it in formBuilder group:
+        ...
+          constructor(private fb: FormBuilder) {
+          this.form = fb.group({
+            ...
+          }, { validator: matchingFields('password', 'confirmPassword')})
+        ...
+        function emailValid() {
+          return control => {
+            var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return regex.test(control.value) ? null : { invalidEmail: true }
+          }
+        }
+    Test in browser by typing a valid and invalid email text
+9) Registering Users
+  Create an Angular auth service
+    Need an Angular service to register new user form data to the backend
+    Insert auth.service.ts file with following code:
+      import { Injectable } from '@angular/core';
+      import { Http } from '@angular/http';
+      @Injectable()
+      export class AuthService {
+        BASE_URL = 'http://localhost:63145/auth/';
+        constructor(private http: Http) {}
+        register(user) {
+          this.http.post(this.BASE_URL + '/register', user).subscribe();
+        }
+      }
+    Register auth.service with main module ( app.module.ts ):
+      ...
+      import { AuthService } from './auth.service'
+      ...
+      @NgModule({
+      ...
+        providers: [WebService, AuthService]
+      })
+    Use auth.service inside register.component:
+      ...
+      import { AuthService } from './auth.service'
+      ...
+        constructor(private fb: FormBuilder, private auth: AuthService) {
+      ...
+        onSubmit() {
+         console.log(this.form.errors); 
+         this.auth.register(this.form.value);
+        }
+    Create "Register" button in nav.component:
+      ...
+          <button mat-button routerLink="/register">Register</button>
+      ...
+    Test in browser that "Register" button works
+  Create a node register service to store users in an array:
+    In backend server.js, create a new authentication router:
+      ...
+      var users = [];
+      ...
+      var auth = express.Router();
+      ...
+      auth.post('/register', (req, res) => {
+        users.push(req.body);
+      })
+      ...
+      app.use('/auth', auth);
+    Remove field "confirmPassword" from frontend auth.service:
+      ...
+        register(user) {
+          delete user.confirmPassword;
+          this.http.post(this.BASE_URL + '/register', user).subscribe();
+      ...
+  Authenticate with JSON web tokens
+    Cookies are not as safe and flexible as tokens for authentication
+    Server generates a token that contains user ID and assigned against a secret
+      Upon registering or logging this token is sent to browser and kept there
+      Token is passed back with every secure request why the server decrypts 
+        using the secret to identify the user ID
+      It is simple since it is stateless unlike a cookie
+    Install a token library for Node:
+      >npm install jsonwebtoken --save
+    In server.js use the token library:
+      ...
+      var jwt = require('jsonwebtoken');
+      ...
+      auth.post('/register', (req, res) => {
+        var index = users.push(req.body) - 1;
+        var user = users[index];
+        user.id = index;
+        var token = jwt.sign(user.id, '123');
+        res.json(token);
+      })
+    Test in http://localhost:4200/register
+      Fill up form
+      Click "Register" button
+      Under "Network" tab click last "register" call
+      Click the "Response" tab
+      See the token value:
+        "eyJhbGciOiJIUzI1NiJ9.MA.j6CTUz0vURbXo-Nsd8VO-JZfqlXrW0MlJA60v4JePzw"
+  Store a token with Angular
+    Need to store server's token in browser to reuse for future http requests
+    Using browser's local storage
+    In auth.service file:
+      ...
+          this.http.post(this.BASE_URL + '/register', user).subscribe(res => {
+            console.log('token: ', res.json());
+            localStorage.setItem('token', res.json().token);
+          });
+      ...
+    Test in register window:
+      fill up form and click Register
+      In DevTool go to Applicaiton tab
+      Under LocalStorage there should be a "token" key with a value
+  Implement an authentication check
+    In backend server.js respond with firstName and token:
+      ...
+      auth.post('/register', (req, res) => {
+        ...
+        var token = jwt.sign(user.id, '123');
+        res.json({firstName: user.firstName, token});
+      ...
+    In frontend auth.service 
+      ...
+      import { Router } from '@angular/router';
+      ...
+        NAME_KEY = 'name';
+        TOKEN_KEY = 'token';
+      ...
+      constructor(private http: Http, private router: Router) {}
+      get name() {
+        return localStorage.getItem(this.NAME_KEY);
+      }
+      get isAuthenticated() {
+        return !!localStorage.getItem(this.TOKEN_KEY);  // !! => converting value into a boolean
+      }
+      register(user) {
+        ...
+        this.http.post(this.BASE_URL + '/register', user).subscribe(res => {
+          var authResponse = res.json();
+          if (!authResponse.token)
+            return;
+          localStorage.setItem(this.TOKEN_KEY, authResponse.token);
+          localStorage.setItem(this.NAME_KEY, authResponse.firstName);
+          this.router.navigate(['/']);
+        });
+      }
+    In nav.component add Register button with user's first name:
+      ...
+        template: `
+          <mat-toolbar color="primary">
+            ...
+            <span style="flex: 1 1 auto"></span>
+            <button mat-button routerLink="/register">Register</button>
+            <button *ngIf="auth.isAuthenticated" mat-button routerLink="/register">Welcome {{auth.name}}</button>
+          </mat-toolbar>
+        `
+      })
+      export class NavComponent {
+        constructor(private auth: AuthService) {}
+    Test in browser register window
+      After registering app should redirect to "root" MessageBoard window
+  Log out
+    Add a logout button to remove local storage from browser
+    In nav.component:
+      ...
+      <button *ngIf="!auth.isAuthenticated" mat-button routerLink="/register">Register</button>
+      <button *ngIf="auth.isAuthenticated" mat-button routerLink="/">Welcome {{auth.name}}</button>
+      <button *ngIf="auth.isAuthenticated" mat-button (click)="auth.logout()" >Logout</button>
+      ...
+    In auth.service:
+      ...
+        logout() {
+          localStorage.removeItem(this.name);
+          localStorage.removeItem(this.TOKEN_KEY);
+        }
+      ...
+    Test in browser that logout removes "Welcome" and only shows "Register"
+    
+10) Logging in
+  Create an Angular login component
+    Create login.component.ts file with basic loginData fields:
+      import { Component } from '@angular/core'
+      import { AuthService } from './auth.service'
+      @Component({
+        selector: 'login',
+        template: `
+        <mat-card>
+          <mat-input-container>
+            <input matInput [(ngModel)]="loginData.email" placeholder="Email" type="email">
+          </mat-input-container>
+          <mat-input-container>
+            <input matInput [(ngModel)]="loginData.password" placeholder="Password" type="password">
+          </mat-input-container>
+          <button mat-raised-button color="primary" (click)="login()">Login</button>
+        </mat-card>
+        `
+      })
+      export class LoginComponent {
+        constructor(private auth: AuthService) {}
+        loginData = {
+          email: '',
+          password: ''
+        }
+        login() {
+          console.log(this.loginData);
+        }
+      }
+    Register in main module app.module and its route:
+      ...
+      import { LoginComponent } from './login.component';
+      ...
+      var routes = [
+        ...,
+        {
+          path: 'login',
+          component: LoginComponent
+        }
+        ];
+
+        declarations: [
+          ..., HomeComponent, RegisterComponent, LoginComponent
+      ...
+  Create the login service
+    In auth.service file create login() method:
+      ...
+        login(loginData) {
+          this.http.post(this.BASE_URL + '/login', loginData).subscribe(res => {
+            this.authenticate(res);
+          });
+        }
+      ...
+        authenticate(res) {
+          var authResponse = res.json();
+          if (!authResponse.token)
+            return;
+          localStorage.setItem(this.TOKEN_KEY, authResponse.token);
+          localStorage.setItem(this.NAME_KEY, authResponse.firstName);
+          this.router.navigate(['/']);
+        }
+      ...
+    In backend server.js implement login service:
+      ...
+      var users = [{firstName: 'a', email: 'a', password: 'a', id: 0}];
+      ...
+      auth.post('/login', (req, res) => {
+        var user = users.find( user => user.email == req.body.email);
+        if (!user)
+          sendAuthError(res);
+        if (user.password == req.body.password)
+          sendToken(user,res);
+        else
+          sendAuthError(res);
+      });
+      ...
+      function sendToken(user, res) {
+        var token = jwt.sign(user.id, '123');
+        res.json({firstName: user.firstName, token});
+      }
+      function sendAuthError(res) {
+        return res.json({ success: false, message: 'email or password incorrect'});
+      }
+      ...
+
+11) Authorizing Resources
+  Send token with Angular HTTP requests
+    Allow user to edit their profile first name and last name
+    In web.service create new function to give user info:
+      ...
+      import { AuthService } from './auth.service';
+      ...
+        getUser() {
+          return this.http.get(this.BASE_URL + '/users/me', this.auth.tokenHeader).map(res => res.json());
+        }
+      ...
+    In auth.service:
+      ...
+      import { Http, Headers, RequestOptions } from '@angular/http';
+      ...
+        constructor(private http: Http, private sb : MatSnackBar, private auth: AuthService) {
+      ...
+        get tokenHeader() {
+          var header = new Headers({"Authorization": "Bearer" + localStorage.getItem(this.TOKEN_KEY)});
+          return new RequestOptions({headers: header});
+        }
+      ...
+    Test it temporarily inside message.component:
+      ...
+        ngOnInit() {
+          ...
+          this.webService.getUser().subscribe();
+        }
+  Create a security middleware:
+    A middleware function that can be attached to routes to secure
+    Processing the authentication token on the backend
+    In server.js, create 'users/me' route:
+      ...
+      // CORS middleware
+      app.use((req, res, next) => {
+        ...
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+      ...
+      api.get('/users/me', checkAuthenticated, (req, res) => {
+        res.json(users[req.user]);
+      })
+      ...
+      function checkAuthenticated(req, res, next) {
+        if (!req.header('Authorization'))
+          return res.status(401).send({message: "Unauthorized request. Missing authentication header"});
+        var token = req.header('Authorization').split(' ')[1];
+        var payload = jwt.decode(token, '123');
+        if (!payload)
+          return res.status(401).send({message: 'Unauthorizaed request. Authentication header invalid'});
+        req.user = payload;
+        next();
+      }
+      ...
+  Edit user Info
+    In server.js create a route that allows to edit users info
+      ...
+      api.post('/users/me', checkAuthenticated, (req, res) => {
+        var user = users[req.user];
+        user.firstName = req.body.firstName;
+        user.lastName = req.body.lastName;
+        res.json(user);
+      })
+    In frontend web.service add a saveUser method:
+      ...
+        saveUser(userData) {
+          return this.http.post(this.BASE_URL + '/users/me', userData, this.auth.tokenHeader).map(res => res.json());
+        }
+      ...
+    Create new user.component.ts file to allow to edit data:
+      import { Component } from '@angular/core'
+      import { WebService } from './web.service'
+      @Component({
+        selector: 'user',
+        template: `
+          <mat-card class="card">
+            <mat-card-content>
+              <mat-input-container>
+                <input [(ngModel)]="model.firstName" matInput placeholder="First Name">
+              </mat-input-container>
+              <mat-input-container>
+                <input [(ngModel)]="model.lastName" matInput placeholder="Last Name">
+              </mat-input-container>
+              <mat-card-actions>
+                <button (click)="post()" mat-raised-button color="primary">Save Changes</button>
+              </mat-card-actions>
+            </mat-card-content>
+          </mat-card>
+        `
+      })
+      export class UserComponent {
+        constructor(private webService: WebService ) {}
+        model = {
+          firstName: "",
+          lastName: ""
+        }
+      ngOnInit() {
+        this.webService.getUser().subscribe(res => {
+          this.model.firstName = res.firstName;
+          this.model.lastName = res.lastName;
+        })
+      }
+        post() {
+          this.webService.saveUser(this.model).subscribe();
+        }
+      }
+    Register component and route in main app.module:
+      ...
+      import { UserComponent } from './user.component';
+      ...
+      var routes = [
+      ...,
+      {
+        path: 'user',
+        component: UserComponent
+      }
+      ];
+      ...
+        declarations: [
+          ... LoginComponent, UserComponent
+    In nav.component update greeting to use the edit profile page:
+      ...
+        <button *ngIf="auth.isAuthenticated" mat-button routerLink="/user">Welcome {{auth.name}}</button>
+      ...
+  Update message posting
+    Get user name from local storage when posting a new message
+    In new.message component:
+      ...
+      import { AuthService } from './auth.service'
+      ...
+      // remove the owner input in mat-card-content
+      ...
+        constructor(private webService: WebService; private auth: AuthService) {}
+        message = {
+          owner: this.auth.name,
+          text: ""
+        }
+    Test it in browser, enter a message and should post with a firstName
+
+Conclusion
+  

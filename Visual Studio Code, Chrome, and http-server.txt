@@ -1,0 +1,130 @@
+Visual Studio Code, Chrome, and http-server (Sasha Vodnik @ Lynda.com)
+
+1) Setting Up Environment
+  In VS Code install extensions:
+    Auto Close Tag by Jun Han
+    Auto Rename Tag by Jun Han
+    Open in Browser by TechER
+  Install http server with npm:
+    >npm install http-server -g
+  To run http server
+    >http-server -p 3000
+    Serves files in current directory where it is launched
+
+2) Processing JSON
+  Understand JSON data
+    JSON Object String
+      '{
+        "keyName1":"Value1",
+        "keyName2":"Value2",
+        ...
+        }'
+    JSON.parse('...') JS method creates a JS object from string
+      {
+        "keyName1":"Value1",
+        "keyName2":"Value2",
+        ...
+       }
+    JSON array start and end with squared brackets:
+      '[{"Id":1,"Balance":233.82},{"Id":2,"Balance":1084.43},...}]'
+    JSON.parse(string array) results in a JS array:
+      [{"Id":1,"Balance":233.82},{"Id":2,"Balance":1084.43},...}]
+    JSONP: JSON with padding or JSON encoding
+      A way of creating a cross domain request
+      It returns a function call
+      URL or JSONP request contains name of callback function
+        <script src="https://api.example.com/data?callback=parseData"></script>
+      Return data is wrapped in call to that function that's already defined
+        parseData('{...}')
+        
+  Prevent data theft
+    Browsers enforce "same-origin" policy
+      Access data from another script only if they shared the same origin
+        Scheme: http or https
+        Hostname: 
+        Port number
+    HTML document can load scripts from any origin
+    XSSI: Cross-Site Script Injection attack
+      Malicious code intercept data to send to attacker
+    Protecting against XSSI
+      Adding JS code that generates error to start of JSON data sent by web service
+        myApp.dataStream = 'while(1);[{"Id":1,"Balance":233.82},...]';
+      Script from same origin can strip out malformed code before parsing it
+        var cleanData = this.dataStream.slice(9);
+      Malicious script will get an error when trying to parse the data
+        
+  Return readable JSON
+    JSON string in human readable format
+    Use JSON.stringify(value, replacer, spacer) method
+      value: JSON string
+      replacer: a function for how conversion happens
+      spacer: customizes indents for levels of hierarchy
+              can pass "\t" to specify a tab
+    Example:
+      weatherDataJson = JSON.stringify(weatherData, null, 4);
+
+  Test for an empty object:
+    To process return data, first step is to check if data has been returned
+    JSON string will normally contain some characters like {} or []
+    Parsing is the first step but then need to check for "empty"
+      Checking for null cannot distinguish between empty object or with content
+      An empty string ("") is falsy
+      And empty object ({}) is truthy
+    In ECMAScript5 can use object.keys(data) method to check for length
+      But it might fail for number type and Date type
+      Add constructor condition also:
+        if (Object.keys(data).length === 0 && data.constructor === Object) { ...
+      But not all browsers are ES5 compatible:
+        https://kangax.github.io/compat-table/es5
+    A more robust method is:
+      using the "hasOwnProperty()" Object method
+      Use JSON.stringify(data) === JSON.stringify({} to test for empty object
+    Example:
+        function testData(data) {
+            for (prop in data) {
+                if (data.hasOwnProperty(prop) === true) {
+                    console.log('hasOwnProperty: Not an empty object: ', prop);
+                    return data; 
+                }
+            }
+            if (JSON.stringify(data) === JSON.stringify({})) {
+                console.log('JSON: Empty Object:');
+                return data;                
+            } else { 
+                console.log('ELSE: Not an empty object:');
+                return data;
+            }
+          }
+          
+3) Working with JSON Schema
+  Understand JSON Schema
+    Schema is a blue print for what data should look like
+    Code could first validate response data against schema before processing
+    After schema validation, code logic validation can be done against values
+    JSON Schema is a standard created by Internet EnGineering Task Force (IETF)
+      Is defined in JSON with a specific structure and keywords
+      {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "http://example.com/schemas/products.json",
+        "title": "h* sport products",
+        "description": schema for h+ sport product data",
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array", ...
+      }
+    Can use a library in JS to validate against the schema
+    Like missing required data or incorrect types of data
+    
+  Create a basic schema with JSON Schema
+  
+  Validate JSON data against a schema
+  
+  Specify required properties with JSON Schema
+  
+  Work with schema generators
+    Schema generator allow to enter a sample JSON to create a scheama
+      https://jsonschema.net
+      
+    
+    

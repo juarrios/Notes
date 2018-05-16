@@ -1,0 +1,457 @@
+Processing and Interchanging JSON Data (Sasha Vodnik @ Lynda.com)
+
+1) Setting Up Environment
+  In VS Code install extensions:
+    Auto Close Tag by Jun Han
+    Auto Rename Tag by Jun Han
+    Open in Browser by TechER
+  Install http server with npm:
+    >npm install http-server -g
+  To run http server
+    >http-server -p 3000
+    Serves files in current directory where it is launched
+
+2) Processing JSON
+  Understand JSON data
+    JSON Object String
+      '{
+        "keyName1":"Value1",
+        "keyName2":"Value2",
+        ...
+        }'
+    JSON.parse('...') JS method creates a JS object from string
+      {
+        "keyName1":"Value1",
+        "keyName2":"Value2",
+        ...
+       }
+    JSON array start and end with squared brackets:
+      '[{"Id":1,"Balance":233.82},{"Id":2,"Balance":1084.43},...}]'
+    JSON.parse(string array) results in a JS array:
+      [{"Id":1,"Balance":233.82},{"Id":2,"Balance":1084.43},...}]
+    JSONP: JSON with padding or JSON encoding
+      A way of creating a cross domain request
+      It returns a function call
+      URL or JSONP request contains name of callback function
+        <script src="https://api.example.com/data?callback=parseData"></script>
+      Return data is wrapped in call to that function that's already defined
+        parseData('{...}')
+        
+  Prevent data theft
+    Browsers enforce "same-origin" policy
+      Access data from another script only if they shared the same origin
+        Scheme: http or https
+        Hostname: 
+        Port number
+    HTML document can load scripts from any origin
+    XSSI: Cross-Site Script Injection attack
+      Malicious code intercept data to send to attacker
+    Protecting against XSSI
+      Adding JS code that generates error to start of JSON data sent by web service
+        myApp.dataStream = 'while(1);[{"Id":1,"Balance":233.82},...]';
+      Script from same origin can strip out malformed code before parsing it
+        var cleanData = this.dataStream.slice(9);
+      Malicious script will get an error when trying to parse the data
+        
+  Return readable JSON
+    JSON string in human readable format
+    Use JSON.stringify(value, replacer, spacer) method
+      value: JSON string
+      replacer: a function for how conversion happens
+      spacer: customizes indents for levels of hierarchy
+              can pass "\t" to specify a tab
+    Example:
+      weatherDataJson = JSON.stringify(weatherData, null, 4);
+
+  Test for an empty object:
+    To process return data, first step is to check if data has been returned
+    JSON string will normally contain some characters like {} or []
+    Parsing is the first step but then need to check for "empty"
+      Checking for null cannot distinguish between empty object or with content
+      An empty string ("") is falsy
+      And empty object ({}) is truthy
+    In ECMAScript5 can use object.keys(data) method to check for length
+      But it might fail for number type and Date type
+      Add constructor condition also:
+        if (Object.keys(data).length === 0 && data.constructor === Object) { ...
+      But not all browsers are ES5 compatible:
+        https://kangax.github.io/compat-table/es5
+    A more robust method is:
+      using the "hasOwnProperty()" Object method
+      Use JSON.stringify(data) === JSON.stringify({} to test for empty object
+    Example:
+        function testData(data) {
+            for (prop in data) {
+                if (data.hasOwnProperty(prop) === true) {
+                    console.log('hasOwnProperty: Not an empty object: ', prop);
+                    return data; 
+                }
+            }
+            if (JSON.stringify(data) === JSON.stringify({})) {
+                console.log('JSON: Empty Object:');
+                return data;                
+            } else { 
+                console.log('ELSE: Not an empty object:');
+                return data;
+            }
+          }
+          
+3) Working with JSON Schema
+  Understand JSON Schema
+    Schema is a blue print for what data should look like
+    Code could first validate response data against schema before processing
+    After schema validation, code logic validation can be done against values
+    JSON Schema is a standard created by Internet EnGineering Task Force (IETF)
+      Is defined in JSON with a specific structure and keywords
+      {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "http://example.com/schemas/products.json",
+        "title": "h* sport products",
+        "description": schema for h+ sport product data",
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array", ...
+      }
+    Can use a library in JS to validate against the schema
+    Like missing required data or incorrect types of data
+    
+  Create a basic schema with JSON Schema
+    Working with data requirements of "h+ sport" web app
+      Single page app
+      Gallery of products
+      Gallery of people involved in the company
+    Code overview:
+      File js/data.js file contains two hard coded objects for convenience:
+        productData:
+          { products: [{name: ,image: ,alt: }, ...] }
+        personData:
+          { cards:
+            [{ img: {src: , alt:}, 
+               cardinfo: {cardname: , cardtitle: },
+               cardText: }, ...
+            ]
+          }           
+      File js/script.js code for DOM manipulation on objects above:
+        displayProducts()
+        displayPeople()
+    Define JSON schema manually using keywords in schemas.js:
+      Start with comment
+      Define a variable name 'productSchema' for schema object
+      Start with '$schema' keyword with special JSON URL schema specification
+      'id' specifies a unique ID for schema in URI format
+      Optional properties but recommended:
+        'title' for short summary  schema purpose 
+        'description' for more detail idea of schema's use
+      'type' property defines each schema object type
+        'properties' to list each property in the object
+          nameOfObject for 'type' defined above
+            children definitions
+        'items' used insted of 'properties' when 'type' is 'array'
+    Example for productData:
+      // JSON containing schema for product data
+      var productSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "id": "http://example.com/schemas/products.json",
+        "title": "h+ sport products",
+        "description": "schema for h+ sport product data",
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "image": {"type": "string" },
+                "alt": {  "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    Can check JSON code syntax with a JSON checker:
+      In https://jsonlint.com/ paste JSON definition for validation
+  
+  Validate JSON data against a schema
+    Use a validator to test JSON data with JSON schema
+    Using TV4 (Tiny Validator) to validate our data
+      js/tv4.min.js
+    In index.html include reference to validator:
+      <script src="js/tv4.min.js"></script>
+    In script.js add JS code to validate productData vs productSchema:
+      var productResult = tv4.validate(productData, productSchema);
+      if (productResult === true) {
+        console.log("Valid data");
+      } else {
+        console.log(tv4.error);
+      }
+    But to check ALL errors at once, use validateMultiple method:
+      var productResult = tv4.validateMultiple(productData, productSchema);
+      if (productResult.valid === true) {
+        console.log("Valid data");
+      } else {
+        console.log("result:", productResult);
+      }
+    Test:
+      Enter invalid values in productData object to verify 
+      
+  Specify required properties with JSON Schema
+    In JSON schema add 'required' property to specify required fields
+    Its value is an array containing one or more elements
+      var productSchema = {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        ...
+        "properties": {
+          "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+            ...
+            },
+            "required": [ "name", "image", "alt"]
+          }
+        },
+        "required": [ "products" ]
+      };
+    Test:
+      In script.js use the nullData object to verify requirement in console log
+        var productResult = tv4.validateMultiple(nullData, productSchema);
+      Results:
+        ...
+        "Missing required property: products"
+        params:{key: "products"}
+        schemaPath: "/required/0"
+        ...
+    
+  Work with schema generators
+    Creating JSON schema from scratch can be tedious
+    Can start building a general definition by using schema generator
+    Schema generator allow to enter a sample JSON to create a schema
+      https://jsonschema.net
+    Allows to enter a valid JSON and choose some schema options
+    Automatically generates schema that fits data and chosen selections
+    Manually add additional properties like '$id', 'title', 'description'.
+    Add JSON schema to bottom of js/schemas.js file:
+      var personSchema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "http://example.com/schemas/person.json",
+        "title": "h+ sport people",
+        "description": "Schema for h+ person cards",
+        "type": "object",
+        "properties": {
+          "cards": {
+            "type": "array",
+            "items": {
+              ...
+        },
+        "required": [
+          "cards"
+        ]
+      };
+    In script.js add personSchema validation code:
+      var personResult = tv4.validateMultiple(personData, personSchema);
+      if (personResult.valid === true) {
+        console.log("Valid person data");
+      } else {
+        console.log(personResult);
+      }
+    Test and look at console's output:
+      Valid product data
+      Valid person data
+      
+4) Converting between JSON and XML
+  Understand XML
+    Extensible Markup Language (XML) format for exchanguing data
+    Before JSON was the common choice but still used
+    Similar to HTML but allows to define own elements rather than predefined
+    Strict adherence to rules, expectes "well formed" XML documents
+    Major rules:
+      Every opening tag must be closed
+      Entire document must be enclosed in a single root element
+      Elements must be nested correctly
+      Case must match in opening and closing tags
+      Five special characters that must be escaped to its character code:
+        <, >, &, ', " => &lt;, &gt;, &amp;, &apos;, &quot;
+    Compared to JSON:
+      XML has more rules
+      Not as easy to read as JSON
+      
+  Convert JSON data to XML
+    Libraries available to convert JSON to XML
+    Using json2xml.js light weight library
+    In index.html add script:
+      <script scr="js/json2xml.js"></script>
+    In script.js comment function's content
+      function displayProducts() {
+        var j2x = json2xml(productData);
+        console.log(j2x);
+        var section = document.querySelector(".product-list");
+        section.innerHTML = j2x;
+        /* ... */
+      }
+    Run and look at console output:
+      <products><image>vitamin-a.jpg</image><alt>Vitamin A - Product Photo</alt>...
+    Which looks like:
+      <products>
+        <image>vitamin-a.jpg</image>
+        <alt>Vitamin A - Product Photo</alt>
+        <name>Vitamin A</name>
+      </products>    
+      ...
+    But that XML will not display correctly in browser's html
+    ".product-list" item is an "ul" element that needs "li" elements
+    Need to transform <products> into HTML <li> elements first:
+      <li>
+        <img />
+        <h2>Text</he>
+      </li>
+    Create a sample JSON template as prototype for basic structure in data.js:
+      var productData = {
+        "li": [{ "h2": "Vitamin A" }]
+      }      
+    Test in browser and verify that <li> displays fine inside <ul>
+    Still missing class names for formatting and an image element
+    Using "badger fish" convention: 
+      use "@" at start of attribute
+      use "#text" to specify text content
+    New template:
+      var productData = {
+        "li": [
+          {
+            "@class": "product-item",
+            "img": {
+              "@class": "product-image",
+              "@src": "images/products/vitamin-a.jpg",
+              "@alt": "Vitamin A - Product Photo"
+            },
+            "h2": {
+              "@class": "product-name",
+              "#text": "Vitamin A"
+            }
+          }
+        ]
+      }
+    Use "revised-data.js" file that contains the new JSON "badger fist" data:
+      <script src="js/revised-data.js"></script>
+    In data.js comment definition of "productData" variable
+    Refresh browser and verify that all products are visible using revised-data.js
+    Setup and intermediate back end transformation to create correct JSON format
+    
+  Convert XML data to JSON
+    Sometimes data source is only available in XML and Web App works in JSON
+    Conversion is not a easy as JSON to XML
+    On this example use people.js and xml2json.js files in index.html:
+      <script src="js/people.js"></script>
+      <script src="js/xml2json.js"></script>
+    In script.js file change displayPeople() function to use XML file:
+      function displayPeople() {
+        // convert XML formatted string to a DOM node
+        var peopleDataNode = (new DOMParser()).parseFromString(peopleXml,"text/xml");
+        console.log(peopleDataNode);
+        // convert DOM node to JSON
+        var peopleDataJson = xml2json(peopleDataNode,"");
+        console.log(peopleDataJson);
+        // convert JSON to an object
+        var parsedJson = JSON.parse(peopleDataJson);
+        console.log(parsedJson);
+        ...
+    Further down modify loop to use "parsedJson" object instead of "personData":
+        ...
+        //personData.cards.forEach(function(el) {
+          parsedJson.people.div.forEach(function(el) {
+            person = item.cloneNode(true);
+            var currentImage = person.querySelector("img");
+            // currentImage.src = "images/employees/" + el.img.src;
+            currentImage.src = el.img["@src"];
+            // currentImage.alt = el.img.alt;
+            currentImage.alt = el.img["@alt"];
+            // person.querySelector(".card-name").innerHTML = el.cardInfo.cardName;
+            person.querySelector(".card-name").innerHTML = el.div.h3["#text"];
+            // person.querySelector(".card-title").innerHTML = el.cardInfo.cardTitle;
+            person.querySelector(".card-title").innerHTML = el.div.h4["#text"];
+            // person.querySelector(".card-text").innerHTML = el.cardText;
+            person.querySelector(".card-text").innerHTML = el.p["#text"];
+            fragment.appendChild(person);
+          });
+    Test in browser and verify that people section is loaded correctly
+  
+5) Converting between JOSN and YAML
+  Understand YAML
+    YAML another language to exchange data on the web
+    Created to be human readable
+    Does not use tags nor opening and closing braces
+    Instead treats white space as significant:
+      Indents
+      Blank lines
+    Size is slightly bigger than JSON but easier to understand by a human
+    Is considered a superset of JSON
+    YAML Array
+      ---
+      - item1
+      - item2
+      ...
+    YAML Object
+      ---
+        name: broccoli
+        genus: bassica
+        ...
+    Capabilities
+      String don't need to be quoted
+      Named anchors 
+      Explicit data typing
+      Single line comments
+    JSON vs YAML
+      JSON good for basic use cases
+      JSON parsing built into JavaScript
+      YAML readability and straightforward syntax and additional features
+      Conversion are sometimes necessary using libraries
+    
+  Convert JSON data to YAML
+    YAML not directly usable in JavaScript
+    Usage mainly to package collected data as JSON and then converting to YAML
+      for submission to back-end systems
+    In index.html include yaml.js:
+      <script src="js/yaml.js"></script>
+    Converting JSON data from file data.js
+      var productData = { ... }
+      var personData = { ... }
+    Ins script.js file add the conversion code:
+      var productDataToYaml = YAML.stringify(productData);
+      var personDataToYaml = YAML.stringify(personData);
+      console.log(productDataToYaml);
+      console.log(personDataToYaml);
+    Verify in browser that JSON data was converted to YAML
+    
+  Convert YAML data to JSON
+    Analyze people.yml and products.yml files as examples of YAML
+    This data can no be used directly linked into index.html
+    Need to use JavaScript to read in file as a stream
+    Need to open project using an http server
+      In CLI window change directory to web app folder
+      Run http-server command:
+        >http-server -p 3000
+      In browser use URL
+        localhost:3000
+    In Scripts.js read yaml data using yaml.js and load into to objects:
+      function displayProducts() {
+        var yamlProducts = YAML.load('/js/products.yml');
+        console.log(yamlProducts);
+      ...
+      yamlProducts.products.forEach(function(el) {
+      ...
+      function displayPeople() {
+        var yamlPeople = YAML.load('/js/people.yml');
+        console.log(yamlPeople);
+      ...
+        yamlPeople.cards.forEach(function(el) {
+      ...
+    Test in browser that products and people are loaded correctly
+      Use "Shift - Refresh" to reload everything
+    
+Conclusion
+  JSON is used in a lot of places
+  Data is available from many APIs on the web in many formats
+  Work with data from a variety of sources
+  Authors site: https://sashavodnik.com/

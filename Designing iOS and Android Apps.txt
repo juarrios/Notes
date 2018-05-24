@@ -1,0 +1,263 @@
+Designing iOS and Android Apps ( Renata Phillippi @ Lynda.com ) 05/22/2018
+Introduction
+  Welcome
+    Platform guidelines:
+      IOs: Human Interface Guidelines
+        https://developer.apple.com/ios/human-interface-guidelines/overview/themes/
+      Material Design Guidelines
+        https://material.io/design/
+  What you should expect
+1) App Architecture and Usability
+  Mobile Information Architecture (IA)
+    Vital: finding what we are looking for
+    Mobile phone usability:
+      Designing for Touch: How we hold our gadgets
+    Google IA:
+      App's structure organized according to content and tasks.
+      Focus attention on important destinations
+    Apple IA:
+      Implement navigation in a way that supports the structure
+      and purpose of App without calling attention to itself
+    Navigational Options
+      Global elements: 
+        Status and header bars: don't change height and style
+        IOs: Navigation Bar
+          Section title, Back button, Content control element
+          Test is centered
+        Android: Tool Bar
+          More standardized than IOs
+          Section title, Up button on the left or Navigation drawer
+          Menu buttons and overflow menu
+          Text is left aligned
+        Status bar is a native component
+          Don't consider in designs
+    Approach to Navigation
+      Android uses drawer menu
+      IOs uses tab bar at bottom of screen
+      Need to plan two separate menus for two platforms
+      Overflow menu can potentially remove navigational drawer      
+      
+  Understand gestures
+    Make experience fast, fluid and delightful
+    Common gestures have standardized behaviors
+    Horizontal swipe
+      Android will move between tabs
+    
+  App layout
+    Dieter Rams Ten principles for good design
+      Is innovative
+      Is honest
+      Makes a product useful
+      Is long-lasting
+      Is Aesthetic
+      Is thorough, down to the last detail
+      Makes a product understandable
+      Is environmentally-friendly
+      Is unobtrusive
+      Is as little design as possible
+      c
+  Adaptive views
+    Challenge:
+      Users don't longer see phone, tablet, desktop
+      They see store, news site, business application
+      They expect same experience across devices
+    Identify the core experience
+    Adapt for each experience
+    Smallest screen first
+    Then largest screen
+    Then pick 1-3 devices in between
+    Ensure a consistent experience across each device type
+    
+2) App Components and Interactions
+  Animation
+    Sense of tangible and relatable
+    Easy entertainment
+    Sense of being alive
+    What connects with users even in subconscious
+    How to use:
+      Use animation carefully
+      Go for realism and credibility
+      Avoid "because you can" without context sense
+    Google
+      Responsive, natural, aware and intentional
+      Guided focus between views
+      Hints at what will happen if a user completes a gesture
+      Hierarchical and spatial relationships between elements
+      Distraction from what's happening behind the scenes
+        Like fetching content or loading the next view
+      Character, polish and delight
+      Focus on eye-catching to grab the user's attention
+    IOs
+      Flat design, more subtle, fluidnessc animations
+      Natural flow from one point to next
+      Almost unnoticeable by the user
+      
+  UI controls
+    Subtle references to real world with layered papered approach
+    Consistent clean look
+    Common UI Controls:
+      Radio buttons
+      Check boxes
+      Fields
+      Switches
+      Alerts
+      Dialogs
+    An area of trust and familiarity with the user
+    Material Design Button Styles
+      Floating buttons: most traditional
+        Use only on backgrounds, not on alerts or popups
+      Flat action: All caps with padding
+    iOS
+      Buttons flat with no shadows
+      Primary have color
+      Secondary are reversed color
+      Consistent metaphor for color meaning
+      Also "plain text" button but no uppercase styling
+    Align all elements on 8 DP square baseline grid
+      Safer touch target for fat fingers
+    Action sheets
+      Choose from many actions in one UI item
+    Overlays
+      Android show shadows
+      IOs are semitransparent  
+    
+  Fields and forms
+    Recommendation of LukeW Web Form Design
+      https://www.lukew.com/resources/web_form_design.asp
+    Clean and clear inputs to obtain user's data
+    User field's label within the field
+      Give user context
+      Save space
+      Use right keyboard type
+    Dropdowns to make selection only on Android
+    iOS uses a new page instead
+    Date & Time
+      Android uses a Calendar picker
+      iOS uses a wheel
+  
+  Common patterns
+    Cards:
+      Allows to consume quick bytes of content
+      Visually fit well
+    Segmented controls:
+      Different content with in single view
+    
+  Notifications
+    Necessary for survival
+    Should be worth the user's time
+    People are the most important 
+      Who more important than what or when
+    It feels good to be needed
+      My existence in the world is important!
+    Get the style right
+      Feel trustworthy and native
+      Flat button styles
+         
+3) Visual Design
+  Typography
+    System font family:
+      iOS: San Francisco
+      Android: Roboto
+    Generalizations
+      Ample white space in layout
+      More dramatic use of font sizing in material design
+        Strking headling provide the hierarchy
+      iOS less dramatic variation in sizing
+        Slight variation in font weights for hierarchy
+      
+  Understand DP and PX
+    DP = density independent pixels
+    PX = pixels
+    DPI = dots per inch
+    PPI = pixels per inch
+    iOS Pixels = (Points * DPI)/163
+    Android Pixels = (DP * DPI)/160
+    
+  Imagery
+    Fits branding
+    Get something done
+    Get Information
+    Be entertained
+    No advertising
+    Defer to content over branding
+      Resist displaying logo across app
+    Use solid branding
+      Color
+      topography
+      overall experience
+      help solidify app in user's mind
+    Stay away from stock imagery
+    Images that relate to the context
+    Have a point of focus
+      Build a narrative with your imagery
+      Tells the story of your application
+  
+  Icons
+    Find the right visual language
+    iOS: thin lines
+    Android: thick strokes or solid icons
+    To create custom icons look at:
+      Material Design Guidelines
+      Human Interface Guidelines
+      
+  Color
+    Challenging to master when new to design
+    Easy to go overboard
+      Use colors that don't communicate message
+    Material Design
+      Bright color palette
+      Shadows for height
+      Squares rather than rounded corners
+    iOS
+      Muted color pallet
+      Relies on white and neutral gray as background
+      Blue or brand color as an accent color
+      Focuses on clarity, deference and depth
+      Vibrant colors used sparingly
+      Translucence to convey depth and perception
+      More minimalistic than material design
+      
+4) Extensions, Resources, and More
+  Different keyboards
+    Offer the right keyboard for type of data required
+    User can start typing immediately instead of switching
+      Numeric value = numeric keyboardc 
+  
+  Explore sizing
+    Will need high resolution images
+    iOS:
+      1x = 10 x 10 px
+      2x = 20 x 20 px
+      3x = 30 x 30 px
+    Android:
+      1x/mdpi   = 100x100
+      1.5x/hdpi = 150x150
+      2x/xhdpi  = 200x200
+      3x/xxhdpi = 300x300
+      4x/xxxhdpi= 400x400
+    Can design in 1x and export to other resolutions
+  
+  Resources available
+    Apple: https://developer.apple.com/design/resources/
+    Android: https://material.io/tools/
+    UI Kit: https://www.sketchappsources.com
+    Icons: https://icons8.com/
+    Device mockups for presentation
+      Apple: https://developer.apple.com/app-store/marketing/guidelines/#images
+      Android: https://dribbble.com/shots/1800309-Nexus-6-flat-mockup-PSD
+      https://placeit.net  
+  
+5) Piecing It Together
+  What we're going to build
+  Different page designs
+  Challenge
+  Solution
+Conclusion
+  Copy and manipulate old designs
+  Get a device you don't currently own
+  Once comfortable, create your own designs and prototypes
+  Prototyping tools:
+        InVision
+        Axure
+        UXPin
+  Next Steps

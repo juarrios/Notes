@@ -1,0 +1,121 @@
+Introduction to Node.js (Azat Mardan @ EDX)
+
+Why Node.js?
+  Allows to develop faster due to existing modules
+  JavaScript most popular language and browser compatible
+  NPM (Node Package Manager)
+    NPM registry to get any module
+    No need to write much code
+  Only one language for server and client
+    With MongoDB can leverage JS
+  One language to code everywhere:
+    Mobil
+    Internet of Things (IOT): embeded systems
+  Full Stack JS developer or generalized developer
+  Powered by
+    Google Chrome V8 engine: super fast JS
+    Also Microsoft Chakra
+  Uses non-blocking input and output system
+    Can serve many clients
+    Can serve more traffic with same amount of servers
+    Cut some cost of infrastructure
+    
+Node Downsides
+  Think in asynchronous way when coding
+    callbacks, promises, async/await
+  Tooling not as mature as other older frameworks and languages
+  
+Node in Modern Web Development
+  Combines both web server and language together
+  Replace both Apache (PHP) and Tomcat (Java)
+  You build web server and the application
+    Restful API servers
+      Statless servers
+      Easier to scale
+    HTTP methodology
+      Methods: GET, POST, PUT, etc.
+    GraphQL server
+      Submit queries
+    
+Node Core Overview
+  Long term support versions are even numbers: 2,4,6,8 ...
+    Recommended for production environments
+
+Environment:
+  >node -v
+  >npm  --version
+  >mongod --version
+  >npm i -g node-static
+  >static -h
+  >which npm
+  >node -e "console.log(process.versions)"
+    evals all versions and packages
+
+How to launch Node:
+  1) REPL:
+    >node
+    Can run any javascript command inline
+      >Math.random()
+      >'abc'.substr(2)
+      >setTimeout( ()=>{console.log('hello')}, 500)
+      >let f = ()=>{return 1}
+      >let f2 = ()=>2
+      >.exit ( or Ctrl-C twice)
+  2) eval mode
+    >node -e "console.log('hello')"
+  3) script file:
+    >node (path/)filename.js
+      file must exists in current folder or path
+    >node .
+      default name is "index.js"
+    ".js" extension is optional
+
+Globals:
+  One "global" object similar to "window" in browsers
+  Its first level properties are accesible without the "global" prefix:
+    process
+    require()
+    module and module.exports
+    console and console.log()
+    setTimeout() and setInterval()
+    __dirname, __filename and process.cwd
+    
+Process object
+  Useful process information includes
+    pid: process ID
+    env: environment variables
+    argv: commmand-line arguments
+    exit(): method to exit process
+
+Require and module.export
+  Node mechanism for moodules
+  require('...')
+    to import functionality or data
+    can provide a path to a file
+      should start with a "." or ".."
+    can provide a name
+      can be a core module
+      NPM module
+    can provide a JSON file
+      creates a JS object to assign to a variable
+    caches the "require() assignments"
+  module.export= object or function
+    export functionality to other programs or files
+    recommend assigning to a function
+      more versatile, flexible and receives arguments
+    assigning to objects
+      more static: configuration or labels
+      
+Core Modules
+  Part of Node.js, already installed
+  Example:
+    OS: get info from operating system
+    Child Process: span other processes and programs
+  Most used:
+    FS: file system
+        work with file system to create, read files/folders
+    Path: to build cross-platform code
+        easily convert path folders into appropiate format
+    http:
+
+Event Emitters

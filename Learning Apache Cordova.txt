@@ -1,0 +1,110 @@
+Learning Apache Cordova (Chris Griffith @ Lynda.com ) 05/30/2018
+
+Introduction
+  How to use CLI to boostrap
+  Preview application in simulator or device
+  How to customize build process to suit development process
+
+1) Introduction to Apache Cordova
+  What is PhoneGap/Apache Cordova?
+    PhoneGap
+      Web based mobile development framework
+      Based on open source Cordova project
+      Quickly create app store ready mobile applications
+      Use standard web technologies for cross platform development
+    History
+      Create by Nitobi in 2009
+      Bought by Adobe and donated to Apache Software Foundation 2011
+      Renamed Cordova after Nitobi street name
+    What is Cordova?
+      WebApp-> Embedded Web Browser-> Cordova Framework-> Plug-in device access
+      Web App rendered within a native web view
+      Web View is an embedded web browser
+      Also called hybrid application
+      Cordova has JS API that allows access to device capabilities
+        camera, accelerometer, video, audio, etc
+      Done through use of plug-ins
+  
+  PhoneGap ecosystem
+    Four methods to create Cordova-based applications:
+      Cordova CLI
+      PhoneGap CLI
+      PhoneGap Desktop App
+      PhoneGap Build
+    Not fully interchangeable
+    
+2) Set Up the Environment
+  Install Node.JS
+    Download from https://nodejs.org
+    Node version Manager allows to switch between Node versions
+  Set up system for Android development for Mac
+    Need Java SDK (SE Development Kit)
+      http://www.oracle.com/technetwork/java/javase/downloads
+    Android SDK
+      https://developer.android.com/studio/
+      Just download the CLI tools
+      Unzip file and place it in a "Development" folder
+    Tell command line where these tools live:
+      Setup path in ~/.bash_profile
+        export ANDROID_HOME=/Users/juarrios/Development/android-sdk-macosx/
+        export PATH=${PATH}:/Users/juarrios/Development/android-sdk-macosx/
+        platform-to ols:/Users/juarrios/Development/android-sdk-macosx/tools
+    Download SDK components for Android
+      In CLI
+        >android
+      Select packages and install
+        
+        
+  Set up system for Android development for PC
+    Need Java SDK (SE Development Kit)
+      http://www.oracle.com/technetwork/java/javase/downloads
+    Android SDK
+      https://developer.android.com/studio/
+      Just download the CLI toolsc
+  Configure Android device for development
+  Install iOS development environment
+  Set up iOS device for development
+  Resolve signing issues
+  Other supported platforms
+3) Installing the Command Line Interface
+  Introduction
+  Install the Cordova CLI
+  Install the PhoneGap CLI
+4) Creating Your First App
+  Create a project using the Cordova CLI
+  Explore the project structure
+  Add platforms to project
+  Remove platforms from project
+5) Understanding App Development
+  Explore the sample app
+  Metatags
+  Local hosting
+  Wrap up
+6) Configuring Your App
+  Configuration basis
+  Define general settings
+  Set iOS specific configurations
+  Set Android specific configurations
+  Add app icons
+  Splashscreens
+  Work with external resources
+7) Building Your App
+  Introduction to building
+  Build for iOS
+  Build for Android
+8) Extending Your App with Plugins
+  Configure application plugins
+  Add a pluging to your app
+  Third-party plugins
+  Remove PhoneGap plugins
+9) Debugging Your PhoneGap Build App
+  Debug Android apps with Chrome remote inspection
+  Debug with Safari
+  Debug with GapDebug
+10) Preparing for Release
+  Prepare app for the Apple App Store
+  Prepare app for the Google Play store
+11) Other Tool;s
+  The PhoneGap desktop app
+Conclusion
+Next Steps

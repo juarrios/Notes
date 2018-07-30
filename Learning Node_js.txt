@@ -145,7 +145,7 @@ Building Your Demo App Chat Client for the Browser
       Add post service:
         app.post('messages'), (req, res) => {
           messages.push(req.body)
-          res.sendStatus(200
+          res.sendStatus(200)
          }
       Use Chrome's "Postman" app to test post message:
         set URL: localhost:3000/messages
@@ -207,7 +207,7 @@ Building Your Demo App Chat Client for the Browser
       Test:
         Refreshing browser should server console log "a user connected"
         
-  Create your Socket.io event (to connectd all clients at once) (05_06)
+  Create your Socket.io event (to connect all clients at once) (05_06)
     Emit event from server to all clients
       In server.js app.post method add line:
         io.emit('message', req.body)
@@ -262,11 +262,9 @@ Exploring Databases:
     Create object based on that model and save data to MongoDB:
       app.post('/messages', (req, res) => {
         var message = new Message(req.body)
-
         message.save((err) => {
           if (err)
             sendStatus(500)
-          
           io.emit('message', req.body)
           res.sendStatus(200)         
         })
@@ -311,7 +309,7 @@ Improving Asynchronous Code
       })
   Async/await
    Makes asynchronous code look even more synchronous
-   Need to declare Express function as "async":
+   Need to declare Express function as "async" (07_03):
     app.post('/messages', async (req, res) => {
       var message = new Message(req.body)
       var savedMessage = await message.save()

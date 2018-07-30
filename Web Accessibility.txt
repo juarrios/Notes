@@ -22,17 +22,17 @@ Accessibility Overview
       Permanent
   Make experience better for everyone by addressing accessibility!
   Accessibility is making sure that the content in web site we create
-    is usable to people with various impariments or abilities.
+    is usable to people with various impairments or abilities.
   WCAG
     Web Content Accessibility Guidelines
-    Guidelinse and Best practices
+    Guidelines and Best practices
     What Accessibility means in a methodical way
     Four core principles (POUR):
       Perceivable
         Aware of content
       Operable
         Use UI components and navigate content
-      Undertandable
+      Understandable
         Interface is clear and avoids confusion
       Robust
         Consume by wide variety of user agents
@@ -51,7 +51,7 @@ Accessibility Overview
       
 Focus
   Refers to control that receives input from keyboard or clipboard
-  Act of clicking or navigating to a textfield is what focus is
+  Act of clicking or navigating to a text field is what focus is
   Well implemented focus strategy will lead to a better experience
   
       

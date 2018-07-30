@@ -87,7 +87,7 @@ Jeremy Forster and Briana Swift
     Invite users and accepting collaboration 
     
 3) GitHub Desktop
-  Introducting GitHub Desktop:
+  Introducing GitHub Desktop:
     Available on Windows and Mac
     Manage local repos
     Create, Branch/Merge, Commits, Pull Requests
@@ -110,7 +110,7 @@ Jeremy Forster and Briana Swift
     GitEye
     Git Kraken: good visual of all commits
   
-4) GitHub Ingegrations with Visual Studio
+4) GitHub Integrations with Visual Studio
   GitHub Extension for Visual Studio
   Bing Developer Assistant
     Brings together Sample Browser and Bing Code Search to enable developers to find and reuse millions of code snippets.
@@ -131,7 +131,7 @@ Jeremy Forster and Briana Swift
   
 
 5) GitHub on the Command Line
-  gh tool to be able to create / remove repositories from console
+  git tool to be able to create / remove repositories from console
   Cheat sheet: https://services.github.com/kit/downloads/github-git-cheat-sheet.pdf
   
   

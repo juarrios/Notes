@@ -1,0 +1,46 @@
+Git Introduction
+  Is a Distributed Version Control System (DVCS)
+    Each user has a complete copy of the repository including history
+    Every repository is a first-class citizen in the DVCS model
+    There is no master repository
+  Two pieces of information to identify elements
+    name
+    version AKA revision
+      changeset: 
+        a hash of its contents
+        large value: unfriendly
+        can be shortened to a unique prefix: first 6 digits
+      pointer to the end of the tree
+        AKA tip
+        HEAD: tip of the current branch
+  Branches
+    Contain different states of the same repository
+    Evolve independently
+    Creating and switching between branches is fast
+    Create a new branch for each new feature item to work on
+    Think of branches as throwaway changesets
+    Create and switch to branch
+      >git checkout -b branch_name
+  Merging
+    DVCSs are all about merging
+    Each node in changeset tree contains a pointer to its previous node
+    Merges are just the weaving together of two (or more) local branches into one
+    Is trivial
+  Initialise
+    >git init
+    Creates empty repository in current directory: .git
+  index
+    a set of files to be committed AKA staged or tracked
+    >git add filename(s)
+  commit
+    >git commit
+    commit tracked files
+  Rebase
+    uprooting the branch from the original commit 
+    re-writing history as if it had been done from the current point in time
+  
+Eclipse:
+    Configuration
+      Preferences > Team > Git > Configuration
+      
+    

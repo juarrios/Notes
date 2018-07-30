@@ -55,7 +55,7 @@ Introduction
       Is environmentally-friendly
       Is unobtrusive
       Is as little design as possible
-      c
+      
   Adaptive views
     Challenge:
       Users don't longer see phone, tablet, desktop
@@ -88,7 +88,7 @@ Introduction
       Character, polish and delight
       Focus on eye-catching to grab the user's attention
     IOs
-      Flat design, more subtle, fluidnessc animations
+      Flat design, more subtle, fluidness animations
       Natural flow from one point to next
       Almost unnoticeable by the user
       
@@ -161,7 +161,7 @@ Introduction
     Generalizations
       Ample white space in layout
       More dramatic use of font sizing in material design
-        Strking headling provide the hierarchy
+        Striking heading provide the hierarchy
       iOS less dramatic variation in sizing
         Slight variation in font weights for hierarchy
       
@@ -242,7 +242,7 @@ Introduction
     Android: https://material.io/tools/
     UI Kit: https://www.sketchappsources.com
     Icons: https://icons8.com/
-    Device mockups for presentation
+    Device mock-ups for presentation
       Apple: https://developer.apple.com/app-store/marketing/guidelines/#images
       Android: https://dribbble.com/shots/1800309-Nexus-6-flat-mockup-PSD
       https://placeit.net  

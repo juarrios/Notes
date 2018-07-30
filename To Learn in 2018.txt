@@ -1,0 +1,87 @@
+To Learn in 2018:
+Package managers:
+  npm
+  yarn
+  choco
+  NuGet
+  
+React
+Angular
+  AngularCLI
+  AngularJS
+  
+JavaScript
+  TypeScript
+  ECMAScript6
+  Three.js
+  
+RESTful API
+  Microservices
+  
+CSS
+
+Databases
+  MySQL
+  MongoDB
+  Apache Cassandra
+  Redis (in-memory DB)
+
+Containers
+  Docker
+  Kubernetes
+
+Dev-Ops
+  Jenkins
+  Maven
+  
+Languages
+  Scripting
+    Javascript
+    PHP
+    Python
+    Go
+    Ruby on Rails
+    Node.js
+  
+  Frameworks
+    Vue.js
+    
+  Elm ( functional)
+  Haskell ( functional)
+  Elixir ( functional )
+  Scala ( functional )
+  Clojure ( functional )
+  Erland ( functional )
+  SVG
+  Rust
+  Swift
+  Java
+  Kotlin
+  C#
+  C++
+  Arduino / Raspberry Pi
+  F#
+  
+Notations:
+  JSON
+  yaml
+  XML
+  XSLT
+  
+Repository
+  Git
+  GitHub
+  
+Mobile
+  Android
+    Java
+  iOS
+    Objective-C
+    Swift
+Other
+  WordPress
+  
+Cloud
+  AWS
+  Google-Cloud
+  Azure

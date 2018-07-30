@@ -34,7 +34,7 @@ Creating Promises:
       Fulfilled (Resolved): It worked! :)
       Rejected: It didn't work :(
       Pending: Still waiting ...
-      Settled: Something happened!
+      Settled: Something happened, has fulfilled or rejected!
   Promise Timeline
     Action for resolution executes for all Promise resolves
     Only settles once
@@ -61,7 +61,7 @@ Creating Promises:
     If a value is passed to either resolve or reject, it is also passed to linked chain
     If a Promise is passed, Promise executes first and result will be passed to linked chain
    Fetch API:
-    XHR is annoying to use
+    XMLHttpRequest (XHR) is annoying to use
     Fetch API simplifies using promises
       fetch('some/url'), {
         method: 'get'

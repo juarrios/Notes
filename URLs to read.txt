@@ -1,0 +1,2 @@
+https://mostly-adequate.gitbooks.io/mostly-adequate-guide/SUMMARY.md  7/12/18
+https://egghead.io/courses/professor-frisby-introduces-composable-functional-javascript 7/12/18

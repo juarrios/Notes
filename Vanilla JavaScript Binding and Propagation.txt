@@ -1,0 +1,39 @@
+Vanilla JavaScript: Binding and Propagation ( Leigh Lawhon @ Lynda.com ) 06/07/2018
+
+1) Working with Prototype and Dynamic Elements
+  Plan our application
+  
+  Pseudo code
+  
+  Immediately invoked function expression
+  
+  Dynamic elements: Game and deck
+  
+  Dynamic elements: Cards
+  
+2) Animation and the Meaning of This
+  CSS animations: Card flip
+  
+  The meaning of this
+  
+  Bind, call, and apply
+  
+  Apply concepts
+  
+  Shuffling
+  
+  Stacking
+  
+  Challenge: Refactor
+  
+  Solution: Refactor
+  
+3) Propagation and Drag and Drop
+  Propagation
+  
+  Discard rows and rules
+  
+  Discard pile
+  Drag and drop
+Conclusion
+  Next steps

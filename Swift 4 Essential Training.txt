@@ -1,0 +1,7 @@
+Swift 4 Essential Training ( Harrison Ferrone @ Lynda.com) 5/21/2018
+Introduction
+  Since 2014 Swift has evolve
+  Exciting programming language in mobile development space
+    Flexible, expansive and fun
+    
+  

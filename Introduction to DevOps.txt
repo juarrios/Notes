@@ -1,4 +1,4 @@
-Introduction to DevOps (Dwayne Lessner, Karl Krueger)
+Introduction to DevOps (Dwayne Lessner, Karl Krueger) Udacity
 
 Introduction:
   Creating better workflows to save time
@@ -10,7 +10,7 @@ Introduction:
   How to measure benefits of DevOps in use
   
 Purpose of DevOps:
-  Movement experience-based, decentrilized and open to all
+  Movement experience-based, decentralized and open to all
   Scariest phrase: "We have always done it that way!"
   The pace of innovation has accelerated
   Old methodologies can't keep pace

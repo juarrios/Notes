@@ -15,6 +15,7 @@ EPEQDT.scada
   Servers
     sodvveas01: development
       Jasper SSL/LDAP, TDF/EA app, Oracle, VS2012
+      Database: https://sodvveas01:8443
     soqaeas01: test/QA
       Jasper SSL/LDAP, TDF/EA app, Oracle
       DB? somgmt-xc01 172.20.118.20
@@ -22,9 +23,12 @@ EPEDMZ.scada
     sopreas01: Jasper prod  172.20.110.10 SOCC soccea.epecad.loc:8443
     bupreas01: Jasper prod  172.20.238.10 BUCC buccea.epecad.loc:8443
       DMZ, Jasper SSL/LDAP, TDF/EA app, Oracle
+    temp server: sodmzjweb01.epedmz.scadahttp 172.20.110.13  Ports: 8080, 8443, 8445
 Paths:
     Jasper Configuration dev:
       c:\Users\Public\JaspersoftWorkspace
+    Reports
+      c:\Users\Public\JaspersoftWorkspace\EPE Report Project
     Jasper Config server:
       c:\Jaspersoft\jasperreports-server-cp-6.2.0
     LDAP config
@@ -34,6 +38,7 @@ Paths:
       ...\apache-tomcat\conf\server
     TFS
       sodvvsql01\Eterra
+      http://sodvvsql01:8080/tfs/Eterra/e_terrasource
 Jasper Studio:
   Similar to SSRS
     IDE design
@@ -65,3 +70,7 @@ EA Server TDF UI
   Perspective->Open Perpective
   Report View Definition
   Determinant->Derivation->View Derivations
+  
+AD Security:
+  LDAP file:
+    Drive:\Jaspersoft\jasperreports-server-cp-6.5.2\apache-tomcat\webapps\jasperserver\WEB-INF\applicationContext-externalAuth-LDAP.xml

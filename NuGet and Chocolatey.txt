@@ -1,0 +1,509 @@
+Windows Package Management: NuGet and Chocolatey ( Walt Ritscher @ Lynda.com - 9/6/2018)
+
+Introduction
+  NuGet:
+    Visual Studio tools to install, remove and update packages
+  Chocolatey package tool:
+    Install windows applications via a package system
+  BoxStarter:
+    Automation engine for Chocolatey
+    Installs all applications
+    Configures devices
+    Handles reboots
+    No manual intervention
+  Windows 10 PMS (Package Management System)
+    Universal system within Powershell
+    Manage the entire world of third party package managers
+    
+2) Package Managers Explained
+What is a Package Manager?
+  ASAP "package installers"
+  Have extensive history in OS and developer communities
+  Special type of installer
+  Two types:
+    OS package managers (PMs)
+    Application (or programmer) PMs
+  What is an installer?
+    An Installer file (exe or msi)
+    Manually run installer
+      Select settings form installer dialog
+    Computer gets updated
+    Registry might be changed
+    Old DLL's removed 
+    Directories added
+  App Store experience:
+    iOS, Google Play, Windows Store
+    One location for all apps
+    Runs and installs seamlessly
+  Package Manager experience:
+    Mashup of these two techniques
+    Closer to App Store model
+  Package Manager System:
+    Created by software publishers
+    Have name and version numbers
+    Use standard format
+    Contains all code and data necessary to install
+    Deployed to a central "code store" repository
+    Searched for in a "code store"
+    Installer installs and configures the local software project
+  Dependency Management:
+    PMs understand dependencies
+    Each package list its dependencies
+    Automatically installs, updates or removes dependencies when needed
+    All packages locates in same online code repository
+  Programming PMs
+    NuGet     .Net, C#, VB, etc
+    NPM       Node.js
+    Bower     Web, HTML, JS, CSS
+    RubyGems  Ruby
+    Maven     Java
+    
+Understand the NuGet System
+  NuGet Roles
+    Consumers: developers
+    Publishers
+      Vendor or Open Source
+      tool or library from tiny to massive
+        .Net DLL, component
+        JS file or framework (jQuery)
+        CSS and other assets
+  Package:
+    Contains all items needed to work correctly
+    Compressed in package file with extension .nupkg
+    Describes dependencies on other packages
+  Access:
+    Install in Visual Studio with NuGet Extension
+    Use NuGet console in IDE
+    Use PowerShell
+  NuGet Commands:
+    List 
+      All
+      Filter list
+      List by Version
+    Install
+    Update
+    Remove
+  Supplemental Tools
+    Chocolatey 
+      standard window's app installs
+      built on NuGet infrastructure
+      similar to Advance Package Tool (APT) in Debian
+      access via Powershell
+    BoxStarter
+      Automation engine for Chocolatey
+      Scripts define complete Windows environments
+      Handles install process for all scripted applications
+      Supervises restarts, system changes and more
+    OneGet ASAP PackageManagement
+      Windows OS package aggregator for installers and PMs
+      access vis Powershell
+      Renamed to PackageManagement
+      Included in Windows 10
+      Extendible architecture using installer's providers
+  
+Explore NuGet in VS
+  Install NuGet in VS
+    Part of VS 2010, 2012, 2013 and 2015
+    Two parts:
+      NuGet Libraries
+      VS NuGet extension
+        Installs libraries and Powershell command-lets
+    Help->About VS: shows version installed
+  Investigate NuGet PM tools:
+    Tools->NuGet Package Manager
+      Package Manager Console
+        Special hosted version of Powershell within VS IDE
+      Manage NuGet Packages for Solution ...
+        Need to have a solution open to see this menu item
+        UI approach for working with packages       
+      Package Manager Settings
+        NuGet configuration section for Tools Option dialog
+    From Solution Explorer:
+      Right clicking on solution 
+      Right clicking on project
+    Restore NuGet Packages:
+      To restore packages when solution loaded from source control
+  Install a package
+    Right click a project and select "Manage NuGet Package"
+    Select "Package source"
+    Choose package and click install
+    What install does:
+      Downloads package into hard drive
+      Two copies: On in NuGet cache and other in solution
+      Output console shows what actions were executed
+      Where packages were installed
+      References list shows new installed libraries
+      Sometimes also updates the "web.config" file with configs
+        Ex: defaultConnectionFactory/provider from EntityFramework package
+  Manage packages for multiple projects
+    Menu:
+      Right click Solution->Manage NuGet Packages for Solution...
+      or
+      Tools->NuGet Package Manager->Manage NuGet Packages for Solution...
+    Installed section shows all packages installed in solution
+    Install NUnit
+      Verify in each project that it contains NUnit installed
+  What's in a package file?
+    Core component of NuGet that contains
+      all .NET assembly files
+      configuration settings
+      content files
+      scripts if necessary
+      additional tools
+    It is stored with a "nupkg" extension
+    Has a name and version number: bootstrap.3.0.3.nupkg
+    NuGet installation flow:
+      A "packages" folder is created once per solution
+      A subfolder with the package name is created inside "packages"
+      The "nupkg" file is placed inside the folder
+      The file is unpacked into its own folder hierarchy
+   Four standard folders:
+    build
+      MSBuild scripts
+      added to the build instructions for the project
+    content
+      copied to root of project
+    lib
+      .Net or Universal Windows Platform assemblies
+      added as reference in VS project
+    tools
+      Powershell scripts
+      commands during install or when VS starts
+      most common scripts:
+        init.ps1
+          runs first time package is installed into solution
+          also every time solution is open
+        install.ps1
+          runs each time when a packaged installed into a project
+  Explore the installed files for the packages:
+    When NuGet installs a package, adds the packages.config file to root of project
+    File contains list of packages for such project
+  Update a package:
+    The "Manage NuGet Packages" window "Update" section shows packages to update
+    Clicking update in a package removes old version and installs new version
+    Version number is updated in packages.config file and references
+  Work with alternate versions of packages
+    VS2013 does not contain UI options to use previous versions
+    Might need to use console window
+  Change version settings
+    Example: 
+      Lib A versions:
+        3.0.1, 3.0.0, 2.2.4, 2.2.0, 2.1.1, 2.1.0, 2.0.1, 2.0.0
+      Lib B depends on Lib A >= 2.1.0
+    Options:
+      Lowest: lowest that meets dependency criteria = 2.1.0
+      Highest: highest dependency version, may change major version number = 3.0.1
+      HighestMinor: must match major version number = 2.2.4
+      HighestPatch: must match major and minor number = 2.1.1
+  Uninstall a package:
+    NuGet is aware of dependencies when trying to uninstall a package
+  Use private NuGet repositories
+    Tools->Options->NuGet Package Manager->Package Sources
+      Press + button on "Available package sources" 
+      Enter package source name and path and click OK
+  Use NuGet Package Explorer
+    Allow to create own NuGet packages and see contents of packages without unzipping
+    Go to https://github.com/NuGetPackageExplorer
+    Click on NuGetPackage Explorer
+    Instruction how to install with Chocolatey
+      >choco install nugetpackageexplorer
+    Can open a package locally or on line and look at its contents
+  Review package.config and package.json
+    NuGet now supports JSON configuration files
+      Only the Universal Windows app and Asp.net 5 project templates
+      
+3) Use the NuGet PowerShell Integration
+  Work with PowerShell
+    Open Tools->NuGet Package Managerj->Package Manager Console
+    Contains a hosted copy of PowerShell
+    Can run any PowerShell command:
+      >get-childitem .
+    Has extra NuGet commands to work with NuGet packages
+      >get-help NuGet
+      List all available NuGet commands inside console window
+  Use the command line to explore packages
+    >find-package bootstrap -source "Team 42 local feed" -allversions
+  Use the command line to install packages
+    >install-package bootstrap -source "Team 42 local feed"
+    >get-project -all | install-package nunit
+  Use the command line with other NuGet commands
+    >get-package
+    >update-package jQuery
+    >uninstall-package automapper
+    >get-package -all | uninstall-package nunit
+  Work with an alternate version of a package
+    >find-package nodatime -allversions
+    >$package = find-package nodatime -allversions
+    >$package
+    >$package.GetType()
+    >$package.id ($package[0].Name)
+    >$package.description ($package[0].Summary)
+    >$package.version  ( array of version numbers)
+    >install-package nodatime -version 1.3.1
+    
+4) Interesting and Useful NuGet Packages
+  Use NuGet Gallery to discover packages
+    Browser:
+      URL: https://www.nuget.org/
+      Look for packages by Tag, use hyper-links to filter
+        Search filter says: Tags:"css"
+      Can search by owner, author, tag and version
+      Can also combine terms:
+        tag: css version 1.2
+      No way to sort results
+    VS tools:
+      Allows to use same search terms as in website
+      Option to sort results by different categories
+  Packages included in ASP.NET MVC
+    Certain packages become the norm and found in many packages
+    Starter template that contains all standard packages
+    Lots of web specific NuGet packages in ASP.NET applications
+    Packages part of ASP.NET MVC project:
+      Runtime assemblies and core libraries to support ASP.NET
+      Optimization of data reading and output
+        WebGrease provides minification of CSS and JS files
+        Newtonsoft.Json: high performance JSON framework for .NET
+      Client validation for data entry pages
+        jQuery.Validation
+      Popular and essential web frameworks
+        jQuery
+        bootstrap
+        Respond: enables responsive design in older browsers witn no CSS3
+        Modernizr: JS lib that detects HTML5 and CSS3 features
+      EntityFramework
+        Microsoft ORM framework
+      OWIN: Open Web Interface for .NET
+        Build decouple servers and applications with modularize ASP.NET
+      Authentication
+        Allow authentication via provider like Facebook and Twitter
+      Identity:
+        Provide interfaces to describe membership and authentication systems
+        Replacement for older ASP.NET authentication membership
+    Check Windows 10 universal app template
+    
+5) Use Package Restore
+  Package Restore explained
+    Folder "packages" should not be stored in source control
+      They all already exist in public or local packages feed
+    Every time the project is built, VS checks if any packages are missing
+      If some missing it installs them
+  Set up a project for Package Restore
+    Package restore is enabled by default
+    Tools->NuGet Pakcage Manager->Package Manager Settings->General
+      Allows to enable or disabled package automatic restore
+
+6) Leverage NuGet with Chocolatey
+  Overview of Chocolatey
+    Built on top of NuGet infrastructure
+    Similar to Advance Package Tool (APT) in Debian
+    Attempt to implement APT in Windows
+    
+    Installer for Windows applications
+    Installs apps in standard locations
+    Gallery at chocolatey.org
+    Managed with PowerShell
+    Uninstalls packages, not applications
+      Use normal Windows uninstall tools for application
+    Chocolatey as Wrapper
+      Package is a wrapper around real application installer
+      Chocolatey installer reads app package
+      Downloads real installer file
+      Runs installer
+      Supresses installer dialogs
+    Install apps quickly and silently with minimum manual input
+    Can bash together multiple installs and updates saving more time
+  Install Chocolatey
+    Not traditional install, it's an extension of PowerShell
+    Go to chocolatey.org and follow "easy install" instructions
+      >Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+    Might need to restart PowerShell
+    To get commands help
+      >choco /?
+  Use Chocolatey to install applications
+    >choco install firefox
+    >choco install paint.net -y
+    Abbreviation command for choco install
+      >cinst googlechrome -y
+  Find apps with Chocolatey Gallery
+    Go to chocolatey.org and click Packages tab ( 6002 packages)
+    Can search and sort by other criteria
+    Show command to install
+      Some commands are alias of real install command
+    Clicking link shows more package information
+    Documentation:
+      Click Doc tab
+      List/Search shows PowerShell commands
+        choco search <filter> [<options/switches>]
+        choco list <filter> [<options/switches>]
+        clist <filter> [<options/switches>]      
+    Powershell:
+      >choco list -l
+      >choco list dropbox
+  Work with versions:
+    >choco list filezilla -all
+    >choco install filezilla --version=3.9.0.1
+  Use Chocolatey to update applications
+    >choco list -l
+    >choco outdated
+      "pinned" property allows to lock a package to a certain version
+      avoids updating inadvertently when doing batch updates
+    >choco upgrade packageName
+      To upgrade
+    >choco upgrade all
+  Use Chocolatey to uninstall applications
+    Chocolatey is a service wrapper around a real application installer
+    Uninstalling may be a two step process:
+      Remove package:
+        >choco uninstall "packageName" -y
+      Remove application if app's uninstaller was not run automatically
+        Uninstalling from "Programs and Features" to remove application
+  Batch installs with Chocolatey config files
+    Create xml config file that group together packages
+    Use the following schema where version is optional:
+      <xml ...>
+        <packages>
+          <package id="packageName" version="..."/>
+          ...
+        <packages>
+      </xml>
+    To run in PowerShell:
+      >choco install filename.config -y
+  Use The ChocolateyGUI application
+    To work in graphical interface
+      >choco install chocolateygui -y
+    Run application
+      Shows two tabs: local packages and public packages
+    Once a package has been selected click the "Install" button
+    Can also do upgrades and uninstalls graphically
+
+7) Leverage NuGet with Other Tools
+  Overview of BoxStarter
+    Based on Chocolatey
+    Automation engine for Chocolatey
+    Mission: quickly and automatically set up development environments
+    Setup:
+      Create a batch list of Chocolatey packages
+      Save to a local computer or a server accessible via URL
+    BoxStarter enhances the batch installs
+    Contains a set of configuration commands
+    Commands aid in configuring standard Windows settings
+      Enable or disable Windows Update
+      Run all pending Windows updates
+      Set File Explorer options (show hidden; show extensions)
+      Other commands ...
+    Seamlessly handles installation restarts
+    Detects pending reboots
+    Handles restart sequence
+    BoxStarter shell: alternate to PowerShell
+      Ensures scripts run with administrative privileges
+      Fully configured with loaded BoxStarter modules
+    Remote installations
+    Integrates with Hyper-V and Azure VMs
+  Install Boxstarter
+    >choco install boxstarter
+    Another way to use boxstarter without installing in local machine
+      Launch from browser using web URL: http://boxtarter.org/packages/packageID
+        EX: https://boxtarter.org/packages/fiddler4
+      A popup window will request to install
+      To make it work in Chrome install "click-once" extension
+  Create a Boxstarter script
+    Contained in a simple text file
+      Sample script contents:
+        <#
+         Comments
+        #>
+
+        Set-WindowsExplorerOptions -EnableShowHiddenFilesFoldersDrives  -EnableShowFileExtensions 
+        Enable-RemoteDesktop
+        Install-WindowsUpdate -acceptEula
+
+        choco install notepadplusplus.install
+        cinst 7zip.install
+
+
+        <#
+        Apps to install, without packages:
+
+        Camtasia Studio
+        Office 2016
+        #>
+    Can place the script in a public URL:
+      A github gist, a text file in a GitHub server
+      Click the "Raw" button to get URL for text data
+  Install programs with a Boxstarter script
+    Run Boxstarter Shell
+    >Install-BoxstarterPackage localTextFileName
+    or
+    >Install-BoxstarterPackage "https://gist.githubusercontent.com/..."
+    or using PowerShell
+    >START http://boxtarter.org/package/url?https://githubusercontent.com/...
+  Overview of OneGet
+    Integrated into PowerShell5 and Windows 10
+    Manager for a collection of installers
+    Need to get OneGet installer provider
+      MSI, Chocolatey, NuGet...
+    To get list of providers:
+      >Get-PackageProvider
+  Use OneGet to install applications
+    Get list of commands for package management
+      >Get-Command -Module PackageManagement
+    List package sources
+      >get-packagesource
+    Add package sources
+      >Register-PackageSource -Name chocolatey -Location https://chocolatey.org/api/v2 -Provider PSModule -Trusted
+      >Register-PackageSource -Name nuget.org -Location https://nuget.org/api/v2 -Provider PSModule -trusted
+    Review sources
+      >get-packagesource
+    Can look for packages:
+      >find-package firefox source chocolatey
+    An install
+      >find-package firefox source chocolatey | install-package
+    Package management conclusion:
+      A single united syntax that works across any package manager application
+      Guarantees a uniform way to install and manage applications and packages
+ 
+8) Additional Topics
+  Create a custom NuGet package
+     Install "NuGet Packager" by Ove Andersion
+     Add Packager to Solution
+      File->Add->New Project->NuGet->NuGet Packager
+    Important folders:      content
+      lib
+      tools
+    File Package.nuspec
+      Describes information specified in NuGet repository
+      Specifies pack's dependencies
+    Add files that are part of package
+      lib folder: 
+        add dll and pdb project files
+        these will be added as reference
+      content folder
+        ReadMe, examples, documentation, licensing
+      tools folder
+        NuGet powershell scripts
+        Additional executables and helpers that augment your package
+        By default template adds three powershell scripts:
+          install.ps1, init.ps1 and uninstall.ps1
+          They are blank script, modify as needed
+  Publish the custom NuGet package
+    Build package generator project
+    Two package "nupkg" files are created in root folder:
+      NameGeneratorLib.1.0.0.nupkg
+      NameGeneratorLib.1.0.0.symbols.nupkg (debug symbols)
+    Deploy to repository
+      Will need to be compiled in Release mode
+      NuGet.config file specifies location of repository in <packageSources>
+  Install the custom NuGet package
+   Manage NuGet Packages
+   Select local repository
+   Install NameGenerator package
+   Review references with new NameGeneratorLib dll and its dependencies
+   
+CONCLUSION
+  Documentation in
+    https://www.nuget.org
+    https://chocolatey.org
+    https://www.bostarter.org
+    https://stackoverflow.com search for nuget
+    PowerShell will pay dividends later
+    

@@ -131,7 +131,7 @@ Jeremy Forster and Briana Swift
   
 
 5) GitHub on the Command Line
-  git tool to be able to create / remove repositories from console
+  GH tool to be able to create / remove repositories from console
   Cheat sheet: https://services.github.com/kit/downloads/github-git-cheat-sheet.pdf
   
   

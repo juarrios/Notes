@@ -1,0 +1,20 @@
+Active Directory PowerShell commands:
+
+Version
+  >$PSVersionTable.PSVersion
+
+Domain info:
+  >Get-AdDomain
+
+List of  AD commands available:
+  >Get-Command -Verb Get -Module ActiveDirectory
+  
+Get user info:
+  >Get-ADUser -filter 'SamAccountName -eq "jbarri1"'
+  >Get-ADUser jbarri1
+  
+Help on command:
+  >Get-Help Get-ADUser -Parameter filter
+  
+Current computer groups
+  >Get-ADComputer $env:COMPUTERNAME | Get-ADPrincipalGroupMembership

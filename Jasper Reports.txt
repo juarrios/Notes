@@ -74,3 +74,6 @@ EA Server TDF UI
 AD Security:
   LDAP file:
     Drive:\Jaspersoft\jasperreports-server-cp-6.5.2\apache-tomcat\webapps\jasperserver\WEB-INF\applicationContext-externalAuth-LDAP.xml
+    
+Community Source Code instructions:
+  https://community.jaspersoft.com/wiki/contributing-tibco-jaspersoft-studio-and-building-sources

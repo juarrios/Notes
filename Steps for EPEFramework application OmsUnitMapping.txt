@@ -1,0 +1,438 @@
+EPEFramework steps for OmsUnitMapping
+1) Create project using template
+2) Edit Web project properties to run it in IIS instead of a port
+3) Run it to verify it runs in IIS with just template code
+4) Define application using frameworkAdmin:
+  frameworkAdmin->Admin->Applications
+  http://localhost/FrameworkAdmin/Admin/preview.aspx?pageName=PageApp
+5) Create default modules:
+  Modules & Roles->Modules
+6) Create roles, ADMIN to start:
+  Modules & Roles->Roles
+  http://localhost/FrameworkAdmin/Admin/preview.aspx?pageName=Roles
+7) Add role to module mapping, ADMIN to HOME page:
+  Modules & Roles->Role Module Mapping
+  http://localhost/FrameworkAdmin/Admin/RoleModuleMapping.aspx
+8) Add user roles:
+  Modules->User Roles
+  http://localhost/FrameworkAdmin/Admin/UserRoles.aspx
+9) Edit web.config:
+ Add connection strings
+  <connectionStrings>
+    <add name="DBConnString" providerName="System.Data.SqlClient" .... />
+    <add name="omsdbdt3" providerName="System.Data.OracleClient"  .... />
+    <add name="InService" providerName="System.Data.OracleClient"  .... />
+  Change application name:
+    <add key="EPEFrameworkAppName" value="OmsUnitMapping" />
+  Change URLs for EPEFrameworkService web services to localhost:
+    <client>
+      <endpoint address="http://localhost/EPEFrameworkService/PageService.asmx" ... />
+      <endpoint address="http://localhost/EPEFrameworkService/ModulesService.asmx" ... />
+    </client> 
+  </connectionStrings>
+  Edit windows authorization:
+    <authentication mode="Windows" />
+    <authorization>
+      <deny users="?" />
+       <allow users="*" /> 
+    </authorization>
+
+10) Update Site.Mater with code that adds menus dynamically 
+11) Use application's own Admin menu and add a page  
+  Admin->Page Config
+  http://localhost/OmsUnitMapping/Admin/PageConfig.aspx
+12) General Tab:
+  Name: OmsUnitMapping
+  Title: OMS to InService Units
+  ConnName: omsdbdtd3
+  TableName: XXTIB.TIB_OMS_UNITS_TO_INSERVICE
+13) Dialog Tab:
+  Button "Add Tab": Name = "Map Units"
+  Button "Add field from DB to current tab" and click "Add All"
+  Remove unwanted fields: STATUS, STATUS_TIME
+  Check UNIT_ID as "IsId" and ControlType "hidden"
+  Add all fields to "Grid" tab
+14) Grid Tab:
+  Reorder fields as desired in the view
+  Uncheck UNIT_ID as "visible"
+  Click "Save configuration"
+15) Click "Preview Page" button 
+  Verify table contents are displayed in the grid
+  Double click a row and verify the dialog displays the records' values
+
+Detailed Customization:
+
+16) Add new web form page with master page
+  Insert script inside "Content1" as specified in Wiki tutorial
+  Insert script inside "Content2" as specified in Wiki tutorial
+17) Replace PAGE_NAME with your page's name
+  const PAGE_NAME = 'OmsUnitMapping';
+18) Using FramworkAdmin add new module, rules and mapping for the new physical page
+  Follow logic for steps 5,6,7 but applied to OmsUnitMapping.aspx
+19) Refresh application
+  Verify "OmsUnitMapping" menu item shows
+  Click "OmsUnitMapping"
+    Grid should show records in XXTIB.TIB_OMS_UNITS_TO_INSERVICE table
+    Double click a row and should show input boxes for each column
+    
+Created Database retrieval interface, classes and methods:
+
+20) Add IUnitDao Interface
+  In Visual Studio under "Dao" folder add IUnitDao.cs interface file
+  Add EPE.Common "using" lines
+    using EPE.Common.Dao;
+    using EPE.Common.Entities;
+  Make interface public and inherit from "IBaseDAO"
+    public interface IUnitDao : IBaseDAO
+  Define methods to retrieve OMS and InService units
+    IList<Entity> GetOmsUnits(Entity entity);
+    IList<Entity> GetInServiceUnits(Entity entity);
+21) Add "GetUnitDAO" method in DAOFactory class to return the IUnitDao interface:
+    public IUnitDao GetUnitDAO(string connString)
+    {
+      string clazz = ConfigurationManager.AppSettings["iUnitDao"];
+      return (IUnitDao)FactoryUtils.GetDAO(clazz, connString);
+    }
+22) Add Web.config entry to define FQN for the class implementation for iUnitDao
+  <add key="iUnitDao" value="OmsUnitMapping.Dao.Oracle.UnitDao, OmsUnitMapping"/>  
+23) Implement interface DAO methods:
+  In Visual Studio create "Oracle" folder under "Dao" folder
+  Under "Oracle" folder add class "UnitDao"
+  Add using EPE.Common lines
+    using EPE.Common.Dao;
+    using EPE.Common.Dao.Handlers;
+    using EPE.Common.Entities;
+    using EPE.Common.Utils;
+  Inherit from BaseSqlDAO, IUnitDao
+    public class UnitDao : BaseSqlDAO, IUnitDao
+  Add default constructor:
+    public UnitDao() : this(DefaultConnString) { }
+  Add constructor that takes specified connection string
+    public UnitDao(string connString)  : base(connString, null) { }
+24) Implement GetOmsUnits method to retrieve OMS vehicles using a SQL query:
+  public virtual IList<Entity> GetOmsUnits(Entity entity)
+  {
+    ...
+      query.Append("select VEHICLE_ID from EPE_A.VEHICLE where vehicle_id like '%M'")// and vehicle_id not in ( select OMSUNIT from TIB_OMS_UNITS_TO_INSERVICE ) ");
+    ...
+      ResultSetHandler<IList<Entity>> h = new EntityHandler<Entity>(entity);
+      list = GetQueryRunner().Query(GetConnection(), query, h);
+    ...
+    return list;
+  }
+25) Implement GetInServiceUnits method to retrieve InService trucks and users:
+  public virtual IList<Entity> GetInServiceUnits(Entity entity)
+  {
+    ...
+      query.Append("select  unid, FNAME, LNAME from cad.def_unit u inner join cad.persl p  on ('TB' || P.EMPID = u.unid  ) ");
+    ...
+      ResultSetHandler<IList<Entity>> h = new EntityHandler<Entity>(entity);
+      list = GetQueryRunner().Query(GetConnection(), query, h);
+    ...
+      return list;
+  } 
+26) Define AjaxController methods that will call DAO methods
+  In Visual Studio create Ajax folder:
+    This folder will hold all classes that are called by the AjaxController class
+  Under "Ajax" folder create "Unit" class:
+    Add using EPE.Common lines
+      using EPE.Common.Ajax;
+      using EPE.Common.Dao;
+      using EPE.Common.Entities;
+      using EPE.Common.Entities.Page;
+      using EPE.Common.Utils;
+    Inherit from PageInfoBase
+      public class Unit: PageInfoBase
+27) Add GetOmsUnits method:
+  public virtual string GetOmsUnits(HttpRequest request)
+  {
+    IList<Entity> list = new List<Entity>();
+    ...
+      Page page = GetPage(request);
+      Entity entity = CreateEntity(request, page);
+      list = DAOFactory.Instance.GetUnitDAO(page.ConnName).GetOmsUnits(entity);
+    ...
+    return CreateEntityListResponse(list);
+  }
+28) Add GetInServiceUnits method:
+  public virtual string GetInServiceUnits(HttpRequest request)
+  {
+    ...
+    IList<Entity> list = new List<Entity>();
+    ...
+      Page page = GetPage(request);
+      Entity entity = CreateEntity(request, page);
+      list = DAOFactory.Instance.GetUnitDAO(page.ConnName).GetInServiceUnits(entity);
+    ...
+      return CreateEntityListResponse(list);
+  }
+29) Add Web.config entry to define the FQN for class instantiation for "Unit" class in AjaxController:
+  <add key="Unit" value="OmsUnitMapping.Ajax.Unit, OmsUnitMapping" />
+  
+30) Use "Page Config" to define OMS Vehicles entity to be returned by GetOmsUnits method:
+  Admin->Page Config->New
+  General Tab:
+    Name: Vehicles
+    Title: Vehicles
+    ConnName: omsdbdt3
+    TableName: EPE_A.VEHICLE
+  Dialog Tab:
+    Click "Add Tab"
+      Name: Vehicles      
+      Cols: 1
+      Save
+    Click "Add fields from DB to current tab"
+      Add "VEHICLE_ID"
+      Close
+    Edit "VEHICLE_ID" field
+      Name: OMSUNIT
+      DB Name: VEHICLE_ID
+      Label: OMSUNIT
+      Type: varchar2
+      ControlType: inputbox
+      Check: IsId and Required
+      UnCheck: Exportable, Insertable, Updatable
+      Save
+    Save page configuration
+31) Test AjaxController instantiation of Unit class to call method GetOmsUnits and retrieve Vehicles:
+  In browser enter URL:
+    http://localhost/OmsUnitMapping/AjaxController.ashx/Unit/GetOmsUnits?pageName=Vehicles
+  JSON object will be returned:
+    {"iTotalRecords":13,
+     "iTotalDisplayRecords":13,
+     "aaData":[{"VEHICLE_ID":"7002M"},...,{"VEHICLE_ID":"7305M"}]
+    }
+32) Use "Page Config" to define InService "Units" entity to be returned by GetInServiceUnits method:      
+  Admin->Page Config->New
+    General Tab:
+      Name: Units
+      Title: Units
+      ConnName: InService
+      TableName: CAD.DEF_UNIT
+    Dialog Tab:
+      Click "New Tab": 
+        Name: Units
+        Cols: 1
+      Click "Add Field from DB to Current Tab":
+        Add UNID
+        Close
+      Edit UNID:
+        Details Tab:
+          Check IsId
+        Join Info tab add fields:
+          TableName: CAD.PERSL
+          JoinField: EMPID
+          JoinFields: FNAME,LNAME
+          JoinType: INNER
+          Save
+      Save page configuration
+33) Test AjaxController instantiation of Unit class to call method GetInServiceUnits and retrieve Units:
+  In browser enter URL:
+    http://localhost/OmsUnitMapping/AjaxController.ashx/Unit/GetInServiceUnits?pageName=Units
+  JSON object will be returned:
+    {
+      "iTotalRecords": 26,
+      "iTotalDisplayRecords": 26,
+      "aaData": [
+        {
+          "FNAME": "ANDREW",
+          "LNAME": "LOZANO",
+          "UNID": "TB6668"
+        }, 
+        ... ,
+        {
+          "FNAME": "VICTOR",
+          "LNAME": "BISHOP",
+          "UNID": "TB6139"
+        }
+      ]
+    }
+      
+Make Edit Dialog more user friendly:
+34) Admin->Page Config
+  Double click OmsUnitMapping page definition
+  Dialog Tab:
+  Edit INSERVICEUNIT
+  "Details" tab:
+    Change ControlType from inputbox to selectmenu
+  "Drop Down Info" tab add fields:
+    url: AjaxController.ashx/Unit/GetInServiceUnits?pageName=Units
+    valField: UNID
+    textField: FNAME,LNAME
+    concatChar: "one space"
+  Save "Drop Down Info"
+  Save page configuration
+35) Test INSERVICEUNIT as select menu:
+  Click OmsUnitMapping menu
+  Double click a grid's row to display edit dialog
+  Verify that INSERVICEUNIT contains list of concatenated names
+  Use Chrome's "Inspect" to view HTML select tag with option items
+  Value should be UNID
+  Text is the concatenated name
+36) Disable Units already mapped in INSERVICEUNIT options items
+  In OmsUnitMapping.aspx file add following JS script
+    $('table.display').Catalog({
+      pageConfig: config,
+      ... ,
+      drawCallBack: myDrawCallback,
+    });
+
+    function myDrawCallback(oTable, oSettings) {
+      log('myDrawCallback start');
+
+      // Retrieve used InService unit IDs from table rows
+      var inserviceUnits = [];
+      oSettings.aoData.forEach(function (obj) {
+        inserviceUnits.push(obj._aData.INSERVICEUNIT);
+      });
+
+      // Disable options already mapped in table
+      $('#INSERVICEUNIT option').each(function (index) {
+        $(this).attr('disabled', inserviceUnits.includes(this.value));
+      });
+      $('#INSERVICEUNIT').selectmenu('refresh');
+
+      log('myDrawCallback end');
+    }  
+37) Hide USERNAME field
+  Admin->Page Config
+    Double click OmsUnitMapping page definition
+    Dialog Tab:
+    Edit USERNAME
+    "Details" tab:
+      Change ControlType from "inputbox" to "hidden"
+38) Test USERNAME is hidden:
+  Click OmsUnitMapping menu
+  Double click a grid's row to display edit dialog
+  Verify that USERNAME does not display
+  Use Chrome's "Inspect" to view HTML USERNAME input tag with type="hidden"
+39) Ensure USERNAME input gets INSERVICEUNIT text value before saving
+  $('table.display').Catalog({
+    pageConfig: config,
+    ... ,
+    saveEntityCallBack: saveEntity
+  });
+
+  function saveEntity(oTable, options) {
+    var entity = getObject(DIALOG_SEL);
+    // Update hidden fields before being saved
+    entity.USERNAME = $('#INSERVICEUNIT option:selected').text().replace('  ', ' ');
+    // call default saveEntity method
+    var response = $(TABLE_SEL).Catalog('saveEntity', oTable, options, entity);
+    $.when(response).done(reloadOmsUnit);
+  }
+40) Make OMSUNIT a selectmenu field
+  Admin->Page Config
+    Double click OmsUnitMapping page definition
+    Dialog Tab:
+    Edit OMSUNIT
+      Details Tab:
+        ControlType: selectmenu
+      Drop Down Info tab:
+        textField: VEHICLE_ID
+        url: AjaxController.ashx/Unit/GetOmsUnits?pageName=Vehicles
+        valField: VEHICLE_ID
+      Save
+    Save Page Configuration
+41) Disable OMSUNITs already mapped in OMSUNIT options items
+  In OmsUnitMapping.aspx file modify JS function myDrawCallback:
+    function myDrawCallback(oTable, oSettings) {
+      ...
+        // Retrieve used OMS and InService unit IDs from table rows
+        var inserviceUnits = [];
+        var omsUnits = [];
+        oSettings.aoData.forEach(function (obj) {
+          omsUnits.push(obj._aData.OMSUNIT);
+          inserviceUnits.push(obj._aData.INSERVICEUNIT);
+        });
+
+        // Disable options already mapped in table
+        $('#OMSUNIT option').each(function (index) {
+          $(this).attr('disabled', omsUnits.includes(this.value));
+        });
+        $('#OMSUNIT').selectmenu('refresh');
+
+        $('#INSERVICEUNIT option').each(function (index) {
+          $(this).attr('disabled', inserviceUnits.includes(this.value));
+        });
+        $('#INSERVICEUNIT').selectmenu('refresh');
+      ...
+    }  
+37) Disable OMSUNIT selectmenu widget when in Edit mode:
+  $('table.display').Catalog({
+    ...
+    newEntityCallBack: newEntity,
+    editEntityCallBack: editEntity
+  });
+  ...
+  function newEntity(oTable, options) {
+    disableOmsUnit(false);
+    $(TABLE_SEL).Catalog('newEntity', oTable, options);
+  }
+
+  function editEntity(oTable, options) {
+    disableOmsUnit(true)
+    $(TABLE_SEL).Catalog('editEntity', oTable, options);
+  }
+
+  function disableOmsUnit(disable)
+  {
+    $('#OMSUNIT').attr('disabled', disable);
+    $('#OMSUNIT').selectmenu('refresh');
+  }
+38) Ensure saveEntity callback retrieves all expected values:
+  function saveEntity(oTable, options) {
+    var entity = getObject(DIALOG_SEL);
+    // Update entity values to be saved
+    entity.USERNAME = $('#INSERVICEUNIT option:selected').text().replace('  ', ' ');
+    entity.INSERVICEUNIT = $('#INSERVICEUNIT option:selected').val();
+    entity.OMSUNIT = $('#OMSUNIT option:selected').val();
+    ...
+    }
+39) Make OmsUnitMapping the Home page
+  Rename OmsUnitMapping.aspx to Default.aspx in Visual Studio
+  In localhost/FrameworkAdmin:
+    Modules & Roles->Modules:
+      Application: OmsUnitMapping
+      Remove Home module
+      Edit OmsUnitMapping module:
+        URL: Default.aspx
+        Module Order: 10
+   Refresh Cache
+40) Add regular non-admin user
+  In localhost/FrameworkAdmin:
+    Modules & Roles->Roles
+      Application: OmsUnitMapping
+      Click "New":
+        Applicaiton: OmsUnitMapping
+        Role Name: User
+        Priority: 2
+        Click Save
+    Modules & Roles->Role Module Mapping
+     Click New:
+      Application: OmsUnitMapping
+      Role: User
+      Module: OmsUnitMapping, OMS Unit Mapping
+      New Access: check
+      Edit Access: check
+      Delete Access: check
+      Click Save
+    Modules & Roles->User Roles
+      Click "New":
+        Application: OmsUnitMapping
+        Role: User
+        User Login: a_jbarri1
+        CRNumber: blank
+        Click Save
+41) Test regular user
+  Open Chrome browser as administrator
+  Enter a_jbarri1 credentials
+  Enter URL: http://localhost/omsunitmapping/
+  Verify that only OmsUnitMapping menu entry is listed
+  Verify list of mappings is shown
+  Add new mapping
+  Edit existing mapping
+  done!
+  
+
+    

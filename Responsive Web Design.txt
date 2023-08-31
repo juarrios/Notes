@@ -76,14 +76,13 @@ Building Up:
     Provide different styles depending on device characteristics:
       Width, Height, Pixel ratio
     Include additional style sheet in page:
-      <link rel="stylesheet" media="screen and (min-width:500px)"
-        href="over500.css">
+      <link rel="stylesheet" media="screen and (min-width:500px)" href="over500.css">
       Many small files but many HTTP request
     Embedded in CSS page:
       @media screen and (min-width: 500px) {
         body { background-color: green; }
       }
-      Bigger files but fewere HTTP requests
+      Bigger files but fewer HTTP requests
     For responsive web design:
       max-width: applied when value is less than value
       min-width: applied when value is more than value
@@ -100,7 +99,7 @@ Building Up:
         Check grid based layouts tutorials:
           https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout
     Flexbox:
-      Powerfool tool for layout
+      Powertool tool for layout
       Candidate recommendation and supported by most browsers
       Ability to fill the space available
         Elements will expand or shrink
@@ -116,7 +115,7 @@ Building Up:
           .orange { order: 3; }
           .red { order: 1; }
         }
-Responssive Patterns:
+Responsive Patterns:
   Column Drop
     Columns go into rows as browser's width shrinks
     Rows go into columns as browser's width expands

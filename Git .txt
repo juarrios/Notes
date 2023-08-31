@@ -395,6 +395,10 @@ Branching means you diverge from the main line of development and continue to do
     Merge:
       >git checkout master
       >git merge hotfix
+    Merge with a single comment instead of all individual hotfix comments:
+      >git merge --squash hotfix
+      >git commit
+        Change top comment to desired comment on vim
     "Fast-forward" commit happens when there are no merging conflicts and Git just moves the pointer forward.
     Delete branch after merging:
       >git branch -d hotfixgit 
@@ -466,10 +470,21 @@ Branching means you diverge from the main line of development and continue to do
       available publicly, then you'll be fine.
     To get the best of both worlds, is to rebase local changes you've made but haven't shared yet before you push
       them in order to clean up your story.
-
-
     
-      
+    Rebase interactive:
+      Refactor comments into a more meaningful summary for deployment and review
+        >git rebase -i 2e5755c
+        Will get interactive list of comments to "pick", 
+
+     Automate the cleanup of rebase interactive:
+      Change readme file and commit
+        >git comit -am "update README"
+      Change readme file again and commit using fixup flag for the last "update" commit
+        >git commit --fixup :/update
+      Do more changes to same file and commit same way
+        >git commit --fixup :/update
+      Finally merge all commits into original commit using rebase --autosquash commitID before changes
+        >git rebase -i --autosquash deb76a6
      
       
       
@@ -482,6 +497,8 @@ Delete commits:
   Locally:
     Last 2 commits:
     >git reset --hard HEAD~2
+    Up to a commit ID to be the new HEAD:
+    >git reset --hard 9a7f06b
   Push to remote origin:
     >git push origin +master
 

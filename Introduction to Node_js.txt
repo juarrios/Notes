@@ -1,4 +1,6 @@
-Introduction to Node.js (Azat Mardan @ EDX)
+Introduction to Node.js (Azat Mardan @ EDX) 
+First (April 2018)
+Review (April 2019)
 
 Why Node.js?
   Allows to develop faster due to existing modules
@@ -10,7 +12,7 @@ Why Node.js?
     With MongoDB can leverage JS
   One language to code everywhere:
     Mobil
-    Internet of Things (IOT): embeded systems
+    Internet of Things (IOT): embedded systems
   Full Stack JS developer or generalized developer
   Powered by
     Google Chrome V8 engine: super fast JS
@@ -27,10 +29,12 @@ Node Downsides
   
 Node in Modern Web Development
   Combines both web server and language together
-  Replace both Apache (PHP) and Tomcat (Java)
+  Replace both 
+    Apache (PHP interpreted)
+    Tomcat (Java compiled)
   You build web server and the application
     Restful API servers
-      Statless servers
+      Stateless servers
       Easier to scale
     HTTP methodology
       Methods: GET, POST, PUT, etc.
@@ -38,6 +42,12 @@ Node in Modern Web Development
       Submit queries
     
 Node Core Overview
+  global objects and global keywords
+  modules: import with "require"
+  module.export: export functionality to other files
+  npm: node package manager
+  core modules: built into the system
+  
   Long term support versions are even numbers: 2,4,6,8 ...
     Recommended for production environments
 
@@ -69,16 +79,24 @@ How to launch Node:
     >node .
       default name is "index.js"
     ".js" extension is optional
+  More Samples:
+    Current date:
+      >node -e "console.log(new Date())"
+    Node version:
+    >node -e "console.log(process.versions.node)"
+    
 
 Globals:
   One "global" object similar to "window" in browsers
-  Its first level properties are accesible without the "global" prefix:
+  Its first level properties are accessible without the "global" prefix:
     process
     require()
     module and module.exports
     console and console.log()
     setTimeout() and setInterval()
-    __dirname, __filename and process.cwd
+    __dirname: absolute path of script running
+    __filename: absolute path with filename of script
+    process.cwd(): absolute path to process running "node" command 
     
 Process object
   Useful process information includes
@@ -88,18 +106,26 @@ Process object
     exit(): method to exit process
 
 Require and module.export
-  Node mechanism for moodules
-  require('...')
+  Node mechanism for modules
+  1) require('...')
     to import functionality or data
     can provide a path to a file
       should start with a "." or ".."
+        const server = require('./boot/server.js') // server.js file with a relative path down the tree
+        const server = require('../boot/server.js') // server.js file with a relative path up the tree
+        const server = require('/var/www/app/boot/server.js') // server.js file with an absolute path 
+        const server = require('./boot/server') // file if there's the server.js file
+        const routes = require('../routes') // index.js inside routes folder if there's no routes.js file      
     can provide a name
       can be a core module
       NPM module
+        const filesystem = require('fs') // core module
+        const express = require('express') // npm module      
     can provide a JSON file
       creates a JS object to assign to a variable
-    caches the "require() assignments"
-  module.export= object or function
+        const databaseConfigs = require('./configs/database.json') // JSON file
+    node caches the "require() assignments"
+  2) module.exports = object or function
     export functionality to other programs or files
     recommend assigning to a function
       more versatile, flexible and receives arguments
@@ -113,9 +139,161 @@ Core Modules
     Child Process: span other processes and programs
   Most used:
     FS: file system
-        work with file system to create, read files/folders
-    Path: to build cross-platform code
-        easily convert path folders into appropiate format
+      work with file system to create, read files/folders
+        fs.readFile(): reads files asynchronously
+        fs.writeFile(): writes files asynchronously
+      documentation: https://nodejs.org/api/fs.html
+    Path: to build cross-platform code for folder paths
+        easily convert path folders into appropriate format
     http:
 
 Event Emitters
+  Core module to implement the observer pattern which has:
+    an observer: object waiting for event o.on(...)
+    an event: name of event o.on('eventName', function() {...} )
+    an event emitter: throws event o.emit('eventName', parameterObject )
+  Can be triggered/emitted multiple times
+    //trigger twice
+    o.on('knock', function1 ...)
+    o.on('kncok', function2 ...)
+    //emit twice
+    o.emit('knock')
+    o.emit('knock')
+  Can be limited to executing observer only once
+    o.once('eventName', function() {...} )
+  Can be modularize
+    Separate event emitter class definition and event emission into own modules
+    Observer logic can be separated from event definitions
+    documentation: https://nodejs.org/api/events.html
+    
+HTTP
+  http.get request
+    Core module http allows to make HTTP requests to other services
+    Uses event emitter pattern
+    Process the 'data' event for small chunks of overall response
+    Save it all together in a buffer variable
+    Event 'end' determines end of response
+    Process data from buffer
+  http request 
+    Used to upload data or send to be processed and returned
+    Needs an options object as first parameter that contains members
+    Ex:
+      const postData = JSON.stringify({foo: 'bar'})
+      const options = {
+        hostname: 'mockbin.com',
+        port: 80,
+        path: 'request?foo=bar',
+        method: 'POST',
+        headers: 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(postData)
+      }
+      const req = http.request(options, (response) => {
+        response.on('data', (chunk) => {...} )
+        response.on('end', ()=> {...} )
+      }
+      req.write(postData)
+      req.end()
+  Server with core http
+    Node is great for building fast and efficient web servers
+    Steps:
+      create server object
+      define request handler
+        pass some data back to the recipient
+      start up with method listen(port)
+    Ex:
+      const http = require('http')
+      const port = 3000
+
+      http.createServer((req, res) => {
+        res.writeHead(200, {'Content-Type': 'text/plain'})
+        res.end('Hello World and Juan Barrios too!\n')
+      }).listen(port)   
+    Test in console with
+      >curl -i http://localhost:3000
+    Documentation: https://nodejs.org/api/http.html#http_class_http_server
+    node-dev utility allows to continuous restart server when changes
+      >npm i -g node-dev@latest   : installs utility
+      >node-dev server.js         : runs node-dev utility
+  Http Request Object
+    Has all information about incoming request
+      headers: connection, host, authorization...
+      method: GET, POST, PUT, DELETE, OPTIONS, HEAD
+      URL: path to request
+      URL, HTTP method
+    To process request body listen to 'data' event to collect incoming payload
+  Http Response object
+    Sends data back to the client
+      writeHead: sets the status code and creates HTTP headers
+      write: adds data to the response
+      end: finishes the response and request
+      statusCode: to change the status code of the response ( 200, 400, 500, etc)
+    Ex:
+      response.writeHead(404, {
+        'Content-Length': body.length,
+        'Content-Type': 'text/plain' })
+      response.statusCode = 200
+      response.write('Hello')
+      response.end(' World\n')    
+    
+Npm basics:
+  Comes with Node.js for package management
+  Three main components:
+    Website: https://www.npmjs.com
+      web gui to search for modules and find meta information
+        how many downloads
+        who is the author
+        documentation
+    Command line tool: npm
+    Registries: public and private
+      Where packages(aka modules) are stored
+      Where developers download packages and publish their packages
+  Installing modules
+    Start by initializing the project's folder that creates the package.json file
+      >npm init -y
+    Run install command
+      >npm install superagent
+      Creates "node_modules" folder
+      Adds subfolders for:
+        superagent module
+        superagent dependencies modules
+    Use downloaded module in a file
+      const superagent = require('superagent')
+  Keeps all the dependencies local for each module for each different version
+  Best practice:
+    Do not include a node_module folder in Git repository when it will be used by other applications
+    But for deployable applications do include it to prevent breakage due to dependency updates.
+  Samples:
+    >npm i module-name      // install locally
+    >npm i -g module-name   // install globally
+    >npm install express@4.2.0    // install version specific express package
+    >npm install express@latest   // install latest version
+    >npm install mocha  --save-dev (-D)  // install and register in devDependencies
+    >npm install express --exact (-E)    // don't use the ^ symbol in is dangerous
+    >npm ls -g    // list installed modules
+    >npm rm mysql       // remove mysql module
+    >npm rm mysql -g    // remove mysql module globally
+  Package.json
+    Is project's manifest file
+    Meta data about project's description, license, location, dependencies, scripts to build, launch and run
+    Required for npm modules
+    It is created with
+      >npm init
+    Private modules prevents accidental publishing
+      {
+        "name": "my-private-module",
+        ...
+        "private": true
+        ...
+      }
+  npm Configurations
+    the config CLI is the easiest way
+    Sample commands:
+      >npm config ls
+      >npm config -g ls
+      >npm config set registry "http://registry.npmjs.org/"
+      >npm config get registry
+      >npm config delete email
+
+    
+  

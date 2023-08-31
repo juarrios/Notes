@@ -1,0 +1,9 @@
+Clear Edge favorites:
+  1) Close Edge browser
+	2) Goto: C:\Users\jbarri1\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\MicrosoftEdge\User\Default
+		Remove or Rename folders: DataStore and Favorites
+  3) Goto: %LocalAppData%\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\RoamingState
+    Clear folder's content
+  4) Refresh the Cache:
+    HKEY_CURRENT_USER\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\FavOrder\FavBarCache
+  

@@ -1,0 +1,197 @@
+NERC Critical Infrastructure Protection (CIP)
+
+Background:
+  Mandatory and enforceable since June 2007
+  Ensure reliability of Bulk Electric System (BES)
+  Includes
+    Operations
+    Planning
+    Cyber Security
+Purpose:
+  Unescorted Physical Access
+  Authorized Electronic Access
+  BES Cyber System Information Access 
+Key Terms:
+  Cyber Assets: 
+    Programmable electronic devices, including the 
+      hardware
+      software
+      data in those devices
+  BES Cyber System: 
+    One or more BES Cyber Assets logically grouped
+  BES Cyber Asset or BCA
+    A Cyber system that can affect reliability of BES within 15 minutes
+  Electronic Security Perimeter
+    Logical border surrounding a BES Cyber System network
+  Physical Security Perimeter (PSP): 
+    The physical border surrounding BES Cyber Systems
+  Cyber Security Incident:
+    Disrupts, or was an attempt to disrupt,
+     the operation of a BES Cyber System
+     
+Cyber Security Policies (Lesson 1):
+  Low Impact BES Cyber Systems
+    Security awareness
+    Physical and Electronic security controls
+    Cyber security incident response
+  Personnel and Training
+    Personal Risk Assessment
+      Confirm Identity
+      Confirm 7 year criminal background check
+    Account Management
+      Technical and procedural control and accountability
+      Minimize risk of unauthorized access
+  Electronic Security Perimeters
+    Identification of all electronic access points
+    Identification of all BES Cyber assets
+    Protective cyber access within 
+      PSP
+      Remote Access
+      Wireless Networks
+  Physical Security of BES Cyber Systems
+    Physical security plan
+    Visitor control program
+    Maintenance and testing program
+  Configuration Change Management and Vulnerability Assessment
+    Change management process
+    Baseline configurations by BES cyber assets and systems
+    Monitoring baseline changes
+    Vulnerability Assesment
+  Systems Security Management
+    Ports and Services
+    Security patch management
+    Malicious code prevention
+    Security event monitoring
+    System access control
+  Incident Reporting and Response Planning
+    CIP cyber security incident response plan specifications
+    Implementation of the plan and testing
+    Review, update and communication
+  Recovery Plans for BES Cyber Systems
+    Plan specifications
+    Implementation and testing of the plan
+    Reviewing, updating and communication of the plan
+  Declaring and Responding to CIP Exceptional Circumstances
+    Conditions for CIP exceptional circumstances
+    Documentation of exceptions to CIP policies due to exceptional circumstances
+  Information Protection
+    Methods to identify and classify protected information
+    Procedures to protect and correctly handle protected information
+    BES cyber asset reuse and disposal
+    
+Physical and Electronic Access Control (Lesson 2):
+  Access Controls
+    PRG 04-01-01 Access Management and Revocation Program
+    EPE Personnel
+    Contractors
+    Vendors
+  Personnel Risk Assessment requirement:
+    Attain Access
+      Confirmation and Verification of Identity
+      7 Year Criminal Background Check
+      EPE Conducts the Assessment of Results
+      Cyber Security Training
+    Retain Access
+      Personnel Risk Assessment: Every 7 years
+      Cyber Security Training: Every 15 Months
+  Roles and Responsibilities
+    Access Controls
+      User: submits request
+      User's Manager: reviews and approves
+      Human Resources: performs personnel risk assesment (PRA)
+      NERC Compliance Group: issues cyber security training
+      Authorized Area Approver: reviews and designates a role for user and approves
+      Access Provisioner: provides the access
+      NERC Compliace Group: reviews workflow and provides final approval
+      CIP Senior Manager: Assigns and approves authorized approvers
+  EPE Intranet contains documentation for CIP Access Workflow
+  
+Visitor Control Program (Lesson 3)
+  Must provide a government provided identification
+  Must fill "Visitor Control Log"
+    Full Name
+    Organization/Company
+    Purpose of Visit
+    Point of Contact (POC)/Initial Escort
+    Date/Time of the Visit
+    Date/Time of Departure
+  Always with assigned POC Escort
+    Existing Employee
+    Contractor
+    Vendor
+    Employee Pending CIP Clearance
+
+Handling and Storage of BES Cyber System Information (Lesson 4)
+  PRG 12-01-01 Information Protection Program
+  Secure Live Link
+    BES cyber information only storage location
+  Protecting and Handling
+    Info must adhere to EPE Information Protection Program
+    Classification and labeling requirements
+    Access must be requested via CIP access workflow
+      Must be supported with a
+        Need to know
+        Business need that justifies access
+    Don't store BES cyber system information on transient cyber assets:
+      Laptops, tablets, removable 
+    Hardcopies under control of information owner
+      Destroy immediatly after intended use and deposited in EPE blue bins
+    Protected information not to be transported by email
+        
+Identification of a Cyber Security Incident (Lesson 5)
+  Identifying, classifying and responding to a cyber security incident
+  Common Attack Methods
+    External or removable media
+    Web based
+    Email
+    Improper usage
+    Loss or theft of equipment
+  Common cyber security incident symptoms:
+    Individual System Account in use when user is not at work
+    Attempted or actual unauthorized use of administrator level accounts
+    Buttons or commands respond differently than expected
+    Cleared log files
+    Creation of new user accounts
+    Disabled malware software or other security controls
+    Machines connecting to outside IP addresses
+    Locked out accounts
+    
+Response to Cyber Security Incidents (Lesson 6)
+  Steps to reponse to an incident:
+    Detection and Analysis
+    Assembling the Cyber security response team
+    Determination of reportable or non-reportable incident
+    Reporting requirements for incident
+    Containment, eradication and recovery of the incident
+    Documentation and lessons learned from the incident
+  Immediately contact supervisor or manager
+  Oversight:
+    CIP Senior Manager
+    Assembles CIRMT (Cyber Security Incident Response Management)
+    Declares incident's closure
+  CIRMT: Cyber Security Incident Response Management
+    Leaders from each operational area
+    Provide support and managerial input
+    Participates in annual review, training and testing of the plan
+  CIRTL: Cyber Security Incident Response Team Leader
+    Leads CIRT in response actions
+    Develops initial sympton assesment, classification and level of impact
+    Determines if incident is reportable or non-reportable
+    Contacts System Operators if reportable
+  CIRT:  Cyber Security Incident Response Team
+    Members of operational areas affected by incident
+    Trained to identify and classify incident
+    Immediately report incident symptoms to management
+    Performs of response actions to contain and mitigate the incident
+    
+Recovery Plans for BES Cyber Systems (Lesson 7)
+  Conditions for activating a Recovery Plan
+    Weather Disruptions/Natural Disasters
+    Computing Equipment Failures
+    Computing Environment Failures
+    Cyber Security Incidents
+  Types of information to recover BES Cyber System Functionality
+    Installation files and media
+    Current backup tapes and configuration settings
+    Documented build or restoration procedures
+    Cross site replication storage

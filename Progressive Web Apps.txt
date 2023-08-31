@@ -53,7 +53,7 @@ What is an App Shell?
   Ensures reliably good performance
   First load is quick and immediately cached using service worker
   Repeat visit only needs to retrieve necessary data
-  Simmilar to a native app package that loads from a store
+  Similar to a native app package that loads from a store
     Core components to show App but without data
   Allows to focus on speed
     Instant loading

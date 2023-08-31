@@ -1,0 +1,25 @@
+C:\>sc \\dtapp1 stop "OMS Vehicle XY Coordinate Update"
+
+SERVICE_NAME: OMS Vehicle XY Coordinate Update
+        TYPE               : 10  WIN32_OWN_PROCESS
+        STATE              : 3  STOP_PENDING
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+C:\>sc \\dtapp1 start "OMS Vehicle XY Coordinate Update"
+
+SERVICE_NAME: OMS Vehicle XY Coordinate Update
+        TYPE               : 10  WIN32_OWN_PROCESS
+        STATE              : 2  START_PENDING
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+        PID                : 7636
+        FLAGS              :
+
+C:\>

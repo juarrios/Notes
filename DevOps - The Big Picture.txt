@@ -1,0 +1,435 @@
+by Richard Seroter @rseroter (07/29/2020)
+DevOps:
+  a good way for teams to collectively work together
+  to ship value that matters
+  sustainable for the people on the team
+  focus on the customer not on IT efficiency or internal things
+  focus on speed, on learning, on things that actually matter
+  
+Today Complex Deployment Pipeline:
+  Many handoffs
+  Numerous teams involved
+  Manual Intervention
+  Downtime expected
+Today Project Mindset
+  Projects funded and teams formed
+  After deployment team disperses and app handled to operations
+  Documentation is the lasting knowledge
+  Value placed on stability and predictability rather than changeability
+Pains:
+  Serious outages
+    Panic when systems go offline
+    Repeated instances of the same mistakes
+    Slow recovery is the norm
+    Low faith in IT
+  No Incremental Value
+    Lengthy projects with lots of upfront work
+    Rare big-bang releases of large batches
+    No experimentation happening: no A B testing
+    Line of Business (LOBs) looks elsewhere for innovation
+  Excessive Infighting
+    "US vs Them" with little transparency within organization
+    IT teams have their own incentives: many features vs stablitiy vs ship on time
+    Lack of customer focus
+    Losing talented people because of bad culture
+Waste
+  Anything that takes time but doesn't add value for the customer
+  Knowledge waste
+    Disrupting flow of knowledge: teams that don't talk
+    Disrupting absorption of knowledge: what prevents people from learning
+    Physical barriers and overly complex reports
+    Dangerous by not sharing information for people to succeed
+  Waiting waste
+    Often caused by uneven processing
+    Can occur with highly specialized personnel
+    Waiting for environments or approvals before deploying
+  Over-Processing Waste
+    Doing more work than is required or needed
+    Can address by actually knowing requirements
+    Over-engineering software or too long design specs
+  Motion waste
+    Unnecessary movement by peopple or machines
+    May fix by physically rearranging or updating tech
+    Double entry of data or repetitive manual testing
+  Transportation waste
+    Moving things without adding value
+    done because "we've always done it that way"
+    ex: sending rubber-stamped approval docs among execs
+  Correction waste
+    Product is not usable, and rework is required
+    When quality is not build into the processing
+  Inventory waste
+    Things pilling up and not realizing value
+      Code piling up before QA team
+      Request queued up for operations to build environments
+    Lumpy processing and bursts of stuff hidding problems
+      Not constantly flowing requests
+      Buring problems under a ton of other things
+    Anything that could be actively processed but is not is wasteful
+    Ex: completed code waiting to be deployed
+  Over-production waste
+    Produce more than necessary
+    To keep staff or machines busy
+    ex: test environment for each team
+        more VMs than needed adding to cost
+Lean
+  Focus on customer value: attention on time and value 
+  Eliminate waste: eliminate non added value processes
+  One-piece flow: building->processing->shipping 
+  Shared, continuous learning: 
+    incremental improvement 
+    no single expert 
+    organization getting smarter 
+    multiple people growing learning the right way to do things
+  Eliminate overburden
+    of people
+    equipment
+    unevenness, lumpiness in production
+  Theory of constraints: 
+    finding bottlenecks and eliminating them to improve flow
+    fix areas that makes to most difference
+Defining DevOps: CALMS
+  Culture: People and process at the forefront
+  Automation: repeatability automating activities
+  Lean: apply lean principles to IT
+  Metrics: measure extensively and use it to improve
+  Sharing: continuous learning by sharing knowledge
+  
+DevOps Transition
+  Changing the culture
+    Re-establish your purpose
+      Shared objectives
+        what is universal across all organization
+        shared goal
+      empathize with the customer
+        know their need
+        who they are serving
+      agile motions
+      misalignment will doom your effort
+    Elevate empowerment
+      Trust team, let them take ownership
+      Employees do what's needed to run the service
+        they have more control
+        less gates to go through
+        less approvals to chase down
+        fewer teams to hand things off to
+        don't end up with "well it's not my job"
+        people feel like they are in control
+          can make things happen
+      Anyone can "pull the chord" when things are going wrong
+        stop production, halt everything
+        can say "I see this problem..."
+        raise their hand without fear to fix things 
+      Teams form during crisis to resolve issues
+    Promote Accountability
+      Can't have empowerment without accountability
+      Quality built into the process
+        quality is everyone's job
+      Shared commitment to excellence
+        team shared responsibility, not the manager
+        deliver something great because is theirs
+      Reward who deliver and take responsibility
+    Require Teamwork
+      All disciplines working together in crisis and daily operations
+      Respect unique skill sets
+        each member
+      Find excuses to get teams together
+        lunch together
+        commingle
+      Don't reward the "lone genius" or firefighter
+        no one can work with
+        at some point they are a hindrance on the team
+          that is waste 
+          slowing down
+          not transfer knowledge
+          too much weight into one person
+          they like being the hero and is not helpful to culture
+          brilliant on their own but can not play nice with others
+    Encourage Continuous Learning
+      Offer resources and time to learn
+        online learning subscriptions
+        sending to conferences
+        encouraging a public profile and engagement
+        not locking people away so they can not learn more and later leave
+      Encourage experimentation
+        have a hack time
+        solve problems in unique ways
+        see what works better
+      Conduct blameless postmortems
+        when things go wrong
+        figure out what happen
+        embrace discussions failures as learning opportunities
+        invite broad audience and share notes afterwards
+        find out what broke down in the system
+        avoid repeated mistakes
+      Make it easy to share and discover information
+        How are we sharing
+        doing public forums
+        internal environment
+          wiki
+          chat
+        everyone is getting better all the time
+          no one feels stagnat
+          more people empowered to jump in
+            help fix things
+            volunteer for assignments
+    Share, Live and Reward the Right Values
+      Don't just say your values, live them
+      What triggers promotion and bonuses?
+      Managers must lead by example
+  Changing Organization
+    Understand your customers and value streams
+      build up and value empathy for users
+      step back and see the systems in place
+        look at them from a value perpective
+      perform value stream mapping excercises
+        to focus your improvement efforts
+        understand components that make up the solution
+        how they work together
+        see where hidden pain is
+        where hand-offs are
+        where bottlenecks are to optimize
+    Put the spotlight on bottlenecks
+      It's innefective to optimize anywhere but the constraint
+        If constraint is not fixed, just piling more inventory
+        when contraint fixed, move to next constraint
+        any improvement outside of constraint is just an illusion
+      A constraint can be anything
+        internal: people, processes
+        external: limited demand
+    Doing away with inconsistent environments
+      Applies to different environments
+        Dev, QA, Prod
+        Also within each environment
+        Wasted time coding and testing when each environment is different
+        Easily recreate production in dev or QA
+      Result is slower software releases and issue resolution
+        A bottleneck when issue can not be reproduced
+        having excess complexity
+      Aim for on-demand environments
+        configurably look like prod even if smaller
+        seriously mimics production
+        configuration be the same in DEV, QA, PROD
+        everyone is working off the same setup
+        when something changes it cascades everywhere
+        everyone is using a cloned environment in each place
+        no waste waiting for environments because they are identical
+    Automate the Path to Production
+      How fast can you deploy code?
+        Is inventory piled up?
+        Scared to touch or update systems because it is a complicated process?
+        Inventory waiting to go into production but not happening because it's cumbersome?
+      Coding or testing faster won't help if deployment process is not optimized
+        Deployment process has too many manual steps
+          packaging up software
+          handling it to a team
+          staging it somewhere
+      Solution involves continuous integration and comprehensive automated pipelines
+        Pipeline should do everything to get it to production
+          Security scanning
+          Configuration management with change control
+          Not required any person to be involved from code complete to production
+        Getting code to production faster
+        Fixing defects faster
+        Get value to customers faster
+    Build in Quality Up-front
+      QA teams not responsible for quality
+        Everybody is responsible for quality
+      Shared commitment to excellence
+        Testing early and often
+        Testing code often
+        Thinking about user experience
+        Having empathy for our customers
+        Not waiting for other team to catch our obvious mistakes
+      Achieved through Test Driven Development (TDD) and continuous integration
+        rigourous integration testing
+        don't commit code that fails to meet a standard
+      Break Down Communication Barriers
+        Poor communication results in push, not pull-based systems
+          Push may suprise the recipient
+          Pull says I am ready for the next thing
+        Feedback loops are critical to context and shared ownership
+          helping understand what is coming
+          they know why it matters
+          the reason is important to customers
+        Solved via a mix of tools, practices and sincere intent to collaborate
+          No siloed knowledge
+          No confrontational relationships
+          everyone sees the outcome of the work
+          we are in this together
+    Rethink and Rebuild your Teams
+      IT is historically organized by functional teams
+        pools of developers that work out projects and then go to something else
+        scheleton crew that runs the project after
+      Result? Waste, uneven flow, poor visibility of the value stream
+        one burst and then everybody goes to something else
+      Smart companies moving from projects to products
+        Lets build a product and staff that product
+        When a release, regroup same people again and do another one
+        same people running a product for a core system
+      "DevOps is a re-org, not a new team to hire" -- Adrian Cockcroft
+    Create Permanent Teams Around Core Products
+      Teams don't disband after shipping
+        they build and run their service
+        more responsive
+        higher quality result
+        better customer satisfaction
+      The benefit? 
+        Retain knowledge
+          don'r rely on giant documentation that nobody wants to read
+          instead have the people that built it
+          educating new people that comes on the team
+        continuously update services
+        improve customer satisfaction
+      Not a fit for every product but puts focus on customer value
+    Need complete teams to achieve velocity
+      Must be capable of going from idea to production on their own
+      Encourage generalist skill sets versus hyper-specialization
+      May use services or APIs ( vs people ) from constrained teams
+    Ruthlessly eliminate waste in the organization
+      Policies and procedures get heavier over time
+        return to the original intent
+        question policies that are slowing down the process
+      Automate manual steps whenever possible
+        promete the idea without making people think they loose they job
+      Technology can help but improvement takes a change of focus
+        organization saying want to eliminate waste
+        put focus on customer
+        automate more things to help do more valuable things for the customer
+        
+Introducing DevOps Automation
+  The goal is continuous improvement
+  Can not "buy" DevOps
+    It is a new way of working
+    Focusing on the customer
+    Focusing on reducing waste
+    Focusing on effieciency and flow
+  Tool adoption happens in stages
+    Can start with just using source control system
+    Then build triggered by commiting
+    Then automating testing and deployment process
+    Then telemetry and feeding back to the teams
+  The DevOps Toolchain
+    Planning tools: to help design what will be built and run
+      Defined a shared purpose
+      Giving better transparency
+      Empowering teams
+        Participating in planning
+        See if everyones priorities are in harmony
+      Are Online tools, not static documents always out of date
+      Ways to visualize work, share plans, track progress, make sure going towards goal
+      Examples: GitLab, TaskTop, CollabNet VersionOne, Pivotal Tracker, Trello, Azure Boards    
+    Issue Tracking: to figure what to fix and improve
+      Collecting, triaging and responding to issues
+      Shared systems to avoid transportation waste and information lost
+      Customer responsiveness and not having them just scream into a black hole 
+      Helps feedback loop so teams can talk to each other
+      Ways to collect tickets, assign them, process them
+      Examples: Atlassian Jira, JetBrains YouTrack, ZenDesk
+    Source Control: the heart of DevOps efforts
+      Foundational piece for DevOps
+      Software asset, the stuff that matters, most important piece
+        Storing source code
+        configuration: 
+          infrastructure manifest
+          definitions
+        anything that defines your system
+        help to repeatedly create infrastructure
+      empowering teams by giving control over the source
+      Examples: git, GitHub, GitLab, Bitbucket, Subversion
+    Build Tools:
+      Consistent was for packaging
+      Automates an error-prone activity
+        Bundling code with all dependencies
+      Running test as part of the build process
+        Ensure package is in good quality shape
+      Condition to get into continuous integration and delivery
+      Examples: Maven/Gradle, MSBuild, Rake, JFrog Artifactory, Sonatype, NuGet
+    Testing Tools: complements build tools
+      Can't trust deployment pipelines without testable code
+      Puts focus on built-in quality
+      creates confidence in deployed artifacts
+      Front end testing, component testing, ifrastructure testing
+      Test every layer of the application's architecture
+      Examples: JUnit, XUnit.net, Selenium, Jasmine, Cucumber
+    Continuous Integration:
+      Doing it early and often, not as last minute
+      Constantly building release and testing them to catch problems
+      Gives fast feedback
+        Not scouring days or months of code to look for a defect
+      Examples: Jenkins, CircleCI, TravisCI, Concourse, AWS CodePipelines, Azure Pipelines
+    Continuous Deployment:
+      Taking source code into production
+      Should be boring, not a big deal
+      Limit pre-production inventory
+      automate complex pipelines
+      unify team around getting value to customers as quickly as possible
+        security teams
+        infrastructure teams
+        app development teams
+      how to do it with no down time
+      Examples: Spinnaker, Octopus Deploy, AWS Code Deploy
+    Configuration Management:
+      Enforcing a certain state of an environment
+      Using automation to configure the service
+      Enforce consistency
+      treat infrastructure as code
+        configurable automation-centric resource versus manually handcraft
+      Example: Terraform, BOSH, Chef, Ansible, Puppet, Google Cloud Deployment Manager
+               Azure Resourced Manager
+    Cloud Platforms:
+      Not required to do DevOps
+      API-enable infrastructure
+      Make it easy to add automation to the infrastructure layer
+        API driven self-service scalable
+        Helps build automation
+        helps track and monitor environments very easily to get feedback
+        enable teams to be self-service and not have a blocker
+        make sure infrastructure does not become the constraint
+        consumption is metered
+      Examples: Amazon Web Services, Microsoft Azure, Google Cloud Platform
+                Pivotal Cloud Foundry, Heroku, Container Schedulers
+    Monitoring and Logging:
+      Key part of the feedback loop
+      Able to pinpoint things
+      Recreate problems to figure out what is happening
+      Seen the health of the entire system inside->out
+      Recovering faster
+      Being more responsive to customer that experience some disruption
+      Improving transparency across teams
+      Limit human involment during incidents 
+        maybe with auto recover
+        automated checks against log data
+      Operators not getting randomly paged
+      Developers are not stuck troubleshooting weird opaque issues
+      Examples: ELK Stack, Datadog, New Relic, Prometheus, Zipkin, Azure Monitor
+    Communication tools:
+      Team dynamic
+      Tools to eliminate meetings
+      Improve developer productivity
+      Regular teams communication with meaningful action
+        Building trust needed later
+      Having easy channels for everyone to connect to each other
+      Improve collaboration
+      Make decisions quickly
+        About the customer
+        About throughput
+        Eliminating waiting waste
+      Example: Slack, Microsoft Teams, Google Hangouts, Zoom, WebEx
+    Knowledge Sharing:
+      Making sure saving information that others can find useful
+      Fast feedback to store learned information for others
+      Reduce knowledge waste
+      More people can learn and cut through the noise
+      Increase higher productivity
+        No need to walk and ask how to do my job
+      Centralized place to learn core aspects to learn the system
+      Making newly hired productive much quicker
+      Limit repeat mistakes because of documented postmortems and retrospectives
+        Prevent that process to be a problem again
+      Everybody empowered to add to it, not a one gate keeper
+      With a way to add, organize and discover the information
+      Everyone getting smarter and no lone genius on the team
+      All constantly learning together and documenting that learning
+      Example:
+        GitHub Pages, Confluence, Jekyll, Wiki, Google Sites,

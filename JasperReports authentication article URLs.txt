@@ -1,0 +1,11 @@
+JasperReports authentication article URLs:
+https://dzone.com/articles/configuring-tomcat-7-single-sign-on-with-spnego-ke
+
+https://community.jaspersoft.com/wiki/jasperreports-server-601-authentication-ntlm
+https://community.jaspersoft.com/blog/jasperserver-user-authentication-microsoft-active-directory
+https://www.javasystemsolutions.com/documentation/ssoplugin/34/installation-jasperserver.pdf
+https://community.jaspersoft.com/documentation/tibco-jaspersoft-studio-user-guide/v640/using-single-sign-jasperreports-server
+https://community.jaspersoft.com/documentation/jasperreports-server-authentication-cookbook
+
+https://community.jaspersoft.com/wiki/configuring-eclipse
+

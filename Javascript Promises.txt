@@ -1,4 +1,4 @@
-Javascript Promises (Cameron Pittman)
+Javascript Promises (Cameron Pittman) 12/07/2017
 
 Creating Promises:
   Introduction:

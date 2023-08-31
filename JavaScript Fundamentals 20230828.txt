@@ -1,0 +1,252 @@
+JavaScript Fundamentals by David Tucker 
+Started-Completed: 08/28/2023 - 08/31/2023
+
+Overview
+  Engines
+    V8: Google Chrome, Micorsoft Edge
+    Core: Safari
+    SpiderMonkey: Firefox
+    Node.js: Server and local computer
+  Documentation: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  Run JS in CLI
+    $node
+    >console.log("Hello World");
+    Hello World
+    > let firstName = "Juan";
+    > console.log("Hello: " + firstName);
+    Hello: Juan
+  Debug within VSCode
+  
+Getting Started
+  Syntax
+    Keywords: around 64 but only 30 most used 
+    Operators: 
+    Comments: ingnore by engine, help understand by humans
+      // Single line comment
+      /*
+       * Multiline comment
+       * bla bla
+      */
+    ESLint: helps with formatting and validate code
+      let lastname = "Juan"; // eslint-disable-line
+  Variable names
+    Can contain: letters, digits and $ or _ characters
+    Cannot start with a digit
+    Case sensitive
+    Base Practices
+      start with lowercase
+      camel case
+    const: does not allow to change value
+    let: set value, don't use var keyword
+  Garbage collector: releases memory of unused variables.
+  Dynamic Typing: 
+    a variable not directly associated with a type
+    a variable can be re-assinged to a different type
+  Memory
+    Stack
+    Heap
+  Data Types
+    Primitive: 
+      immutable (cannot be changed)
+      no properties or methods
+      stored in stack
+      passed by value
+      Boolean, Number, BigInt, String, Symbol, Null, Undefined
+      Have corresponding object wrapper types ( except Null )
+    Objects
+      mutable ( contents can be changed )
+      can contain collection of properties
+      passed by reference
+      stored in heap
+      Plain objects, functions, Collection types, Dates, Errors, Promises
+   Number: double-precision 64 bit-binary formatting
+   BitInt: values that are too large, append an 'n' at the end of it
+   Undefined: variable without a value
+   Null: variable set explicitly to denote not having a value
+   Classes: templates for creating object. 
+    Encapsulate data with code to work on that data.
+    A private field is an identifier prefixed with #
+   JSON: enables converting objects into a string
+   Locale: defines user's language, region and special variant preferences
+    consists of language and country/region
+    
+Collections and Loops
+  Array: 
+    ordered collection of items
+    has a length property and methods for manipulating list.
+    Usage
+      let list = [] or new Array()  // create empty array
+      let departments = ["Marketing", "Engineering" ] or new Array("Marketing", "Engineering");
+      departments[1]; // access 2nd item
+      departments.push("Human Resources"); // add at end
+      departments.unshift("IT"); // add at beginning
+      departments.splice(2,0,"Financials"); // add at position 3
+      departments.shift(); // remove first items
+      department.splice(3,1); // remove 4th item
+      department.includes("HR"); // boolean if exists in array
+      department.indexOf("IT"); // index of item if exits or -1 if not
+      employees.find( e => e.id === id ); // returns first item that matches expression
+      employees.filter( e => { expression } // returns all items that match expression
+      departments.length;
+   Map
+    collection that allows any data type as your keyword
+    Usage
+      let accessCodes = new Map();
+      accessCodes.set("employee1234", "8303");
+      ...
+      accessCodes.size
+      accessCodes.get("employee1234"0;
+      accessCodes.delete("employee1234");
+   Set
+    collection type that allows for a unique set of values
+    Usage
+      let agileTeam = new Set();
+      agileTeam.add("employee1234");
+      ...
+      agileTeam.has("employee1234"); // exists item in set
+      agileTeam.delete("employee1234"); // remove given item
+      agileTeam.clear(); //remove all items      
+  Loops
+    while
+      while(condition) { ... };    // evaluate before block, may not run
+      do { ... } while(condition); // evaluate after block, warranties at least one run
+    for loops
+      for: 
+        for(let i=0; i<departments.length; i++) { ... console.log(departments[i]); ... }
+      for ... of
+        for(let val of departments) { ... console.log(val); ... }
+      for ... in
+        for(let key in obj) { ... console.log(`${key}: ${obj[key]}`); ... }
+    break: stops execution of loops
+    continue: jumps back to next iteration of inner loop or labeled loop
+    
+Functions
+  Function Declaration
+    function isInputValidDepartment(input) { ... }
+  Function Expression
+    const isDavid = function(name) { return (name === "David"); }
+  Arrow Function
+    Compact alternative to function expressions
+    Samples
+      const isDavid = (nmae) => name === "David";
+      const lineBreak = () => console.log("");
+      const logArray = (item, index) => { console.log(`${index}: ${item}`); };
+  Recursion
+    Function calls itself but there is an exiting condition to avoid infinite loop
+  Higher-order Functions
+    Takes one or more parameters and returns another function as return value
+    
+Asynchronous programming
+  Three primary ways
+    Callbacks
+      Usage
+        const myCallback = () => { ... };
+        fs.writeFile("./filename", data, myCallback);
+    Drawback: 
+      callback hell or pyramid of doom when calling many in sequence
+      code less readable and difficult to see where error happens
+    Promises
+      represent the eventual completion ( or failure ) of an asynchrounous operation
+      Advantage: can be chained together
+      Example
+        import fs from 'node:fs/promises';
+        ...
+        fs.writeFile("file1", data)
+          .then(() => fs.writeFile("file2", data))
+          .then(() => fs.writeFile("file3", data));
+    Async/await
+      Closer to how we work with synchrounous code
+      Become the default of modern JavaScript
+      A different syntax for working with promises behind the scenes
+      The async function returns a promise
+      Example
+        import fs from 'node:fs/promises';
+        ...
+        async function writeFiles() {
+          await fs.writeFile("file1", data);
+          await fs.writeFile("file2", data);
+          await fs.writeFile("file3", data);
+        }
+        writeFiles().then(() => console.log("Files written"));
+  Error Handling
+    Code not always behaves as expected in the "happy path"
+    Generally interacting with something we don't have control
+      File system, API endpoint, expected format
+    try{}catch(err){} block
+      err object has 3 properties:  name, message, stack
+    throw statement
+      throws a user-defined exception and control passes to first catch block in call stack
+      if not catch block exists, program terminates
+  Spread syntax
+    The spread (...) allows an iterable to be expanded
+  Events
+    Things that happen in the system
+    fires a signal of some kind when event occurs
+    provides mechanism of action to be taken automatically
+    
+Modules
+  Code available in other files or packages
+  Two module standards:
+    CommonJS
+      Created for Node.js
+      Load using the "require" method
+      Uses an "exports" variable to determine exports
+      Example:
+        const fs = require("node:fs/promises");
+        ...
+        module.exports.jsonData = sampleJSON;
+        module.exports.loadData = loadData;
+    ESM
+      Shorthand for ECMAScript modules
+      Part of the ECMAScript specification
+      To load module uses the "import" keyword
+        Can specify what to pull out of module 
+      Uses "export" keyword to determine exports
+      This is now the standard in Node.js
+      Example:
+        import { readFile } from "node:fs/promises";
+        import * as local from "./myFile.js";
+        import sampleJSON from "./sample.json" assert { type: "json" };
+        ...
+        export {
+          jsonData: sampleJSON,
+          loadData
+        };
+Code Formating and Testing
+  JavaScript Testing Frameworks: Jest, Mocha, Jasmine, AVA, Vitest
+  Code coverage: metric how much application is actually tested
+  Code Linting: automated checking for programmatic and stylistic errors.
+    ESLint 
+      statically analyzes code
+      can be part of continuous integration pipeline
+      package: eslint-config-airbnb
+      Example
+        > npx install-peerdeps --dev eslint-config-airbnb 
+        file .eslintrc contents
+          {
+            "extends": "airbnb"
+          }
+        > npx eslint .
+          bunch of errors and warnings are displayed
+        modify file .eslintrc contents, add "rules" to ignore some errors:
+          {
+            "extends": "airbnb",
+            "rules": {
+              "no-console": "off",
+              "import/extensions": "off",
+              "no-param-reassign": "off",
+              "no-underscore-dangle": "off"
+            }
+          }        
+        > npx eslint . --fix
+          fixes most of the errors and warnings
+          manually fix remaining by doing suggested changes
+      Automatically ESLint code when saving files
+        Add folder/file .vscode/settings.json
+        {
+          "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": true
+          },
+          "eslint.validate": ["javascript"]
+        }
+        

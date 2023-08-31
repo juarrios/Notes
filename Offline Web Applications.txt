@@ -1,4 +1,4 @@
-Offline Web Applications (Jake Archibald)
+Offline Web Applications (Jake Archibald) 12/06/2017
 
 The Benefits of Offline First
   Intro
@@ -13,14 +13,14 @@ The Benefits of Offline First
     Path to data server has many failing points
     Network connectivity is a huge unknown
   Benefits of Offline First
-    Getting as much sturff as possible from cache first
+    Getting as much stuff as possible from cache first
     Update page when network content is available
     Also update cache with the new data
     If no network, stale data is better than nothing
     User is happy offline or online
   Installing Demo App
     >node --version
-    >git clone https://github.com/jakearchibald/wittr.git
+    >git clone https://github.com/jakearchibald/wittr.git   // inside d:\code\OfflineWebApp
     >cd wittr
     >npm install
     >npm run serve

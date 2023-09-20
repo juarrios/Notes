@@ -1,0 +1,346 @@
+Arrays and Objects in Javascript 09/01/23
+by Matt Henry
+
+Objects 
+  containers of other datatypes called properties
+  passed via reference, points to a memory address
+  link to a prototype
+  Creating Objects 
+    Object LIteral Syntax: creating one from scratch
+      done with curly braces containing keys and values
+      const myCourse = {
+        title: "The big boss",
+        id: "12345ABC",
+        ...
+      };
+      keys don't require quotations unless it has special chars 
+        "course author": "Matt Henry",
+        "course-id": "ps_js-arrobj"
+    With "new" syntax: creating from predefined blueprint
+      It already has useful structure or functionality we want to use
+      const myDate = new Date();
+Prototype: predefined behavior
+  many objects are predefined with prototype
+  all objects link to a previously defined prototype
+  prototype chain: 
+    myDate = Date ( empty )
+              -> Date.prototype( methods: getDay, getHours ... )
+              -> Object.prototype ( methods: toString, valueOf ... ) 
+    if property or method not found in chain, an error is returned
+  Three ways to create object
+    obj = { ... };
+    obj = new Object();
+    obj = Object.create(Object.prototype);
+  We can create own prototype:
+    const courseProto = { ... }
+    const newCourse = Object.create(courseProto);
+  Null Prototype:
+    const myNullObj = Object.create(null);
+      
+Properties: 
+  two ways to add to an object:
+    dot notation: shortest ways to create and access a property
+      contentBlock1.description = "...";
+    bracket notation: more flexible, can compute name at runtime
+      contentBlock1["description"] = "...";
+      contentBlock1["name with space"] = "...";
+      for (let i=0; i<5; i++) {
+        contentBlock1["info" + i] = "...";
+  Check if property is defined in an object:
+    if (!object.property == undefined )
+    if (object.hasOwn("property"))  // does not check prototype
+    if ("property" in object)
+    Better to add property to prototype with a default value to avoid check
+  delete properties
+    delete object.property
+    delete object["property"]
+  Protecting properties
+    Property attributes:
+      name: property key
+      value: property value
+      writable: true
+      configurable: true
+      enumerable: true
+    Editing property attribute:
+      Object.defineProperty(object, "property", {
+        writable: false,
+        configurable: false
+      });
+    if configurable=false it cann't be edited, deleted or attributes changed
+    Object.freeze(object): 
+      set writable and configurable to false
+      prevents extensions to the object
+    Object.seal(object):
+      writable is still true
+      configurable to false
+      prevents extensions
+    enumerable: if it shows when listing object's properties
+      Object.definedProperty(object,"description", {
+        enumerable: false
+      });
+  List properties:
+    for(let key in objectName) { console.log(key); }
+      returns own and inherited properties that are enumerable
+    Objects.Keys(objectName).forEach(key => { console.log(key); });
+      returns only own properties that are enumerable
+    Object.getOwnPropertyNames(objectName):
+      returns only own properties regardless of enumerable
+
+Reference and Scope
+  Assignment
+    const: can't be redefined later
+      const myNum = 1.138;
+    let: can be redefined later
+      let myNum = 1.138;
+  Memory storage:
+    Stack: 
+      limited size space allocated for JS thread
+      used to store primitive types or pointers to named objects
+    Heap: 
+      dynamic memory store that can grow as needed
+      used to store objects
+  Comparing and Cloning Objects
+    Since object are reference types comparing and copying is not straightforward.
+    Two ways to copy properties
+      Object.assign: Object.assign(tagetObject, sourceObject);
+        copies all enumerables properties by using prototype
+      Spread Operator: newObject = { ...sourceObject };
+        target does not need a prototype
+        returns all enumerable own properties and sets to target
+    Deep cloning:
+      needed when objects contain inner object properties
+      otherwise same reference will point to same source property object
+  Functions as Properties: Two ways to define functions as properties
+    Traditional way: 
+      {
+        newFunc: function() { ... }
+      }
+    Since ES6:
+      {
+        newFunc(): { ... }
+      }
+  Scope in Objects
+    this: refers to the object within the code block
+    objects as passed as references and properties can be changed by functions
+  Primitive Wrappers:
+    Convenient way to get access to object-like functionality on primitives
+    without needing to instantiate an object yourself
+    
+Arrays
+  Contain properties
+  Access properties with bracket notation but using zero based numbers
+    Cannot use dot notation
+  Functions come from their prototype
+  Can create in many of the same ways as objects
+  Ways to create Arrays:
+    New Syntax:
+      const myArray = new Array();          // []
+      const myArray = new Array(2,3,4);     // [2,3,4]
+      const myArray = new Array({},{},{});  // [{},{},{}]
+      const myArray = new Array(3);         // [undefined, undefined, undefined]
+    Literal Syntax:
+      const myArray = [];
+      const myArray = [2,3,4];
+      const myArray = [3];                  // [3] different than Array(3)
+    Other:
+      const myArray = Object.create(Array.prototype);
+      const myArray = Array.of();
+      const myArray = Array.from(arrayLikeObject);
+  Ways to check if property is an array:
+    currentCourse.content instanceof Array
+    Array.prototype.isPrototypeOf(currentCourse.content)
+    Array.isArray(currentCourse.content)
+  Adding to array:
+      arrayToPushTo.push(itemToPush);    // insert item at end of array
+      arrayToUnshiftTo.unshift(item)     // insert item at start of array
+  Accessing from array:
+    As a stack:
+      const poppedElement = arrayToPopFrom.pop(); // removes and returns last item
+    As a Queue:
+      const shiftedElement = arrayToShifFrom.shift() // pull from front of array
+  Removing items:
+    delete myArray[index]   // deletes element at index (not recommended)
+    delete myArray          // deletes entire array of content
+    splice: to unite, link, or insert by splicing
+      destructive: remove items from middle and unite the rest into one array
+        content.splice(startIndex, cutAmount)
+        const removed = content.splice(2,1)   // second item removed as array
+        let value = removed[0]
+      insert items
+        array.splice(startIndex, amount, itemsToAdd)
+        const myArray = ["orange", "grape", "pear"];
+        const removedElement = myArray.splice(2, 1, "apple"); //replace pear for apple
+    slice: to cut with or as if with a knife
+        non-destructive: returns chunk of array but original array is not affected
+      content.slice(startIndex, endIndex);
+      const animals = ["pig", "pug", "cow","bird"];
+      const sliced = animals.slice(1, 3);   // ["pug", "cow"] is returned
+      const sliced = animals.slice(1, -1);  // count backwards, ["pug", "cow"] is returned
+      const sliced = animals.slice(1);   // ["pug", "cow", "bird"] is returned
+    toSpliced: same as splice but non-destructive
+  Concatenating arrays:
+    Join arrays into a single one
+      megaCourse.content.concat(part1.content, part2.content);
+    Using spread operator to unpack arrays:
+      megaCourse.content = [...part1.content, ...part2.content];
+    Shallow clone:
+      const course2 = { ...course1 };
+    Deep clone at 2 levels:
+      course2.content = [];
+      course1.content.forEach( contentBlock => {
+        course2.content.push({ ...contentBlock });
+      });
+    Deep clone using JSON utility:
+      const course2 = JSON.parse(JSON.stringify(course1));
+  Sorting arrays:
+      const sortingFunction = function(a,b) { 
+        if (a.field > b.field) return 1;
+        if (b.field > a.field) return -1;
+        return 0;
+      };
+      array.sort(sortingFunction)
+  Sparse arrays:
+    Array with empty indexes: amount of values it containts is less than the length property
+    Have blank slots inside
+    Ways to make a sparse array:
+      deleting an array element: delete array[3];
+      initializing array with length but not filling it:
+        let array = new Array(3);
+        array[1] = "banana";
+      adding to an index greater than its length:
+        let fruits = ["apple", "banana"];
+        fruits[5] = "cherry";
+    Avoid adding elemnts to array by index and use push()
+      array.push({});
+      don't set length of array since they are dynamic in javascript
+  Maps, Sets and Typed Arrays
+    Maps
+      Keys and Values being anything
+      Insertion order is kept
+        const courseComletionTimes = new Map();
+        courseComletionTimes.set(course1, 5.35);
+        courseComletionTimes.set(course2, 4.12);
+        courseComletionTimes.set(course3, 5.5);
+    Sets
+      Comprise of unique values only, no keys
+      Insertion order is kept
+        const dogSet = new Set();
+        dogSet.add("Bulldog");
+        dogSet.add("Pug");
+        dogSet.add("Bulldog"); // fails, returns false
+    Typed Arrays
+      Keys and Values
+      Ordered in any way
+      Keys are zero indexed numbers
+      Values are only specified type
+      Used where performance is important like web assembly
+        Int8Array, Float64Array, Int16Array, Uint32Array ...
+        
+Array Iteration Deep Dive
+  For Loops
+    For Loops with Arrays
+      They work
+      But lots of boilerplate code
+      Easy to make an off-by-one error
+      Difficult to read
+    For ... in
+      Loops for all inherit of own properties of an object
+      Not recommended for Arrays because might get inherited properties also
+        for (let item in array) {
+          console.log(item);
+        }
+    For ... of
+      Loops over an iterable object instead of enumerable properties
+      Recommended for arrays
+        for (let element of array) {
+          //do something
+        }
+      To retrieve index also
+        for (let [key, value] of array) {
+          value.title = "Element " + (key + 1);
+        }
+      No special handling for sparse arrays
+        for (let element of array) {
+          if (element == undefined) continue;
+          //do something
+        }
+    Array.forEach
+      Defined in the array prototype and takes a function parameter
+      Takes care of sparse arrays, ignores undefined elements in array
+      The best way to loop through an array ( but there are better options! )
+        array.forEach( element => {
+          //do something
+      To retrieve index
+        array.forEach((element, index) => {
+          element.title = "Element " + (index + 1);
+        });
+  Functions for Summarizing Arrays
+    join
+      calls toString on every element in the array
+        array = [1, 2, 3, 4]
+        array.join();  // returns "1,2,3,4"
+        
+    some
+      returns boolean true if "some" elements match a condition
+      let array = [2,4,6];
+      array.some(element => {
+        return element > 4;
+      });  // returns true
+    every
+      returns boolean true if "every" element match a condition
+      let array = [2,4,6];
+      array.every(element => {
+        return element > 4;
+      });  // returns false
+      
+    reduce
+      calculate a number based on the array
+      requires at lease two parameters
+        let total = cart.products.reduce(
+          (accumulator, product) => {
+            return accumulator + product.price;
+        });
+      to retrieve index give a third parameter to function
+        let total = cart.products.reduce(
+          (accumulator, product, index) => {
+            //function body
+        });
+      to set initial value of accumulator
+        let total = cart.products.reduce(
+          (accumulator, product) => {
+            //function body
+        }, initialValue);
+    reduceRight
+      same as reduce but array is transversed in the opposite order
+  Functions for Searching through Arrays
+    includes
+      returns true if element is in the array
+        let array = [2,3,4];
+        array.includes(3); // true
+    find
+      returns the first element which matches the criteria
+      let found = course.content.find( block => {
+        return block.bookmarked == true;
+      });
+    filter
+      returns an array of all matching elements, even if only one found
+      let found = course.content.filter( block => {
+        return block.bookmarked == true;
+      });
+    findIndex
+      returns the index of the first result found in the array
+        let array = [3,5,7,9,7,5,3];
+        let index = array.findIndex(5); // returns 1
+    findLastIndex
+      returns the index of the last result found in the array
+        let array = [3,5,7,9,7,5,3];
+        let index = array.findIndex(5); // returns 5
+  
+Map and Functional Javascript
+  Chaining Array Functions
+    Logic becomes powerful when functions are chained 
+    It works as long as each output is an array
+      jsonBlocks
+        .map(myMapFunc)
+        .filter(myFilterFunc)
+        .sort(mySortFunc) 

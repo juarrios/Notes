@@ -1,0 +1,124 @@
+Asynchronous Programming in JavaScript 09/21/2023
+by Nate Taylor
+
+Understanding Promises
+  Fetching data is unpredictable
+  Some API request may come before others
+  Need to make sure data is available before working on it
+  Solving for Race Conditions
+    Nested calls:
+      One call inside of another
+      Callback Pyramid of Doom
+        many levels of nested identation 
+          to control access to a function
+        can hide bugs
+        error handling is hard to debug
+  Promise
+    Object representes the eventual completion ( or failure ) 
+      of an asynchronous operation and its resulting value
+    Provides readable asynchronous code
+    States
+      Pending
+        Initial state when creating
+      Fulfilled
+        When asynchronous call completed successfully
+      Rejected
+        When asynchronous call failed
+      Settled or Resolved: no longer in pending state
+    Eager
+      They are executed right away
+      
+Consuming Promises
+  .then()
+    how to handle after data comes back from eager promise
+      .then((result) => {
+        // do stuff with the result
+      })
+  .catch()
+    promise function to retrieve errors
+      .catch((err) => { 
+        // do sturff with the error.
+      })
+  Chaining promises
+    then() and catch() both return promises
+    allows to chain promises together
+      promise
+        .then()
+        .catch()  // gets only errors of above
+        .then()
+        .then()
+        .catch()  // gets any errors of above calls
+        .finally()
+    .finally()
+      what to do once chain has been settled
+      
+Queuing Promises
+  Synchrounous loading of data can be too slow
+  power of asynchronous programing is doing it in parallel
+  Promises can wait till ally asynchronous calls are back
+  .all(): 
+    wait util all promises are fullfilled or one is rejected
+    returns an array of results
+    catches first rejection
+  .allSettled:
+    wait until all are settled
+    return schema is different
+    fulfilled:
+      {
+        status: 'fulfilled',
+        value: {}
+      }
+    rejected:
+      {
+        status: 'rejected',
+        reason: {}
+      }
+    catch(): is not really needed due to status
+  .any()
+    wait until first is fulfilled or all rejected
+    returns a single value
+    only catches if all reject
+  .race()   
+    returns until first settled: fulfilled or rejected
+    need to handle both .then() and .catch()
+    
+Creating Promises
+  It contains an executor function
+    const tmp = new Promise( (resolve, reject) => {
+      // some code
+      if (something_good) {
+        resolve(succesData);
+      } else {
+        reject(errorMessage);
+      }        
+    })
+    .then( (sucessData) => {} )
+    .catch( (errorMessage) => {} );
+  Once a promise is settled, its state is not updated
+  
+Async/Await
+  Promises are already kind of old
+  Async/Await is syntatic sugar
+    designed to make easier to read or to express
+  async keyword
+    designate a function as asynchronous
+    whatever it returns will be wrapped inside a promise
+      const getNames = async() => {
+        return [];
+      };
+  await keyword
+    pauses the execution of an asynchronous function while
+      it waits for the promise to be fulfilled
+    must be used inside an async function
+    only blocks current function
+  error handling done with familiar try/catch blocks
+  Chaining async/await
+    more straight foward than promises chaining
+      const statusReq = axios.get(statusesUrl);
+      const orderReq = axios.get(ordersUrl);
+      
+      const { data: statuses } = await statusReq;
+      const { data: order } = await orderReq;
+      
+      
+     

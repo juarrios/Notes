@@ -19,6 +19,7 @@ Objects
     With "new" syntax: creating from predefined blueprint
       It already has useful structure or functionality we want to use
       const myDate = new Date();
+      
 Prototype: predefined behavior
   many objects are predefined with prototype
   all objects link to a previously defined prototype

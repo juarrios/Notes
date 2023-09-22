@@ -1,0 +1,160 @@
+Fundalmentals of Functional Programming in JavaScript 09/21/2023 - 09/22/2023
+by Nate Taylor
+https://app.pluralsight.com/library/courses/javascript-functional-programming-fundamentals/table-of-contents
+
+
+What is Functional Programming (FP)
+  Wikipedia definition:
+    Programming paradigm, a style of building the structure and
+      elements of computer programs.
+    Treats computation as the evaluation of mathematical functions
+      and avoids changing-state and mutable data.
+  Declarative
+    What vs How
+    What ( Declarative )
+      users.map((u) => {
+        u.lastModified = new Date();
+        return u;
+      });
+      "For every user you have run this function"
+    How ( Imperative )
+      for (var i=0; i<users.length; ++i) {
+        users[i].lastModified = new Date();
+      }
+  Pure Functions
+    Don't depend on data other than what is passed in, and
+      don't alter data other than what they returned. Always return
+      same result for same parameters ( mathematical functions )
+        Math.max(10,5)
+  Immutable Data
+    Data that cannot be changed after it's created
+    Using mutable data can have side effects.
+  Easier to Reason
+    Focus on the use of pure functions and elimination of side effects
+    Confident function not changing items outside of its scope.
+    Main focus on "What is it doing?"
+    Easier to setup the state for testing, only test for return values
+
+Declare What You Mean
+  Arrays
+    Best places to start making the transition to FP
+    Because they are iterated for a specific reasons
+    Everytime there is a loop, there's opportunity to convert it to FP
+    Declarative:
+      for (let i=0; i<users.length; i++) {
+        if (users[i].id === id) {
+          user = users[i];
+        }
+      }
+    Imperative (FP):
+      users.find( (u) => {
+        return u.id === id;
+      });
+    Array functions:
+      .every(testFunction): all items must pass test, boolean
+      .some(testFunction): at least one item in the array, boolean
+      .find(testFunction): first item that passes test, one item
+      .filter(testFunction): all items that pass test, new array
+      .map(transformFunction): new array with updated items
+      .reduce((accumulator,n) => {}): returns single values
+  Function Chaining:
+    Helps reduce number of lines by chaining functions
+    Can be done if functions return an array
+      let sum = number.map(substractOne)
+                .filter(isDivisibleBy3)
+                .reduce(add,0);
+  Libraries
+    RamdaJS: more functional oriented, prefixed with "R."
+    lodash/fp: lodash functional version, prefixed with "_."
+    Ramda functions:
+      R.drop(number,array):
+      R.dropLast(number,array): returns last "number" items
+      R.flatten(array of arrays): returns single array
+      R.none(testFunction, array): opposite of "some()" result
+      R.pluck(property,array): array with just listed property
+      R.reject(testFunction,array): array of items that failed test
+      R.pick(arrayOfProperties, object): new object with listed properties
+      R.omit(arrayOfProperties, object): new object excluding properties
+      R.path(['property','subproperty], users]: returns value or undefined
+      R.PathOr({},'property','subproperty], users): returns value or empty object
+      R.project([properties],array): array with listed properties ?
+      
+The Power of Functions
+  Functions can be assinged to variables to name "anonymous" functions
+  Allows to reuse same function as parameter in different functions
+    Example
+      const isActive = (item) => { return item.active; }
+      products.filter(isActive);
+      users.filter(isActive);
+      locations.filter(isActive);
+  Returning functions
+    Currying
+      Convert a function that accepts multiple parameters into a series of functions
+        that each only take 1 parameter
+      Example
+        const byId = (id) => {
+          return (item) => {
+            return item.id === id;
+          }
+        }
+        users.find(byId(2));
+      Example using Ramda curry function
+        const byId = R.curry((id, item) => {
+          return item.id === id;
+        });
+        users.find(byId(2));
+  Pure Functions
+    Properties
+      Doesn't depend on any data other than what it's passed
+      Doesn't modify any data other than waht they return
+      Always returns same data for same parameters
+    Help reduce mental load because 
+      you supply the data
+      returning the modified data, not modified the internal state
+  Function Composition
+    Combining functions to form a new function and giving it a descriptive name
+      Example:
+        const absoluteDifference = (first, second) => {
+          return abs(difference(first, second));
+        }
+      Example using Ramda:
+        const isEmptyString = (str) => {
+          const value = R.defaultTo('',str);
+          const trimmedValue = R.trim(value);
+          return R.isEmpty(trimmedValue);
+        }
+        R.any(isEmptyString, [oldPwd, newPwd, confirmedPwd]);
+    Ramda Pipe: calls functions sequentially passing result of previous
+      const isEmptyString = R.pipe(
+        R.defaultTo(''),
+        R.trim,
+        R.isEmpty
+      );
+      isEmptyString('abc');
+      
+Inmmutable Data
+  Reduces the complexity of code because not changing the object
+  Helps reduce the side effects 
+  Having fewer places where data can be changed
+  
+  No native JavaScript immutable structures
+    const keyworkd implies "readonly" not immutable
+    can still add and delete properties on an object
+    but can not reassign a new object
+  Library seamless-immutable
+    URL: https://github.com/rtfeldman/seamless-immutable
+    creates immutable objects
+      let myImmutable = Immutable([3,5,1,2,4]);
+      const diff = (a,b) => { return a-b; }
+      let mySorted = R.sort(diff, myImmutable);
+    to add data to an immutable
+      myImmutable 
+        .asMutable()
+        .push()
+    for immutable objects
+      const mutableObj = immutableObj.set('age',39);
+         
+Testing Your Functions
+  FP makes it easier to test because using pure functions
+  
+React, Redux and Ramda use FP

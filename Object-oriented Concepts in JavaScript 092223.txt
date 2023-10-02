@@ -1,0 +1,260 @@
+Object-oriented Concepts in JavaScript 09/22/2023
+by Jim Cooper
+
+Introduction
+  Object-oriented concepts
+    Encapsulation
+      Grouping of information and functionality
+    Composition
+      Composing object from other objects
+    Classes
+      Like a cookie cutter that contains the shape of objects to create
+      Used to created objects with a consistent set of properties and functionality
+    Inheritance
+      Create additional type of objects that inherit properties and methods from another type of object.
+    Polymorphism
+      A child object and be used as it were the parent object
+      Methods can be overriden by child to have different behavior
+  JavaScript
+    A loosely-typed language
+      Just use keyword "let" and JS infers the type assinged to it
+        let age = 5;
+      Don't specify data type in function parameters
+      No object data type checking 
+    Prototyped-based
+      Use objects to create other objects
+        let person = { ... };
+        let student = { prototype: person }
+        
+Understanding JavaScript Prototypes
+  How JS prototypes work
+    let Person = {
+      firstName: '',
+      lastName: '',
+      age: 0,
+      fullName() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+    };    
+    let jim = {};
+    Object.setPrototypeOf(jim, Person);
+  Inspect prototype of an object
+    Object.getPrototypeOf(jim);
+    jim.__proto__; // deprecated
+  If an object has a property
+    Person.hasOwnProperty('age'); // true
+    jim.hasOwnProperty('age');    // false
+  Prototype Chains
+    "Object" object is the parent of all objects
+    JS check for properties starting at child and transversed up the chain up to Object.
+    
+Using JS Constructor Functions
+  Functions used to construct new objects
+    function Person(firstName, lastName, age) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.age = age;
+      this.fullName() {
+        return `${this.firstName} ${this.lastName}`;
+      }
+    }
+    let jim = new Person('Jim','Cooper',29);
+  New keyword   
+    Steps
+      Creates a new object
+      Binds "this" to the new object
+      calls the function
+      implicitly returns the new object    
+    This is why functions can be used as constructors
+  Adding methods to constructors
+    function Person(firstName, ...) {
+      // property assignments here
+    }
+    Person.prototype.fullName = function() {
+      // function definition here
+     }     
+  Getters and Setters
+    function Person(firstName, ...) {
+      // property assignments here
+    }
+    Person.prototype = {
+      get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+      set fullName(fullName) {
+        let nameParts = fullName.split(' ');
+        this.firstName = nameParts[0];
+        this.lastName = nameParts[1];
+      },
+    };
+    jim.fullName = 'John Doe';
+    let name = jim.fullName;
+  Static Properties and Methods
+    Belong to the constructor itself
+      function Person(firstName, ...) {
+        // property assignments here
+      }
+      Person.adultAge = 18;
+      Person.isAdult = function(age) {
+        return age >= Person.adultAge;
+      };
+  Private Properties
+    To hide inner details from outside code
+    Available inside the constructor function only
+    Possible by using closures
+      function Person(firstName, lastName, age) {
+        let adultAge = 18;
+        ....
+        this.isAdult = function() {
+          return this.age >= adultAge;
+        };
+      };
+  Private Method:
+    Only available inside constructor
+    Accomplished via closures
+      function Person(fistName,...) {
+        ...
+        let isAdult = () => {
+          return this.age >= 18;
+        };
+        this.isQualified = function() {
+          return isAdult();
+        };
+    }
+      
+Inheritance with Constructor Functions and Prototypes
+  Inheritance with JavaScript Constructor
+    function Person(firstName, lastName, age) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.age = age;
+    }
+    Person.prototype.isAdult = function() {
+      return this.age >= 18;
+    }
+    
+    function Student(firstName, lastName, age) {
+      Person.call(this, firstName, lastName, age);
+      this.course = [];
+    }
+    Student.prototype = Object.create(Person.prototype);
+    Student.prototype.constructor = Student;
+    Student.prototype.enroll = function(course) {
+      this.courses.push(course);
+    }
+    let jim = new Student('Jim','Cooper', 29);
+  Using the instanceof Operator
+    "typeof jim" returns "object"
+    "jim instanceof Student" returns "true"
+      telling if jim is a Student
+    "jim instanceof Person" also returns "true"
+      telling jim is also a Person
+    instanceof
+      will walk up the prototype chain
+  Polymorphism with JavaScript constructor functions
+    A derived class can be used instead of a base class
+  Overriding Methods
+    Add method to child prototype
+      Student.prototype.isAdult = function() {
+        return this.age >= 21;
+      }
+      let jimPerson = new Person('Jim','Cooper',18);
+      let jimStudent = new Student('Jim','Cooper',18);
+      jimPerson.isAdult()  // returns true
+      jimStudent.isAdult() // returns false
+  Abstract Methods
+    Sort of emulated in JavaScript by throwing error in base method
+      Person.prototype.isAdult = function() {
+        throw new Error("isAdult() function must be implemented in derived constructor function.");
+      }
+      jimPerson.isAdult() // shows error message
+      jimStudent.isAdult() // runs implemented Student method
+  
+Using JavaScript Classes
+  Defined with the "class" keyword
+    class Person {
+      firstName = '';
+      lastName = '';
+      age = 0;
+      constructor(firstName, lastName, age) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+      }
+    }
+    let jim = new Person('Jim','Cooper', 29);
+  Adding methods   
+    class Person() {
+      ...
+      isAdult() {
+        return this.age >= 18;
+      }
+    }
+  Getters and Setters
+    class Person() {
+      ...
+      get fullName() {
+        return `${this.firstName} ${this.lastName}`;
+      }
+      set fullName(fullName) {
+        let nameParts = fullName.split(' ');
+        this.firstName = nameParts[0];
+        this.lastName = nameParts[1];
+      }
+    }
+    let name = jim.fullName  // returns full name
+    jim.fullName = 'John Doe'; // sets firstName and lastName
+  Static Properties and Methods
+    Belong to class itself instead of an instance of the class
+    class Person() {
+      static adultAge = 18;
+      ...
+      static isAdult(age) {
+        return age >= Person.adultAge;
+      }
+      ...
+    }
+  Private Properties and Methods
+    Only available withing the class
+    Prefixed with the hash (#) sign
+      class Person() {
+        ...
+        #adultAge = 18;
+        ...
+        #isAdult() {
+          return this.age >= this.#adultAge;
+        }
+        isQualified() {
+          return this.#isAdult();
+        }
+      }
+  
+Inheritance with JavaScript Classes
+  To inherit from a parent class use "extends" keyword
+    class Student extends Person {
+      ...
+    }
+  Automatically calls the constructor of the parent class
+  Using class constructor
+    Child constructor must first call parent constructor using "super" function
+    Then do its local constructor logic
+      class Student extends Person {
+        courses = [];
+        constructor(firstName, lastName, age, courses) {
+          super(firstName, lastName, age);
+          this.courses = courses;
+        }
+        ...
+      }
+  Class data type is object
+    Use instanceof to see if belongs to a class
+      jim instanceof Student // returns true
+      jim instanceof Person // returns true
+  Polymorphism
+    A parent class can be used instead of a child class
+    Only properties or methods that match will work
+  Overriding methods
+    Child classes can override parent methods
+  
+    
+  

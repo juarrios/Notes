@@ -1,5 +1,6 @@
 Object-oriented Concepts in JavaScript 09/22/2023
 by Jim Cooper
+https://app.pluralsight.com/library/courses/javascript-object-oriented-concepts/table-of-contents
 
 Introduction
   Object-oriented concepts

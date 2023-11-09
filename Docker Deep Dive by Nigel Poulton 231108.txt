@@ -1,0 +1,230 @@
+Docker Deep Dive 11/08/2023
+by Nigel Pulton
+URL: https://app.pluralsight.com/library/courses/docker-deep-dive-2023/table-of-contents
+
+At the heart of Kubernetes
+Docker Account:  
+  Allows to store images in https://hub.docker.com
+Docker apps:
+  Docker Desktop:  
+    Local dev environment
+    >docker --version   
+  Play with Docker: 
+    Internet 4 hour session playground in cloud 
+    https://labs.play-with-docker.com/   
+  Multipass from Canonical: 
+    Local cloud-style VMs running Docker
+    Requires private network
+    >multipass version
+    >multipass find
+    >multipass launch docker --name docker1
+    >multipass list
+    >multipass info docker1
+    >multipass shell docker1
+    $docker --version
+    $ exit
+    
+Architecture
+  CLI commands convert to API calls posted to Docker daemon
+  Workflow
+    build: to package images
+      creates OCI images
+      OCI: Open Container Initiative standard https://opencontainers.org
+    push: upload to registry
+    run: execute in server
+      create OCI containers
+  Container
+    Isolated area of OS with resource limits applied
+    Run in host operating system (OS)
+    Namespaces
+      Carve the OS into virtual OSes called containers
+      All about isolation
+    Control Group
+      All about imposing limits
+  Kernel Internals
+    Container has own
+      process tree (PIDs)
+      ethernet eth0 interface (net)
+        NIC, IP, routing table
+      root file system (mnt)
+        isolated FS
+      inter-process communication (ipc)
+        shared memory
+      unix time sharing (UTS)
+        gives every container its own hostname
+      route user
+        map internal user account to users on shared host
+      looks like regular operating system
+      but share a single host kernel
+    Control Groups
+      Limits on
+        Disk
+        Memory
+        CPU
+    Latered mounts
+      Copy on write
+  Docker Magic
+    Client
+      CLI for doing commands
+    API
+      daemon
+      receives commands via REST
+    containerD
+      Lifecycle management
+        start, stop, pause, unpause
+        controls multiple "shims"
+      called via gRPC API
+    runC
+      low-level runtime
+      at OCI layer does all the work with the kernel
+      creates container an exists
+      a "shim" process sticks around
+      
+Images
+  Contain layers
+    Base OS
+    App Code
+    Dependencies
+    Config
+    Writable ctr layer
+  Manifest file
+    describes image and how to stack layers
+    image = layers + manifest
+    content addressable
+      layer ID is a hash
+      content hashes: original image
+      distribution hash: compressed image for transport
+    >docker images --digests
+      REPOSITORY   TAG       DIGEST                                                                    IMAGE ID       CREATED      SIZE
+      redis        latest    sha256:d2f4d823a498f366c540b81e6b69bce397062f980f2e42340402225af0d9b5ab   7f27d60cb8e0   7 days ago   138MB  
+    >docker manifest inspect redis -v
+      Shows the manifest and all its layers per each OS
+    >docker rmi redis
+  Registries
+    Where images are listed, public and private
+    Defaults to docker hub if not specified
+    A pulled image is stored in the host's local registry
+    Official registries
+      like in Docker Hub
+      should be safe
+    Unofficial registries
+      be careful
+    Naming convention:
+      <registry URL>/<repo name>:<tag>
+      docker.io/redis:6.0.8
+      >docker pull redis ( short )
+      >docker pull docker.io/redis:latest (FQN)
+  Good Practices
+    use official images
+    keep images small
+      smaller better
+      less attack surface with fewer vectors
+    build custom images from small official base images
+      add your app and configs on top of that
+    reference exact image tags
+      being explicit
+      sometimes "latest" tag is not what is expected
+      
+Building New Images
+  Docker File
+    Instructions to create image from layers:
+      FROM alpine:3.16                              #Layer 1
+      LABEL maintainer="nigelpoulton@hotmail.com"   #Metadata
+      RUN apk add --update nodejs npm curl          #Layer 2
+      COPY . /src                                   #Layer 3
+      WORKDIR /src                                  #Layer 4 & Metadata
+      RUN  npm install                              #Layer 5
+      EXPOSE 8080                                   #Metadata
+      ENTRYPOINT ["node", "./app.js"]               #Metadata
+    >wsl --status
+      displays windows subsystem for Linux version
+  Builds
+    >docker build -t ddd2023:nodeweb .
+      #0 building with "default" instance using docker driver
+      ...
+      #11 exporting layers 0.3s done
+      #11 writing image sha256:d2ab82e5253f54a201e45c84a78bef6f9e5a779d952d8cdcb8bee7a3a1b2d4d6 done
+      #11 naming to docker.io/library/ddd2023:nodeweb done
+      #11 DONE 0.3s
+    >docker images
+      REPOSITORY   TAG       IMAGE ID       CREATED              SIZE
+      ddd2023      nodeweb   d2ab82e5253f   About a minute ago   85.1MB
+    >docker run -d --name web -p 8080:8080 ddd2023:nodeweb
+      6822158bdc616473e2dae0e45a7e95e0f45b39317a68a5eae2b06c1f1b12a231
+    In browser go to http://localhost:8080 to see node app displays
+    >docker rm web -f
+      web
+    >docker rmi ddd2023:nodeweb
+      Untagged: ddd2023:nodeweb
+      Deleted: sha256:d2ab82e5253f54a201e45c84a78bef6f9e5a779d952d8cdcb8bee7a3a1b2d4d6
+    build context is where your code resides
+    Creating image from GitHub location:
+      >docker build -t ddd2023:nodeweb https://github.com/nigelpoulton/psweb.git#main
+      >docker history ddd2023:nodeweb
+        IMAGE          CREATED         CREATED BY                                      SIZE      COMMENT
+        3f050701af6d   5 minutes ago   ENTRYPOINT ["node" "./app.js"]                  0B        buildkit.dockerfile.v0
+        <missing>      5 minutes ago   EXPOSE map[8080/tcp:{}]                         0B        buildkit.dockerfile.v0
+        <missing>      5 minutes ago   RUN /bin/sh -c npm install # buildkit           24.5MB    buildkit.dockerfile.v0
+        <missing>      5 minutes ago   WORKDIR /src                                    0B        buildkit.dockerfile.v0
+        <missing>      5 minutes ago   COPY . /src # buildkit                          2.31kB    buildkit.dockerfile.v0
+        <missing>      5 minutes ago   RUN /bin/sh -c apk add --update nodejs npm c…   64.5MB    buildkit.dockerfile.v0
+        <missing>      5 minutes ago   LABEL maintainer=nigelpoulton@hotmail.com       0B        buildkit.dockerfile.v0
+        <missing>      5 weeks ago     /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B
+        <missing>      5 weeks ago     /bin/sh -c #(nop) ADD file:756183bba9c7f4593…   7.34MB
+      >docker inspect ddd2023:nodeweb
+        ...
+        "Layers": [
+            "sha256:cc2447e1835a40530975ab80bb1f872fbab0f2a0faecf2ab16fbbb89b3589438",
+            "sha256:30633407f5e0c9e3f612ea13a2451a5dbf92b462d47ca7726f4d94d78ce99428",
+            "sha256:da321d9ffe2c3f522a42374d6c460660bc2dc4fdcf3a79dcd036f565dc1df287",
+            "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+            "sha256:97aee3b30099525dc356879a9d07f5dd4f029bda5921b0f8575d1c2c455f36a1"
+        ]
+  Multi-stage Builds
+    Create leaner and better images
+    Dockerfile has multiple stages to extract and create minimum layers for image
+      FROM golang:1.20-alpine AS base
+      WORKDIR /src
+      COPY go.mod go.sum .
+      RUN go mod download
+      COPY . .
+
+      FROM base AS build-client
+      RUN go build -o /bin/client ./cmd/client
+
+      FROM base AS build-server
+      RUN go build -o /bin/server ./cmd/server
+
+      FROM scratch AS prod
+      COPY --from=build-client /bin/client /bin/
+      COPY --from=build-server /bin/server /bin/
+      ENTRYPOINT [ "/bin/server" ]    
+    >docker build -t multi:stage .
+      ...
+      #13 [prod 1/2] COPY --from=build-client /bin/client /bin/
+      #13 DONE 0.0s
+      #14 [prod 2/2] COPY --from=build-server /bin/server /bin/
+      #14 DONE 0.1s
+      #15 exporting to image
+      ...
+    >docker images
+      REPOSITORY   TAG       IMAGE ID       CREATED             SIZE
+      multi        stage     f7cb5f50eeaf   3 minutes ago       15.9MB
+      ddd2023      nodeweb   3f050701af6d   About an hour ago   96.3MB
+    >$ docker history multi:stage
+      IMAGE          CREATED         CREATED BY                          SIZE      COMMENT
+      f7cb5f50eeaf   3 minutes ago   ENTRYPOINT ["/bin/server"]          0B        buildkit.dockerfile.v0
+      <missing>      3 minutes ago   COPY /bin/server /bin/ # buildkit   7.91MB    buildkit.dockerfile.v0
+      <missing>      3 minutes ago   COPY /bin/client /bin/ # buildkit   7.98MB    buildkit.dockerfile.v0
+    >docker inspect multi:stage
+      ...
+     "Layers": [
+      "sha256:373d88cbad88f8b5b391afd08c6fbd029dcedd05e559dcae46ecaa78b42f2880",
+      "sha256:06ab29faef9c8915e025d64d1fde85da0b8b864982f622a2ec87b3f5edd6c2d2"
+     ]
+     ...
+
+
+
+
+  

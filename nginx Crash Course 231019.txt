@@ -1,0 +1,128 @@
+The NGINX Crash Course 10/19/2023
+by Laith Academy
+https://www.youtube.com/watch?v=7VAI73roXaY
+
+Sample code at:
+  d:\apps\portable\nginx\nginx.conf
+  d:\code\nginx\mysite
+
+What is mainly:
+  Reverse proxy
+  Load balancer
+    mainly round robin selection to available servers
+    good for scaling application
+  HTTPS encryption in a single spot
+  
+Installation
+    >brew install nginx ( linux )
+      Installed in /usr/local/etc/nginx
+
+nginx daemon commands:
+  Reload changes:
+    >nginx -s reload
+  Stop process:
+    >nginx -s stop
+    >nginx -s quit
+    
+Configuration
+  location: conf/nginx.conf
+    blocks { ... } known as context
+    key: value; pairs known as directives
+
+Reverse proxy:    
+  Http context
+    include mime.types;
+    
+    server context
+      listen port#;
+        how to reach it in a browser
+      root path;
+        where is going to start running from
+        index.html is the assumed default start file
+      location context
+        maps URL paths to internal server paths ( reroutes )
+        
+      #appends /fruits to root path
+        location /fruits {
+          root D:\\Code\\nginx\\mysite;
+        }
+      #alias: uses path as FQN, does not append /carbs
+      location /carbs {
+        alias D:\\Code\\nginx\\mysite\\fruits;
+      }    
+      #add optional locations to look for with "try_files"
+      location /vegetables {
+        root D:\\Code\\nginx\\mysite;
+        try_files \\vegetables\\veggies.html /index.html =404;
+      }
+      #use regular expression to resolve URL reroute
+      location ~* /count/[0-9] {
+        root D:\\Code\\nginx\\mysite;
+        try_files /index.html =404;
+      }
+      #redirects to another folder ( changes browser URL )
+      location /crops {
+        return 307 /fruits;
+      }    
+      #redirecs without sending 307 back to client
+      rewrite ^/number/(\w+) /count/$1;
+      
+Docker commands to build setup many clients:
+  Create simple Node application
+    index.js 
+      listens at port 7777
+        app.listen(7777, () => {...
+      root URL returns message with hostname to see load balancing
+        app.get("/", (req, res) => {
+          res.send(`I am an endpoint on hostname "${os.hostname}"`);
+        });
+    package.json
+      "scripts": {
+        "start": "node index"
+      },
+  Dockerfile
+    ...
+    EXPOSE 7777
+    CMD [ "npm", "run", "start" ]    
+
+  Create container:
+    >docker build . -t myserver
+  Run 4 instances of node application listening at different ports
+    >docker run -p 1111:7777 -d myserver
+    >docker run -p 2222:7777 -d myserver
+    >docker run -p 3333:7777 -d myserver
+    >docker run -p 4444:7777 -d myserver
+  
+Load balancer in nginx:
+  http context:
+    ...
+    #describe backend
+    upstream backendserver {
+      server 127.0.0.1:1111;
+      server 127.0.0.1:2222;
+      server 127.0.0.1:3333;
+      server 127.0.0.1:4444;
+    }
+    ...
+    #round robin root call to backend servers
+    location / {
+      proxy_pass http://backendserver/;
+    }
+    ... 
+    
+  >nginx -s reload
+    
+Sample response:
+  Browse URL and refresh many times to see hostname of each back server: 
+    localhost:8080/
+  Round Robin Responses:
+    I am an endpoint on hostname "0b0157fe9b25"    
+    I am an endpoint on hostname "02bb02c3f4e9"  
+    I am an endpoint on hostname "62d5b645ec3f"
+    I am an endpoint on hostname "8e6fdc5ad113"
+    
+    I am an endpoint on hostname "0b0157fe9b25"
+    I am an endpoint on hostname "02bb02c3f4e9"
+    I am an endpoint on hostname "62d5b645ec3f"
+    I am an endpoint on hostname "8e6fdc5ad113"
+    ....

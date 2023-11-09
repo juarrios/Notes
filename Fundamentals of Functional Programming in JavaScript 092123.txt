@@ -106,7 +106,7 @@ The Power of Functions
   Pure Functions
     Properties
       Doesn't depend on any data other than what it's passed
-      Doesn't modify any data other than waht they return
+      Doesn't modify any data other than what they return
       Always returns same data for same parameters
     Help reduce mental load because 
       you supply the data

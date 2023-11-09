@@ -85,7 +85,7 @@ Physical and Electronic Access Control (Lesson 2):
     EPE Personnel
     Contractors
     Vendors
-  Personnel Risk Assessment requirement:
+  Personnel Risk Assessment (PRA) requirement:
     Attain Access
       Confirmation and Verification of Identity
       7 Year Criminal Background Check
@@ -169,7 +169,7 @@ Response to Cyber Security Incidents (Lesson 6)
     CIP Senior Manager
     Assembles CIRMT (Cyber Security Incident Response Management)
     Declares incident's closure
-  CIRMT: Cyber Security Incident Response Management
+  CIRMT: Cyber Security Incident Response Management Team
     Leaders from each operational area
     Provide support and managerial input
     Participates in annual review, training and testing of the plan

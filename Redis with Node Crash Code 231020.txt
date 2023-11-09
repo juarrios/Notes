@@ -1,0 +1,40 @@
+Redis with Node Crash Code - Cache Data for Improved Performance 10/20/2023
+by Laith Academy
+URL: https://www.youtube.com/watch?v=AzQ6_DTcG6c
+https://medium.com/geekculture/using-redis-with-docker-and-nodejs-express-71dccd495fd3
+
+
+Redis is an open source in memory data structure store
+  A database cache
+  A Message broker
+  
+Download
+  Run server under src folder
+  >redis-server
+  Test it with redis-cli and type PING, should respond PONG
+  >redis-cli
+    127.0.0.1:6379> PING
+    PONG
+  Using Docker
+    >docker pull redis
+    >docker run --name myRedis -d redis
+  
+Sample application using Express
+  Create and CD to folder RedisTutorial
+  Initialize node and install some packages
+    >npm init -y
+    >npm install express
+    >npm install nodemon -g
+    >npm install redis
+    
+    
+  Create file index.js
+    Code located at d:\code\redis
+    To refresh code changes realtime
+      >nodemon index
+    
+PENDING after making it run with Redis on docker
+
+
+  
+  

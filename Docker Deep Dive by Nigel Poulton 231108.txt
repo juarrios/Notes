@@ -224,7 +224,400 @@ Building New Images
      ]
      ...
 
+Working with Containers
+  Big Picture
+    Pod is a thin wrapper around a container for scheduling purposes
+    Apps are build from containers
+    One container for each feature
+    To scale up a feature create more containers from that
+    Microservices where each container runs a single application responsibility
+    Should be treated as ephemral an immutable
+      ephemral
+        short lived
+        being down an up on regular basis without impacting the whole app
+        rollouts, rollbacks, scaling up and scaling down
+      immutable
+        not making changes or fixes in live containers
+        build new images for changes or fixes
+        switch old containers for new ones
+  Hands On
+    >docker run -it alpine sh
+      Unable to find image 'alpine:latest' locally
+      latest: Pulling from library/alpine
+      96526aa774ef: Already exists
+      Digest: sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978
+      Status: Downloaded newer image for alpine:latest
+    # ps -elf
+      PID   USER     TIME  COMMAND
+          1 root      0:00 sh
+          7 root      0:00 ps -elf
+    Ctrl-PQ to exit
+    >docker ps
+      CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+      f3e12308ed4b   alpine    "sh"      2 minutes ago   Up 2 minutes             crazy_taussig
+      
+    Reusing same alpine image for another process:
+      >docker run -d alpine sleep 1d
+        decccc5568d4242845a0d137c6363c3e047a7df45af560ad54bfce3802edb629
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND      CREATED         STATUS         PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   6 seconds ago   Up 5 seconds             interesting_borg
+        f3e12308ed4b   alpine    "sh"         3 minutes ago   Up 3 minutes             crazy_taussig
+      >docker images
+        REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+        alpine       latest    8ca4688f4f35   5 weeks ago   7.34MB
+    Stopping container
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND      CREATED         STATUS         PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   5 minutes ago   Up 5 minutes             interesting_borg
+        f3e12308ed4b   alpine    "sh"         9 minutes ago   Up 9 minutes             crazy_taussig
+      >docker stop f3e
+        f3e
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND      CREATED         STATUS         PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   6 minutes ago   Up 6 minutes             interesting_borg
+      >docker ps -a
+        CONTAINER ID   IMAGE     COMMAND      CREATED          STATUS                        PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   6 minutes ago    Up 6 minutes                            interesting_borg
+        f3e12308ed4b   alpine    "sh"         10 minutes ago   Exited (137) 38 seconds ago             crazy_taussig
+    Restart container
+      >docker start f3e
+        f3e
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND      CREATED          STATUS         PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   7 minutes ago    Up 7 minutes             interesting_borg
+        f3e12308ed4b   alpine    "sh"         11 minutes ago   Up 5 seconds             crazy_taussig
+    Write inside container
+      >docker exec -it dec sh
+      # ps -elf
+        PID   USER     TIME  COMMAND
+            1 root      0:00 sleep 1d
+            7 root      0:00 sh
+           13 root      0:00 ps -elf
+      # echo "Be kind" > newfile
+      # ls
+        bin      etc      lib      mnt      opt      root     sbin     sys      usr
+        dev      home     media    newfile  proc     run      srv      tmp      var
+      # exit
+    Stop and Restart to verify file is still there with "Be kind" contents
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND      CREATED          STATUS         PORTS     NAMES
+        decccc5568d4   alpine    "sleep 1d"   9 minutes ago    Up 9 minutes             interesting_borg
+        f3e12308ed4b   alpine    "sh"         13 minutes ago   Up 2 minutes             crazy_taussig
+      >docker stop decc
+        decc
+      >docker ps
+        CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS         PORTS     NAMES
+        f3e12308ed4b   alpine    "sh"      13 minutes ago   Up 2 minutes             crazy_taussig
+      >docker start decc
+        decc
+      >docker exec decc ls
+        bin      etc      lib      mnt      opt      root     sbin     sys      usr
+        dev      home     media    newfile  proc     run      srv      tmp      var
+      >docker exec decc cat newfile
+        Be kind   
+    Remove containers
+      >docker rm $(docker ps -aq) -f
+        decccc5568d4
+        f3e12308ed4b
+    Container is an execution environment for an app
+      So exit the app, exists the container
+    Run nginx    
+      >docker run -d --name web -p 5005:80 nginx
+        Unable to find image 'nginx:latest' locally
+        latest: Pulling from library/nginx
+        578acb154839: Pull complete
+        ...
+        Status: Downloaded newer image for nginx:latest
+        7d640453aa0973d4a8e2225b8a7608510c0da0c05d3ebdbd86656db75e64992b
+    Review port mapping
+      >docker port web
+        80/tcp -> 0.0.0.0:5005   
+    Go to browser localhost:5005 to see default nginx page
+      Welcome to nginx!
+      ...
+      Thank you for using nginx.        
+    Docker Desktop GUI
+      Easier way to manage images and containers
+      Extension to see disk usage
+      Can stop, start, remove any docker resource
+      
+Building a Secure Swarm
+  SwarmKit
+    Powers Swarm mode (clustering) and Docker orchestration capabilities
+    Orchstration
+      Where containers are run
+    Clustering
+      Infrastructure to support containers
+      Host or nodes to run on
+      certificates and secrets
+      some intelligence to scale and fix when it breaks
+  Swarm
+    Groups a group of nodes into a cluster
+    It picks which best node to send to job
+    Container in no swarm is in singe-engine mode
+    To convert to swarm node run
+      >docker swarm init ...
+    first node is the manager of the swarm, the leader
+      root CA ( certificate authority ) of swarm
+      issues itself a client certificate
+      builds a secure cluster store where state is held
+      creates "manager join token" and "worker join token"
+    to join another manager
+      >docker swarm join ...
+    swarm manager automatically are high availability
+      if one fails the others keep going
+      but only one is the leader and others are "Raft"
+    ideal number of managers is 3 or 5
+      keep them within same cloud region
+    worker continers do the app work
+    
+  Building a secure swarm
+    Create three multipass VMs
+      >multipass launch docker --name mgr1
+      >multipass launch docker --name mgr2
+      >multipass launch docker --name mgr3
+      >multipass launch docker --name wrk1
+      >multipass launch docker --name wrk2
+    Enter VM 1
+      >multipass shell mgr1
+        $docker info
+          ...
+          OSType: linux
+          Architecture: aarch64
+          ...
+          Swarm: inactive   // sincgle engine mode
+        $docker swarm init
+        $docker info
+          ...
+          Swarm: active
+          ...
+        $docker node ls
+          ID          HOSTNAME  Status  AVAILABILITY  MANAGER STATUS  ENGINE VERSION
+          asdfa... *  mgr1      Ready   Active        Leader          24.0.5
+        $docker swarm join-token manager
+          returns command to add other managers ...
+          docker swarm join --token asaf... 192.168.64.44:2377
+        $exit
+      >multipass shell mgr2
+        $docker swarm join --token asaf... 192.168.64.44:2377
+        $docker node ls
+          ID          HOSTNAME  Status  AVAILABILITY  MANAGER STATUS  ENGINE VERSION
+          asdfa...    mgr1      Ready   Active        Leader          24.0.5
+          wgkdi... *  mgr2      Ready   Active        Reachable       24.0.5
+        $exit
+      >multipass shell mgr3
+        $docker swarm join --token asaf... 192.168.64.44:2377
+        $docker node ls
+          ID          HOSTNAME  Status  AVAILABILITY  MANAGER STATUS  ENGINE VERSION
+          asdfa...    mgr1      Ready   Active        Leader          24.0.5
+          wgkdi...    mgr2      Ready   Active        Reachable       24.0.5
+          firnh... *  mgr3      Ready   Active        Reachable       24.0.5
+        $docker swarm join-token worker
+          returns command to create workers
+          docker swarm join --token SWMTKN-1-1dfjdk... 192.168.64.46:2377
+        $exit
+      >multipass shell wrk1
+        $docker swarm join --token SWMTKN-1-1dfjdk... 192.168.64.46:2377
+    More explainations about security but reveiw video for those details
+  Orchestration Primer
+    Swarm manages containers and make sure desired state is always present
+    The self heal the problem
+  Recap
+    Swamp is Docker's alternative to Kubernetes but simpler
+    
+Container Networking
+  Netwrok Types
+    Bridge
+      Single host networking
+      Oldest and default, docker0
+      each container gets own IP
+    Overlay
+      single layer 2 network spanning multiple hosts
+      single easy command to create
+        >docker network create -d overlay -o encrypted
+      they are container to container only
+    MACVLAN
+      every container get own MAC & IP on external VLAN
+      requires promiscuous mode on the host NIC
+      :( cloud providers don't allow this
+  Network Services
+    Service Discovery
+      Being able to locate servicees on a swarm
+    Load Balancing
+      Lets access the services from any node in the swarm
+      Even nodes not hosting the services
+      Replicas load balance also
+    Service
+      Gets a name
+      Name is registered with swarm DNS
+      Containers use DNS for service discovery
+      In a swarm, containers are wrapper in services for more advanced features
+    
+Persistent Data and Volumes
+  Volumes
+    bring persistent data to the ephemeral immutable world of containers
+    specifically created and then copied to a container
+    also a directory on the docker host
+    gets mounted into the container at a specific mount point
+    important is that they are decoupled from containers
+    can be crated before containers and attached to them at runtime
+  Physical location:
+    Linux: 
+      /var/lib/docker/volumes
+    Windows: 
+      c:\ProgramData\Docker\WindowsFilter ?
+      
+  Creating and Managing Volumes
+    >docker volume
+      shows commands available 
+      Commands:
+        create      Create a volume
+        inspect     Display detailed information on one or more volumes
+        ls          List volumes
+        prune       Remove unused local volumes
+        rm          Remove one or more volume      
+    >docker volume ls
+      DRIVER    VOLUME NAME
+    >docker volume create --name myvol
+      myvol
 
+    >docker volume ls
+      DRIVER    VOLUME NAME
+      local     myvol
+    >docker volume inspect myvol
+    [
+        {
+            "CreatedAt": "2023-11-15T00:01:59Z",
+            "Driver": "local",
+            "Labels": null,
+            "Mountpoint": "/var/lib/docker/volumes/myvol/_data",
+            "Name": "myvol",
+            "Options": null,
+            "Scope": "local"
+        }
+    ]
+    >docker volume rm myvol
+      myvol
+  Working with Volumes
+    >docker volume ls
+      DRIVER    VOLUME NAME
+    >docker run -dit --name voltest --mount source=ubervol,target=/vol alpine
+      will create unexisting volume named ubervol
+    >docker volume ls
+      DRIVER    VOLUME NAME
+      local     ubervol
+    >docker exec -it voltest sh
+      # ls -l /vol
+        total 0
+      # echo "Let's be respectful to everyone" > /vol/newfile
+      # cat /vol/newfile
+        Let's be respectful to everyone
+      # exit
+    >docker ps -a
+      CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+      903442e11562   alpine    "/bin/sh"   9 minutes ago   Up 9 minutes             voltest
+    >docker rm voltest -f
+      voltest
+    >docker ps
+      CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES  
+    >docker volume ls
+      DRIVER    VOLUME NAME
+      local     ubervol
+    >docker run -dit --name volmore --mount source=ubervol,target=/app nginx
+      e303ffd5edf6fd0e94672e6eadaddfec56f88841d7b8df8a3548cb81cc99d35d
+    >docker exec -it volmore sh
+      # cat /app/newfile
+        Let's be respectful to everyone
+      # echo "...and always be kind!" >> /app/newfile
+      # exit
 
+Docker Compose
+  Compose file defines a multi-container app
+    Great documentation about how all is striched together
+    Declarative method or infrastructure as code
+      networks
+      volumes
+      services
+        containers
+  Run compose
+    >docker compose up &
+  After finishing check
+    > docker volume ls
+      DRIVER    VOLUME NAME
+      local     20d5e43682b9ea0c54249d37bc94eaa5798ce6eedba10f01a5e30693e2f23de6
+      local     compose_counter-vol
+    >docker network ls
+      NETWORK ID     NAME                  DRIVER    SCOPE
+      f063eeddb28a   compose_counter-net   bridge    local
+    >docker images
+      REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+      compose-web-fe   latest    131476e54e30   3 minutes ago   69.4MB
+      redis            alpine    246a9110fd9e   7 days ago      43.4MB
+    >docker ps
+      CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
+      61f91488cb5c   redis:alpine     "docker-entrypoint.s…"   4 minutes ago   Up 4 minutes   6379/tcp                 compose-redis-1
+      cad4aa2bdc32   compose-web-fe   "python app/app.py p…"   4 minutes ago   Up 4 minutes   0.0.0.0:5001->8080/tcp   compose-web-fe-1
+    >docker port compose-web-fe-1
+      8080/tcp -> 0.0.0.0:5001
+  In Browser go to localhost:5001 to see the web app
+  Bring compose down removes everything but volumes and images
+    >docker compose down
+       Container compose-redis-1  Stopping
+       Container compose-web-fe-1  Stopping
+       ...
+       Container compose-redis-1  Removed
+       Container compose-web-fe-1  Removed
+       Network compose_counter-net  Removed
+    >docker ps
+      CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+    >docker network ls
+      NETWORK ID     NAME               DRIVER    SCOPE
+    >docker volume ls
+      DRIVER    VOLUME NAME
+      local     20d5e43682b9ea0c54249d37bc94eaa5798ce6eedba10f01a5e30693e2f23de6
+    >docker images
+      REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+      compose-web-fe   latest    131476e54e30   18 minutes ago   69.4MB
+      redis            alpine    246a9110fd9e   7 days ago       43.4MB
+  Restart compose again in background
+    >docker compose up --detach
+      Network compose_counter-net  Created
+      Container compose-web-fe-1  Created
+      Container compose-redis-1  Created
+      Container compose-redis-1  Started
+      Container compose-web-fe-1  Started
+    >docker compose ls
+      NAME                STATUS              CONFIG FILES
+      compose             running(2)          D:\code\docker\docker-deep-dive-2023\ddd2023\compose\compose.yaml
+  Remove all including volumes and images
+    >docker compose down --volumes --rmi all
+      Container compose-redis-1  Stopped
+      Container compose-redis-1  Removed
+      Container compose-web-fe-1  Stopped
+      Container compose-web-fe-1  Removed
+      Volume compose_counter-vol  Removed
+      Image compose-web-fe:latest  Removed
+      Image redis:alpine  Removed
+      Network compose_counter-net  Removed
 
-  
+Production-grade Multi-container Apps
+  Docker Stacks
+    Each microservice gets own container
+    compose.yaml file
+      Images should be pre-built
+      replicas
+  Deploying and Managing Docker Stacks
+    >docker stack deploy -c compose.yaml psight
+    >watch docker service ls
+    >docker stack ls
+    >docker stack ps psight
+    >docker stack services psight
+    >docker service scale psight_web=10
+      recommended to do change in compose "replicas" configuration instead
+    >docker stack rm psight
+    
+Kubernetes is the next step
+
+    
+    

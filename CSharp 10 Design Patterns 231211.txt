@@ -1,0 +1,521 @@
+C# 10 Design Patterns 12/11/2023
+by Kevin Dockx
+URL: https://app.pluralsight.com/library/courses/c-sharp-10-design-patterns/table-of-contents
+
+Design Pattern
+  A general reusable solution to a commonly occurring problem within a given context in software design.
+  View as a template to start from, but not as a rule
+  Each pattern has an intent
+    The intent should remain the same no matter how it is implemented
+  Learn which problem each pattern solves
+  The Gang of Four
+    Erich Gamma
+    Richard Helm
+    Ralph Johnson
+    John Vlissides
+    1994 book "Dessign Patterns"
+  Three Pattern types
+    Creational
+      Deal with object creation
+      Abstract the object instantiation process
+      Help making system independent of how objects are created, composed and represented.
+      Five types
+        Abstract Factory
+        Builder
+        Factory Method
+        Prototype
+        Singleton
+    Structural
+      Deal with ways to define relations between classes or objects
+      Concerned with how classes and objects are composed to form larger structures
+      Seven types
+        Adapter
+        Bridge
+        Composite
+        Decorator
+        Facade
+        Flyweight
+        Proxy
+    Behavioral
+      Deal with ways to communicate between classes or objects
+      Characterize complex control flow that's difficult to follow at runtime
+      Let you concentrate on the way objects are interconnected
+      Eleven types
+        Chain of Responsibility
+        Command
+        Interpreter
+        Iterator
+        Mediator
+        Memento
+        Observer
+        State
+        Strategy
+        Template Method
+        Visitor
+  Two Object oriented principles
+    Program to an interface, not an implementation
+      Clients 
+        Only know about the interface
+        Unaware of specific types being used
+        Unaware of classes being implemented
+      Implementation
+        Use abstract class when needed to provide a basic functionality that can potentially be overriden
+        Use interface if only need to specify the expected functionality of  class
+      SOLID
+        software entities should be open for extension, but closed for modification
+    Favor object composition over class inheritance
+      New functionality is obtained by assembling or composing objects
+      
+Singleton Pattern
+  Creational pattern
+  Ensure that a class only hs one instance, and provide a global point of access to it.
+    Example: a logger
+  Make the class responsible for ensuring only one instance of itself exists
+    Constructor is private
+    A static methond or property to return the only instance of itself
+    Prefer lazy instantiation
+      created when it's requested for the first time
+      later requests return same instance
+      use Lazy<T> creates lazy instantiation in thread safe manner to avoid locking
+  Use cases
+    Where there must be exactly one instance and accessible from a well-known access point
+    When the sole instance should be extensible by subclassing.
+      Clients should be able to use an extended instance without modifying their code
+  Pattern consequences
+    strict control over how and when clients access it
+    avoids polluting the namespace with global variables
+    multiple instances can be allowed without having to alter the clients
+    Disadvantage: violates the single responsibility principles
+      objects no longer control how they are created
+    in modern languages no longer write code like this anymore
+      mostly dealt with via an IOC (inversion of control) container
+      IOC manages lifetime responsibility
+  Related patterns
+    Can be implemented as a singleton
+    Abstract factory pattern
+    builder pattern
+    prototype pattern
+    State pattern 
+      often implemented as singletons
+  
+Factory Method pattern
+  Also known as virtual constructor
+  Intent is to define an interface for creating an object but let subclasses decide which class to instantiate.
+  Lets a class defer instantation to subclasses.
+  Concreate creator implements creator and overrides the factory method to return an instance of ConcreteProduct
+  Use cases
+    When a class can't anticipate the class of objects it must create
+      don't know in advace which type of object will be working with
+    When a class want its subclasses to specify the objects it creates
+      concrete creator takes responsibility for creating the objects
+    When classes delegate responsibility to one of several helper subclasses
+      want to localize the knowledge of which helper subclass is the delegate
+    As a way to enable reusing of existing objects
+      creator can crate or reuse and existing object
+  Pattern consequences
+    Eliminate the need to bind application-specific classes to your code
+      because only deals with interface and not the concrete implementation
+      avoiding tight coupling
+    New type of products can be added without breaking client code
+      open/closed principle
+    Creating products is moved to one specific place in code, the creator
+      single responsibility principle
+    Disadvantage: Clients might need to create subclasses of the creator class just to create a particular ConcreteProduct object.
+  Related patterns
+    Abstract factory
+      Often implemented with factory methods
+    Prototype
+      No subclassing is needed, but an initialize action on Product is often required
+    Template
+      Factory methods are often called from within template methods
+      
+Abstract Factory pattern
+  Intent
+    Provide an interface for creating families of related or dependent objects without specifying their concrete classes.
+    Using same factory to create related services by composition
+  Client is decoupled from the concrete factory implementation
+  Use cases
+    When a system should be independent of how its products are created, composed and represented.
+    When want to provide a class library of products and only want to reveal their interfaces, not their implementations.
+    When a system should be configured with one of multiple families of products.
+    When a famility of related product objects is designed to be used together and want to enforce this constraint.
+  Pattern consequences
+    Isolates concrete classes, because it encapsulates the responsibility and the process of creating product objects.
+    New products can easily be introduced without breaking client code: open/closed principle
+    Code to create products is contained in one place: single responsibility principle
+    It makes exchanging product families easy
+    Promotes consistency among products
+    Disadvantage: Supporting new kind of products is rather difficult.
+  Related patterns
+    Factory method
+    Prototype
+    Singleton
+    
+Builder pattern
+  Intent
+    Separate construction of a compplex object from its representation. 
+    The same constructiton process can create different representations.
+  Creating a complex object is transparent for the consumer of the builder
+  Work on interfaces, not implementations.
+  Use cases
+    When want to make algorithm for creating complex object independent of the parts that make the object and how they're assembled.
+    When want the construction process to allow different representations for the object that's constructed.
+  Pattern consequences
+    Lets us vary a product's internal representation
+    Isolates code for construction and representation; thus improves modularity by encapsulationg the way a complex object is constructed and represented: single responsibility principle
+    Gives finer control over the construction process
+    Disadvantage: Complexity of code base increases
+  Related patterns
+    Abstract factory
+    Singleton
+    Composite
+    
+Prototype pattern
+  Intent
+    Specify the kind of objects to create using a prototypical instance, and create new objects by copying this instance.
+    Copying existing objects without dependancy on concrete classes.
+  A way to create a new object by cloning an existing one
+  Prototype class declares an interface for cloning itself
+  Use cases
+    When a system should be independent of how its objects are created, and avoid building a set of factories that mimics the class hierarchy.
+    When a system should be independent of how its objects are created, and when instances of a class can have one of only a few different combinations of states.
+  Pattern consequences
+    Hides the ConcreteProduct classes from the client, which reduces what the client need to know
+    Reduce subclassing
+    Each implementation of the prototype base class must implement its own clone method
+
+Adapter pattern
+  Intent
+    Convert the interface of a class into another interface clients expect.
+    Lets classes work together that couldn't otherwise because of incompatible interfaces.
+  Actors
+    Adaptee
+      defines an existing interface that needs to be adapted
+    Target
+      defines the domain specific interface that the client uses
+    Adapter
+      adapts the interface of Adaptee to the Target interface
+  Two types
+    Object adapter pattern
+      Works with object composition
+    Class adapter pattern
+      Relies in multiple inheritance to adapt one interface to another
+  Use cases
+    Whan you want to use an existing class but the interface does not match the one you need
+    When you want to create a reusable class (the adapter) that works with classes that don't have compatible interfaces.
+    When you need to use several existing subclasses, don't want create additional subclasses for each of them, but still need to adapt the interface.
+  Pattern consequences
+    A single adapter can work with many adaptees, and can add functionality to all adapteees at once.
+    The interface (adapter code) is separated out from the rest of the code: single responsibility principle
+    New types of adapters can be introduced without breaking client code: open/closed principle
+    The object adapter makes it hard to override adaptee behavior
+    Additional complexity is introduced
+    
+Bridge Pattern
+  Intent
+    To decouple an abstraction from its implementation so the two can vary independently
+    Aims to separate an abstraction of a class from the implementation
+    A means to replace an implementation with another implementation without modifying the abstraction
+  Abstraction
+    A way to simplify something complex
+    Handle complexity by hiding the parts we don't need to know about
+  Use cases
+    When you want to avoid a permanent binding between an abstraction and its implementation (to enable switching implementations at runtime)
+    When abstraction and implementations should be extensible by subclassing
+    When you don't want changes in the implementation of an abstraction have an impact on the client
+  Pattern consequences
+    Decoupling: the implementation isn't permanently bound to the abstraction
+    As the abstration and implementation hierarchies can evolve independently, new ones can be introduced such: open/closed principle
+    Hide implementation details from clients
+    Can focus on high-level logic in the abstraction, and on the details in the implementation: single responsibility principle
+    
+Decorator pattern
+  Intent
+    To attach additional responsibilities to an object dynamically.
+    Provides a flexible alternative to subclassing for extending functionality.
+    Sometimes called a wrapper.
+  Adding responsibility to a class can be done bny adding an additional method to the class
+  We don't want to add reponsibility to a class but to an instance of a class at runtime: an object
+  Actors
+    Component
+      defines the interface for objects that can have responsibilities added to them dynamically
+    ConcreteComponent
+      defines an object to which additional responsibilities can be attached
+    Decorator
+      maintains a reference to a component object, and defines an interface that conforms to component's interface
+    ConcreteDecorator
+      adds responsibilities to the component
+  Use cases
+    When you have a need to add responsibilities to individual objects dynamically (at runtime) without affecting other objects.
+    When you need to be able to withdraw responsibilities you attached to an object
+    When extension by subclassing is impractical or impossible ( class is sealed )
+  Pattern consequences
+    More flexible than using static inheritance via subclassing: responsibilities can be added and removed at runtime ad hoc when needed.
+    Split feature-loaded classes until ther's just one responsibility left per class: single responsibility principle
+    Increased effor is required to learn the system due to the amount of small, simple classes
+    
+Composite pattern
+  Intent
+    To compose objects into tree structures to represent part-whole hierarchies.
+    It lets clients treat individual objects and compositions of objects uniformly: as if they all were individual objects.
+  Actors
+    Component
+      declares the interface for objects on the compositions, and contains a common operation
+    Leaf
+      represents leaf objects in the composition, and has no children.
+      it defines behavior for primitive objects in the composition.
+    Composite
+      stores child components and defines behavior for components having children.
+    Client
+      manipulates objects in the compositions through the Component interface
+  Use cases
+    When want to represent part-whole hierarchies of objects
+    When want to be able to ignore the difference between compositions of objects and individual objects
+  Pattern consequences
+    Makes the client simple
+    It's easy to add new kinds of components: open/closed principle
+    Disadvantage: can make the overall system too generic
+    
+Facade pattern
+  Intent
+    Provide a unified interface to a set of interfaces in a subsystem. 
+    It defines a higher-level interface that makes the subsystem easier to use.
+  Actors
+    Facade
+      knows which subsystem classes are responsible for a request
+      delegates client requests to appropiate subsystem objects
+    Subsystem class
+      implements subsystem functionality
+      don't know about the Facade, but they do handle work assgned by it.
+  Use cases
+    When want to provide a simple interface into a complex subsystem
+    When there are many dependencies between a client and the implementation classes of the abstraction.
+  Pattern consequences
+    Shields clients from subsystems: the number of objects clients have to deal with are reduced
+    Promotes weak coupling between the subsystem and its clients, enabling subsystem components to vary without affecting the client: open/closed principle
+    Clients are not forbidden to use subsstem classes
+
+Proxy pattern AKA Surrogate pattern
+  Intent
+    Provide a surrogate or placeholder for another object o control access to it
+    the problem it solves is one of access control
+    Accessing a remote API from an application
+      "Add service reference" from VS generates a proxy to interact with an API
+    Proxy is responsible for controlling the actual access to the remote API
+      contains code that deals with the underlying protocol
+      provides an interface identical to the actual call
+      can take on the responsibility of executing code before or after calling the API
+  Actors
+    Subject
+      defines the common interface between the RealSubject and the Proxy
+    RealSubject
+      defines the real object that the proxy respresents
+    Proxy
+      provides an interface identical to the Subject. It maintains a reference to and controls access to the RealSubject
+  Variations
+    Remote proxy
+      client can communicate with the proxy, feels like a local resource
+      usually generated from a service definition: WSDL, OpenAPI specification
+    Virtual proxy
+      allow creating expensive objects on demand
+      performance optimization is a big advantage of this type of proxy
+    Smart proxy
+      allows adding additional logic around the subject
+      like managing caching, or locking access to shared resources
+    Protection proxy
+      used to control access to an object
+  Use cases
+    When need to add some form of access control to an actual object
+  Pattern consequences
+    By proxy type
+      Remote
+        Hides the fact that an object resides in a different network space
+      Virtual
+        object can be create on demand
+      Smart & Protection
+        additional housekeeping tasks can be executed when an object is accessed
+    Allows introducing new proxies without changing the client code: open/closed principle
+    Added complexity because of additional classes
+    Potential performance impact of passing through additional layers
+    
+Flyweight pattern
+  Intent
+    Use sharing to support large number of fine-grained objects efficiently.
+    It does it by sharing parts of the state between these objects instead of keeping all that state in all of the objects.
+  Considerations before choosing the flyweight pattern ( all must be true )
+    Does the application use a large number of objects?
+    Are storage costs high because of the large number of objects?
+    Can most of the object state be made extrinsic ?
+    If you remove extrinsic state, can a large group of objects be replaced by relatively few shared objects?
+    Does the application doesn't require object identity?
+  Actors
+    Flyweight
+      declares interface ghrough which they an receive and act on extrinsic state
+    FlyweightFactory
+      creates and manages Flyweights and ensures they are properly shared
+    Client
+      maintains a reference to flyweights and computes or stores their extinsic state
+    Unshared concrete Flyweight
+      enables acting on extrinsic state, while having unshareable instrinsic state
+      doesn't have state to share
+      no storage advantage anymore
+  Use cases
+    When the application use a large number of objects
+    When storage costs are high because of the large amounts of objects
+    When most of the objects state be made extrinsic
+    When if removing extrinsic state, a large group of objects be replaced by relatively few shared objects
+    When the application does not require object identity
+  Pattern consequences
+    May save a lot of memory when using the pattern for an applicable use case
+    Processing costs might go up, but that's typically offsetted by the reduced storage costs
+    Pattern is complex and makes the code base more complicated as well
+    
+Template pattern
+  Intent
+    To define the skeleton of an algorith in an operation, deferring some steps to subclasses.
+    Lets subclasses redefine certain steps of an alogrithm without changing the algorithm's structure.
+  Actors
+    AbstractClass
+      defines abstracct primitive operations that concrete subclasses define to implement steps on an algorithm
+      implements a template method defining the skeleton of an algorithm
+    ConcreteClass
+      implements the primitive operations to carry out subclass-specific steps of the algorithm
+  Use cases
+    When you want to implement invariant parts of an algorithm only once, and wnat to leave it to subclasses to implement the rest of the behavior.
+    When you want to control which part of an algorithm subclasses can vary
+    When you have a set of algorithms that don't vary much
+  Pattern consequences
+    Template methods are fundamental technique for code reuse
+    Template methods cannot be changed: the order of methods they call (the skeleton) is fixed
+    
+Strategy pattern AKA Policy pattern
+  Intent
+    To define a family of algorithms, encapsulate each one, and make them interchangeable.
+    Lets the algorithm vary independently from client that use it.
+  Actors
+    Strategy
+      declares an interface common to all supported algorithms.
+    ConcreteStrategy
+      Implement the algorithm defined by the Strategy    
+    Context 
+      uses the Strategy to call the algorithm defined by a ConcreteStrategy
+  Use cases
+    When many related classes differ only in their behavior
+    When need different variants of an algorithm which you want to be able to switch at runtime
+    When algorithm uses data, code or dependencies that the clients shouldn't know about
+    Whan a class defines many different behaviors which appear as a bunch of conditional statements in its method
+      when dealing with large "if then" or "switch" statements
+  Pattern consequences
+    It offers an alternative to subclassing your context, alternative to inheritance to composition
+    New strategies can be introduced without having to change the context: open/close principle
+    It eliminates conditional statements
+    It can provide a choice of implementations with the same behavior
+    Draw back: 
+      if client injects the strategy, it must be aware of how startegies differ
+      overhead in communication between the strategy and the context
+      additional objects are introduced, which increases complexity
+    
+Command pattern AKA Action or Transaction pattern
+  Intent
+    encapsulate a request as an object, thereby letting you parameterize clients with different requests, queue or log requests, and support undoable operations.
+    allows to decouple the requester of an action from the receiver
+    very common in mobile or rich UI development
+  Actors
+    Invoker
+      asks Command to cary out a request
+    Command
+      declares an interface for executing an operation
+    ConcreteCommand
+      defines a binding between a Receiver and an action.
+      implements Execute by invoking the corresponding operation(s) on Receiver
+    Receiver
+      knows how to perform the operations associated with carrying out a request ( like a repository )
+    Client
+      creates the ConcreteCommand and sets its Receiver
+  Use cases
+    When you want to parameterize objects with an action to perform
+    When you want to support undo
+    When you want to specify, queue and execute requests at different times
+    When you need to store a list of changes to potentially reapply later on (like after a system crash)
+  Pattern consequences
+    It decouples the class that invokes the operation from the one that knows how to perform it: single responsibility principle
+    Commands can be manipulated and extended
+    Commands can be assembled into a composite command
+    Existing implementations don't have to be changed to add new commands: open/closed principle
+    Negative: complexity increases because an additional layer
+    
+Memento pattern AKA Token pattern
+  Intent
+    To capture and externalize an object's internal state so that the object can be restored to this state later, without violating encapsulation.
+    Allows to store and restore private field and property values
+  Actors
+    Memento
+      stores the internal state of the originator. 
+      The state should be protected agains access by other objects as much as possible
+    Originator
+      creates Memento with a snapshot of its internal state.
+      It also uses the Memento to restore its internal state.
+    Caretaker
+      keeps the Memento safe, and shouldn't operate on or examine its contents.
+  Use cases
+    When part of an object's state must be saved so it can be restored later on
+    AND when a direct interface to obtaining the state would exponse implementation details and break encapsulation
+  Pattern consequences
+    It preserves encapsulation boundaries
+    It simplifies the originator
+    Using mementos might be expensive
+    It can introduce complexity to the code
+    
+Mediator
+  Intent
+    To define an object, the mediator, that encapsulates how a set of objects interact.
+    It does that by forcing objects to communicate via that mediator.
+    Promotes loose coupling by keeping objects from referring to each other explicitly
+    A central object, the mediator, holds references of objects that want to communicate with each other.
+    It handles communication between objects.
+  Actors
+    Mediator
+      defines an interface for communicating with Colleague objects
+    Colleague
+      knows its Mediator and communicates with it instead of with another Colleague
+    ConcreteMediator
+      knows and maintains its Colleagues, and it implements cooperative behavior by coordinating Colleague objects
+      it routes messages between them
+  MediatR
+    Popular .NET implementation of the mediator pattern made by Jimmy Bougard
+    github.com/jbogard/MediatR
+  Use cases
+    When a set of objects communicate in well-defined but complex ways
+    When because an object refers to and communicates with many other objects, the object is difficult to reuse
+    When behavior that's distributed between several classes should be customizable without a lot of subclassing
+  Pattern consequences
+    It limits subclassing
+    It decouples colleagues
+    It simplifies object protocols
+    New mediators can be introduced without having to change the components: open/closed principle
+    Disadvantage: it centralizes control, which can make the mediator turn into a monolith
+    
+Chain of Responsibility pattern
+  Intent
+    To avoid coupling the sender of a request to its receiver by giving more than one object a chance to handle the request.
+    It does that by chaining the receiving objects and passing the request along the chain until an object handles it.
+  Actors
+    Handler
+      defines an interface for handling requests, and optionally implements the successor link
+    ConcreteHandler
+      handles requests it's responsible for. It can access the successor and potentially pass the request on.
+    Client
+      initiates the request to a ConcreteHandler object on the chain
+  Use cases
+    when more than one object may handle a request and the handler isn't known beforehand
+    when want to issue a request to one of several objects (handlers) without specifying the receiver explicitly
+    when the set of objects that handle a request should be specified dynamically
+  Pattern consequences
+    it enables reduced coupling & works towards a single responsibility per class
+    it adds flexibility in regards to assigning responsibilities to objects
+    it does not guarantee receipt of the request
+    
+Observer pattern AKA Publish-Subscribe or Pub-Sub
+  Intent
+    to define a one to many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+    

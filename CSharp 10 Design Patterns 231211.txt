@@ -518,4 +518,123 @@ Chain of Responsibility pattern
 Observer pattern AKA Publish-Subscribe or Pub-Sub
   Intent
     to define a one to many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+  Actors
+    Observer
+      defines an updating interface for objects that should be notified of changes in a Subject
+    Subject
+      knows its Observers. Provides an interface for attaching and detaching them.
+    ConcreteObserver
+      store state that must remain consitent with the Subject's state.
+      they implement the Observer updating interface to keep state consistent.
+    ConcreteSubject
+      stores state of interest to ConcreteObserver objects, and sends a notification to its Observers when its state changes
+  Use cases
+    When a change to one object requires changine others, and you don't know in advance how many objects need to be changed
+    When objects that observer others are not necessarily doing that for the total amount of time the application runs
+    When an object should be able to notify other objects without making assumptions about who those objects are
+  Pattern consequences
+    It allows subjects and observers to vary independently: subclasses can be added and change without having to change others: open/closed principle
+    Subject and observer are loosely coupled: open/closed principle
+    It can lead to a cascade of unexpected updates
+      
+State pattern AKA Objects for States
+  Intent
+    To allow an object to alter its behavior when its internal state changes. The object will appear to change its class.
+  Actors
+    Context
+      defines the interface that's of interest to clients. It maintains an instance of a ConcreteState subclass that defines the current state.
+    ConcreteState
+      implements behavior associated with a state of the Context
+    State
+      defines an interface for encapsulating the behavior associated with a particular state of the Context
+  Use cases
+    When an object's behavior depends on its state and it must change it at runtime (depending on that state)
+    When objects are dealing with large conditional statements that depend on the object's state
+  Pattern consequences
+    It localizes state-specific behavior and prtitions behavior for different states: single responsibility principle
+    New states and transitions can easily be added by defining new subclasses: open/closed principle
+    Negative: the number of classes is increased, which adds additional complexity.
     
+Iterator pattern
+  Intent
+    To provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation
+    It takes the responsibility for traversing out of the aggregate list object and puts it in an iterator object.
+  Actors
+    Aggregate
+      defines an interface for creating an Iterator object
+    Iterator
+      defines an interface for accessing and traversing elements
+    ConcreteIterator
+      implements Iterator interface and kkeps track of the current position in the traversal of the Aggregate
+    ConcreateAggregate
+      implements the Iterator creation interface to return an instance of the proper ConcreteIterator
+  Use cases
+    When want to access an aggregate object's content without exposing its internal representation
+    When want to support multiple ways of traversal for the same aggregate object
+    When want to avoid code duplication in regards to traversing the aggregate object
+  Pattern consequences
+    Interators simplify the interface of the aggregate structure as traversal code is separated out: single responsibility principle
+    Can implement new types of aggregate objects and iterators without them interfering with each other: open/closed principle
+    Iterators can exist next to each other at the same time on the same collection
+    Can be a bit overkill when you only use simple traversals and collections
+    
+Visitor pattern
+  Intent
+    To represent an operation to be performed on the elements of an object structure. 
+    Lets define a new operation without changing the classes of the elements on which it operates.
+    Adding behavior to classes by adding the behavior to another class, the visitor, which will visit the original classes to execute that behavior.
+  Actors
+    Element
+      defines an accept operation that takes a Visitor as an argument
+    ConcreteElement
+      implements the accept operation that takes a Visitor as an argument
+    ObjectStructure
+      enumerates its elements. It may provide an interface to allow a Visitor to visit its Elements. It can be a composite or a collection.
+    Visitor
+      declares a visit operation for each class of ConcreteElement in the ObjectStructure
+    ConcreteVisitor
+      implements each operation declared by Visitor
+  Use cases
+    When an object structure contains many classes of objects with differing interfaces, and you want to perform operations on them that depend on their concrete classes.
+    When the classes defining the object structure don't have to change often, but want to define new operations over the structure.
+    When you've got potentially many operations that need to be performed on object structure, but not necessarily on all of them.
+    Examples
+      Document element processing
+      Medical records system
+      Data structure serialization
+      Financial transactions within a financial software system
+  Pattern consequences
+    It makes adding new operations easy; you can define a new operation by creating a new visitor: open/closed principle
+    A visitor can accumulate info on the objects it visits
+    A visitor gathers related operations together and separates unrelated ones: single responsibility principle
+    Disadvantage: adding a new ConcreteElement class can be hard
+    It might require to break encapsulation
+    
+Interpreter pattern
+  Intent
+    Given a language, define a representation for its grammar along with an interpreter that uses the representation to interpret sentences in the language
+    Examples
+      LINQ queries, Regular expressions, C# compiler
+  Actors
+    AbstractExpression
+      declares an abstract Interpret operation that is common to all nodes in the abstract syntax tree
+    TerminalExpression
+      implements an Interpret operation associated with terminal symbols in the grammar
+    Context
+      contains information that's global to the Interpreter
+    Client
+      builds or is given the abstract syntax tree which represents a sentence in the language that the grammar defines.
+      invokes the Interpret operation
+  Use cases
+    When there's a language you can interpret, and you can represent statements in the language as abstract syntax trees
+    AND when the grammar is simple
+    And when the best possible efficiency isn't required
+    Examples:
+      Command line parsers
+      HTML or XML parsing
+      Natural language processors, useful in chatbos and virtual assistants
+      Mathematical expression evaluation
+  Pattern consequences
+    It's easy to change and extend the grammar
+    It's easy to implement the grammar
+    Complex grammars are hard to maintain

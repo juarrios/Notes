@@ -1,0 +1,313 @@
+AZ-900 Micosoft Azure Fundamental by Mathew Ulasien 03/05/2024
+https://app.pluralsight.com/library/courses/az-900-microsoft-azure-fundamentals-2/table-of-contents
+
+Overview of Training
+  Cloud concepts
+    advantages such as high availability and scalability
+  Azure architecture
+    how Azure is put together
+  Compute
+    how to use Azure to run applications
+  Networking
+    how each server on Azure can talk to each other
+  Storage
+    where you put all your data in different ways
+  Database
+    a way to store your data
+  Authentication and Authorization
+    make sure only the right users get into your services
+  Solutions
+    look at more complex scenario Azure can provide
+  Security
+    various parts of Azure to make most secure choice for your business functions
+  Privacy, Compliance and Trust
+    how services ensure privacy for user and how to stay compliant with regulations and standards
+  Pricing
+    various facets of how pricing is made up and how to stay on top of the cost
+  Support
+    many ways to get help and assistance using Azure from Microsoft and community
+  Exam preparation
+    what to expect on the day of the exam
+    
+Introduction
+  Course Overview
+    Proficiency
+      Skills have been tested
+    Certification
+      Proof that you passed the exam
+    Credibility
+      Signal that you know what you are talking abount and can perform the tasks right away
+    Outcome
+      What and How
+        What features you can create and how you can create them
+      Why and When
+        Context for lesson to make the content easier to remember and apply
+      Real-life prep
+        Learn the tools, tech and products in symbiosis.
+  Azure Portal
+    Most common way to interact with Azure
+    a website gives you access to all your resources and features
+    can build, manage and monitor everything in a single unified console
+    Portal featurs
+      Personalize
+        craete own dashboards, layouts, workflows and colors
+      Access control
+        fine-grained to all resources to make management and governance much easier
+      Cost management
+        to keep track of current and projected spend of Azure resources
+      One stop shop
+        single portal, single login for all Azure assets
+      Constantly updated
+        featurs and products constantly updated
+      Multi-platform
+        available through the web and mobile devices      
+  Azure CLI
+    Text only entry tool
+    same result as using the portal
+    Advantages
+      Stable
+        text commands don't change
+      Structure
+        CLI commands structured logically and follow same pattern
+      Croos platform
+        Works on Windows, Mac and Linux
+      Automation
+        simple to automate the CLI commands for future use
+      Logging
+        keep track of who ran what command and when in various ways
+      
+  Azure PowerShell
+    Uses cmdlets
+    Example how to create a new virtual machine
+      >new-az vm nameOfMachine
+    Can manipulate resources   
+  Azure Cloud shell
+    Browser accesible shell for managing Azure resources
+    Fully dedicated standalone browser or the portal component
+    Can use Bash CLI or PowerShell
+    Access from anywhere using web or mobile app
+    Authenticated and secure
+    Tools
+      interpreters, modules, Azure tools
+      language support for 
+        Node.js
+        .NET
+        Python
+    Dedicated storage to persist data between sessions
+    Integrated file editor
+  Azure Mobile apps
+    Available in Android and iOS
+    Goal of giving quick information
+    excelent to quickly diagnose and fix issues on the go
+    hs a version of Cloud Shell to run PowerShell or Azure CLI commands
+  ARM Templates
+    give options to automate and replicate tasks
+    Azure Resource Manager (ARM) is gatekeeper to manage anything in Azure
+    templates
+      describe resource usage
+        a way to describe which resources to create, delete, manage or alter
+        do any number of actions
+      common syntax
+        making it easier to formalize and learn
+    benefits
+      idempotent
+        can be applied multiple times and results are always the same
+      source control
+        keep track of all changes
+      reuse
+        use a combination of multiple partial ARM templates to achieve
+      declarative
+        specify what you want, not how it is done
+      no human errors
+        automation means don't repeat mistakes      
+  Azure Advisor
+    provide recommendation to 
+      improve availability of resources
+      save costs
+      increase reliability
+      security recommendations
+    checks all things you might not be aware of
+  Hands-On Lab
+    Create new free Azure account
+      first create a Microsoft email account
+      register for new free Azure account
+      need to provide a valid credit card
+      it will open with "Quickstart Center"
+      
+Cloud Concepts
+  Cloud computing
+    On-demand availability of computer system resources split into three main catories
+      compute
+      networking
+      storage
+    cloud are datacenters distributed around the globe
+    benefits
+      low cost
+      ease of adoption
+      almost unlimited resources
+  Language terms
+    High Availability
+      systems are always available
+      if hardware fails it is replaced instantly
+      use clusters to ensure high availability
+    Reliability
+      how Azure can tolerate failures or even disasters
+      ability of a system to recover from failures and continue to function
+      aka fault tolerance / disaster recovery
+      use to describe the resilience of cloud computing
+      two strategies
+        deploy in multiple locations
+          global scale computing
+          protect agains regional failure/disaster
+        no single point of failure
+          resources in multiple locations
+          if one computer goes down, others pick up the load         
+    Scalability
+      process of adding more resources on an as-needed basis
+      automatically adjust resources to meet demand
+        example adding number of VMs to handle peak traffic
+      automatically reduce resources when demand drops
+        remove uneeded VMs
+        don't overpay for services
+      Horizontal = scaling out
+        adding additional VMs/containers
+      Vertical = scaling up
+        increase power (CPU/RAM) of existing VMs
+    Predictability
+      application will always perform as expected and knowing what it will cost
+      Performance
+        consistent experience for customers regardless of traffic
+        autoscaling, load balancing and high availability provide a consistent experience
+      Costs
+        no unexpected surprises
+        track and forecast resource usage (costs) in real time
+        analytics provide patterns/trends to optimize usage
+    Security
+      full control of cloud environment
+        patches, maintenance, network control
+    Governance
+      standarize environments to corporate standars
+      regulatory requirements
+      audit for compliance
+    Manageabiity
+      management of the cloud resources
+        autoscaling
+        monitoring
+        ARM templated based deployments
+      management in the cloud
+        how to interact with resources
+          portal
+          cli
+          APIs
+  Economy of Cloud Computing
+    Capital Expenditure
+      money spent on acquiring or maintainig fixed assets as land, buildings and equipment
+      large upfront investments
+    Operational Expenditure
+      ongoing cost of running a product, business or system on a day-to-day basis, including annual costs
+      pay-as-you-go     
+    Azure pricing
+      Hourly pricing
+      Consumption based
+        pay for resources used
+        per execution of function
+        per second
+        or combination of both
+        no lock-in fees
+  Cloud Service Models
+    Infrastructure as a Service = IaaS
+      scaling is fast
+      no ownership of hardware
+      Include
+        Vms & Servers
+        Networks
+        Physical Buildings
+    Platform as a Service = PaaS
+      superset of IaaS
+      Includes infrastructure, service, storage, networking
+      Also middleware and development tools
+      designed to support a complete web application lifecycle
+        building, testing, deploying, managing and updating
+      avois software license hell
+    Software as a Service = SaaS
+      Implicitly includes IaaS and PaaS
+      providing a managed service via a rented software service
+      pay an access fee to use
+      no maintenance and always latest features
+    Serverless
+      don't have to managed any server
+        Azure functions as example
+      extreme PaaS
+      a single function of code can be hosted without having to maintain a full application    
+    Shared Responsibility Model
+      On-Premises
+        User is reponsible for every part of the system and infrastructure
+      IaaS
+        Microsoft responsible only for Physical Infrastructure
+        User resonsible for everything else
+          OS, Network controls, Identity and Directory, App Mgmt, Data, Devices and Accounts
+      PaaS
+        Microsoft responsible for Physical Infrastructure, OS
+        Shared responsiblitiy for Network controls and Identity
+        User responsible for App Mgmt, Data and Devices and Accounts
+      IaaS
+        Microsoft responsible for Physical Infrastructure, OS, Network controls, App Mgmt
+        Shared responsibility for Identity 
+        User for Data and Devices and Accounts
+  Azure Market Place
+    Solutions and Services
+      Large selection from Microsoft and partners for
+        Apps
+        VMs templates
+        services
+        much more
+    Azure App Store
+      buy cloud services
+      many categories of items
+    Easy to integrate
+      use from Portal, CLI or PowerShell
+      some are free and some are paid
+    Publish you own
+      if you are a Microsoft partner
+      publish your own services in the Marketplace
+    Benefits
+      certified by Microsoft and less maintenance than creating your own
+      efficient
+        faster to build a prototype by using ready-to-go services
+      new markets
+        venture into new markets by getting the full exposure to tons of users
+      support
+        technical, design and architectural design support when you list a service
+  Cloud Architectural Models
+    Private Cloud
+      services within the cloud offered to selected users only
+      Pros
+        complete control of infrastructure
+        benefits of public cloud but you can lock it down
+        better security and privacy
+      Cons
+        maintenance expenses as traditional
+        staffing
+    Public cloud
+      anyone with an internet connection can instantly 
+        become a master of the service
+        overlord of VMs
+        emperor of cloud infrastructure
+      Pros
+        no purchase of hardware
+        low monthly fees
+      Cons
+        no control over features and versions
+    Hybrid Cloud
+      Mix of private and public cloud
+      Pros
+        avoid disruptions and outages
+        adhere to regulations, governance, etc
+        span both public and private cloud
+        alleviate CapEx investments
+      Cons
+        complex infrastructure
+        
+      
+      
+        

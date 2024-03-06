@@ -1,0 +1,46 @@
+Microsoft Azure Fundamentals test notes:
+
+Azure Blueprint: 
+  to manage templates
+Application Insights from Azure Monitor:
+  allows to detect and diagnose issues across applications and dependencies
+  alerts to changes in performance or usage metrics in your web apps
+Service tags: 
+  used for creating security rules instead of specific IP addresses
+Availability Zone: 
+  physically separated location winthin an Azure region, with one or more datacenters
+Data Catalog App: 
+  component of Microsoft Purview that provides data curation features such as business glossary management and automation tagging of data assets with glossary terms
+Azure functions: 
+  allos code to run as result of an event or change like a message arrival or a stored procedure update
+Azure Log analytics: 
+  Azure OMS service that monitors on-premises and cloud environments for availability and performance
+Azure sovereign regions: 
+  regions dedicated to specific sovereign entities and completely isolated from the rest of Azure: China 21Vianet and US Government
+Azure CLI, Azure PowerShell, Azure Cloud Shell: 
+  can automate routine operations, standarize DB failovers and pull data for insights
+Azure Spot VM: 
+  no SLA and can be evicted at any time
+Azure load balancer: 
+  operates at OSI layer 4, the Transport Layer
+GRS, Geo-redundant storage: 
+  designed at 99.999...(16) durability over a year by replicating to a secondary region hundred of miles away from primary region
+Azure Table: 
+  non-relational to store schemaless data
+Azure private peering: 
+  bi-directional connectivity between your core network and Azure virtual networks (VNets) that allows to connect VMs and cloud services to your private IP addresses
+When scaling down VMs, Azure removes VMs with highest IDs first
+Action Group: 
+  created within Azure Monitor to notify via e-mail, SMS, push or voice mail notifications
+Elasticity 
+  is done automatically vs Scalability
+Logic Apps: 
+  serverless solution that configures workflows and choreographs processes
+Event Grid: 
+  serverless solution that directs and orchestrates events that can spark code or logic execution. It's an event routing service.
+Serveless computing 
+  delivers exact units of resources when an application needs it.
+  
+
+
+

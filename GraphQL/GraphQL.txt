@@ -1,0 +1,510 @@
+GraphQL Query Language by Eve Procello on EggHead (10/01/2019)
+
+Intro:
+Regardless of implementation, GraphQL is the query language for:
+  Query data
+  Change data with mutations
+  Listen for data changes with subscriptions
+
+Concepts:
+  Query, mutation & subscription
+  GraphQL playground
+  Schema
+  Fragments
+  Variables
+  Input types, unions, interfaces, return payloads
+  Introspective Queries
+
+-----------------------------------------------------------
+Practice:
+
+Pet Library GraphQL Playground URLs: 
+https://pet-library.moonhighway.com/
+https://funded-pet-library.moonhighway.com/
+
+In Browser IDE to send queries
+-----------------------------------------------------------
+query {
+  totalPets
+}
+-----------------------------------------------------------
+query {
+  allPets {
+    name
+    weight 
+  }
+  totalPets
+}
+-----------------------------------------------------------
+query {
+  checkOut: totalPets(status: CHECKEDOUT)
+  available: totalPets(status:AVAILABLE)
+  totalPets
+  allPets {
+    name
+    weight
+    category
+    petPhoto: photo {
+      thumb
+      full
+    }
+  }
+}
+-----------------------------------------------------------
+query ($category: PetCategory=STINGRAY $status: PetStatus) {
+  allPets(category: $category status: $status) {
+    id
+    name
+    status
+    category
+  }
+}
+
+Variables:
+{
+  "status": "AVAILABLE"
+}
+-----------------------------------------------------------
+query {
+  allCustomers {
+    name
+    username
+    currentPets {
+      name
+    }
+  }
+  petById(id: "C-1") {
+    name
+    inCareOf {
+      name
+      username
+    }
+  }
+}
+-----------------------------------------------------------
+"Name your multiple queries":
+
+query PetPage {
+  availablePets: totalPets(status: AVAILABLE)
+  checkedOutPets: totalPets(status: CHECKEDOUT)
+  dogs: allPets(category: DOG, status: AVAILABLE) {
+    name
+    weight
+    status
+    category
+    photo {
+      full
+      thumb
+    }
+  }
+}
+
+query CustomerPage {
+  totalCustomers
+  allCustomers {
+    name
+    username
+    dateCreated
+    checkoutHistory {
+      pet {
+        name
+      }
+      checkOutDate
+      checkInDate
+      late
+    }
+  }
+}
+-----------------------------------------------------------
+Mutations: to change data. Creating an account:
+
+mutation ($input: CreateAccountInput!) {
+  createAccount(input: $input) {
+    username
+    name
+  }
+}
+
+Variables:
+{
+  "input": {
+    "name": "juanete",
+    "username": "jb987",
+    "password": "mysecret"
+  }
+}
+
+Returns:
+{
+  "data": {
+    "createAccount": {
+      "username": "jb987",
+      "name": "juanete"
+    }
+  }
+}
+-----------------------------------------------------------
+Loging:
+
+mutation {
+  logIn(username: "jb987" password: "mysecret") {
+    customer {
+      name
+    }
+    token
+  }
+}
+
+returns:
+{
+  "data": {
+    "logIn": {
+      "customer": {
+        "name": "juanete"
+      },
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiOTg3IiwiaWF0IjoxNTY5OTY0Nzc2fQ.6d-kSVLh8McXD2eUvrb2eSFFEEnFPgvVr8K2MhWVOyE"
+    }
+  }
+}
+
+add http header:
+{
+ "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiOTg3IiwiaWF0IjoxNTY5OTY0Nzc2fQ.6d-kSVLh8McXD2eUvrb2eSFFEEnFPgvVr8K2MhWVOyE"
+}
+
+query only for authorized users:
+query Me {
+  me {
+    name
+  }
+}
+
+returns:
+{
+  "data": {
+    "me": {
+      "name": "juanete"
+    }
+  }
+}
+-----------------------------------------------------------
+Checkout a pet:
+query available pets and get ID of desired pet:
+query {
+  allPets(status: AVAILABLE) {
+    id
+    name
+    category
+  }
+}
+
+returns:
+...
+  {
+    "id": "S-4",
+    "name": "Pluto",
+    "category": "STINGRAY"
+  },
+...
+check it out:
+mutation CheckOut {
+  checkOut(id: "S-4") {
+    pet {
+      name
+    }
+    customer {
+      name
+    }
+  }
+}
+returns:
+{
+  "data": {
+    "checkOut": {
+      "pet": {
+        "name": "Pluto"
+      },
+      "customer": {
+        "name": "juanete"
+      }
+    }
+  }
+}
+-----------------------------------------------------------
+check back in:
+mutation CheckIn {
+  checkIn(id: "S-4") {
+    pet {
+      name
+    }
+    checkOutDate
+    checkInDate
+    late
+  }
+}
+returns:
+{
+  "data": {
+    "checkIn": {
+      "pet": {
+        "name": "Pluto"
+      },
+      "checkOutDate": "2019-10-01T21:29:33.448Z",
+      "checkInDate": "2019-10-01T21:31:59.546Z",
+      "late": false
+    }
+  }
+}
+-----------------------------------------------------------
+query {
+  allCustomers {
+    username
+    checkoutHistory {
+      pet {
+        id
+        name
+      }
+    }
+  }
+}
+returns:
+  ...
+  {
+    "username": "jb987",
+    "checkoutHistory": [
+      {
+        "pet": {
+          "id": "S-4",
+          "name": "Pluto"
+        }
+      }
+    ]
+  }
+  ...
+-----------------------------------------------------------
+fragments to reuse field queries:
+
+query {
+  petById(id: "C-1") {
+    ...PetDetails
+    inCareOf {
+      ...CustomerDetails
+    }
+  }
+  allPets(category: RABBIT, status: AVAILABLE) {
+    ...PetDetails
+  }
+}
+
+fragment CustomerDetails on Customer {
+  name
+  username
+}
+
+fragment PetDetails on Pet {
+  name
+  weight
+  category
+  status
+}
+
+returns:
+{
+  "data": {
+    "petById": {
+      "name": "Biscuit",
+      "weight": 10.2,
+      "category": "CAT",
+      "status": "CHECKEDOUT",
+      "inCareOf": {
+        "name": "Julian G",
+        "username": "juliang"
+      }
+    },
+    "allPets": [
+      {
+        "name": "Pip",
+        "weight": 3.7,
+        "category": "RABBIT",
+        "status": "AVAILABLE"
+      },
+      {
+        "name": "Sweetums",
+        "weight": 4.6,
+        "category": "RABBIT",
+        "status": "AVAILABLE"
+      },
+      {
+        "name": "Jerry",
+        "weight": 5.5,
+        "category": "RABBIT",
+        "status": "AVAILABLE"
+      },
+      {
+        "name": "Jason",
+        "weight": 2.7,
+        "category": "RABBIT",
+        "status": "AVAILABLE"
+      },
+      {
+        "name": "Peep",
+        "weight": 6.5,
+        "category": "RABBIT",
+        "status": "AVAILABLE"
+      }
+    ]
+  }
+}
+-----------------------------------------------------------
+
+change URL: https://funded-pet-library.moonhighway.com/
+First log in and grab token:
+
+
+-----------------------------------------------------------
+Query Interface Types:
+
+query {
+  allPets {
+    __typename
+    id
+    name
+    ... on Cat {
+      sleepAmount
+    }
+    ... on Stingray {
+      chill
+    }
+    
+  }
+}
+-----------------------------------------------------------
+Query Lists of Multiple Types:
+
+query {
+  familyPets {
+    __typename
+    ... on Cat {
+      name
+      sleepAmount
+    }
+    ... on Dog {
+      name
+      good
+    }
+  }
+}
+-----------------------------------------------------------
+Listen for real time Data Changes with Subscriptions:
+
+1) LogIn and retrieve token
+mutation {
+  logIn(username: "jb987" password: "mysecret") {
+    customer {
+      name
+    }
+    token
+  }
+}
+
+returns:
+{
+  "data": {
+    "logIn": {
+      "customer": {
+        "name": "juanete"
+      },
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiOTg3IiwiaWF0IjoxNTY5OTY0Nzc2fQ.6d-kSVLh8McXD2eUvrb2eSFFEEnFPgvVr8K2MhWVOyE"
+    }
+  }
+}
+
+2) Add to HTTP Header:
+{
+ "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpiOTg3IiwiaWF0IjoxNTY5OTY0Nzc2fQ.6d-kSVLh8McXD2eUvrb2eSFFEEnFPgvVr8K2MhWVOyE"
+}
+
+3) Add subscription:
+subscription {
+  petReturned {
+    pet {
+      name
+    }
+  }
+}
+
+4) Listening... for changes using a web socket
+
+5) Open another tab and open mutation for checkOut
+mutation {
+  checkOut(id: "S-4") {
+    pet {
+      name
+    }
+  }
+}
+
+6) And then check in:
+mutation {
+  checkIn(id: "S-4") {
+    pet {
+      name
+    }
+  }
+}
+7) Switch back to subscription tab to see "Listening..." returned data:
+{
+  "data": {
+    "petReturned": {
+      "pet": {
+        "name": "Pluto"
+      }
+    }
+  }
+}
+
+-----------------------------------------------------------
+Query GraphQL API's Types with introspection queries:
+
+query InterfaceTypes {
+	__type(name: "Pet")  {
+    kind
+    name
+    description
+    possibleTypes {
+      name
+      kind
+      description
+    }
+  }
+}
+
+query AvailableQueries {
+  __schema {
+    queryType {
+      fields {
+        name
+        description
+      }
+    }
+  }
+}
+
+query Customer {
+  __type(name: "Customer") {
+    fields {
+      name
+      description
+    }
+  }
+}
+
+query AllTypes {
+  __schema {
+    types {
+      name
+      kind
+      description
+    }
+  }
+}

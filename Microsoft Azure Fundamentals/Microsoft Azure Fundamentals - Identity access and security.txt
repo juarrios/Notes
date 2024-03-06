@@ -1,0 +1,199 @@
+Describe Azure identity, access, and security 01/08/2024
+https://learn.microsoft.com/en-us/training/modules/describe-azure-identity-access-security/
+
+Microsfot Entra ID
+  Cloud-based identity and access management service available globally
+  Can detect sign-in attempts from unexpected locations or unknown devices
+  What can id do
+    Authentication
+      Verifying identity to access applications and resources
+      Self-service password reset
+      multifactor authentication
+      smart lockout services
+    Single sign-on
+      enables to remember only one username and one password
+      reduces effor to change or disable accounts
+    Application management
+      Application Proxy, Saas, My Apps portal
+    Device management
+      registration of devices
+      managed through tools like Microsoft Intune
+      Conditional Access policies to restrict accesss attempts
+  Microsoft Entra Connect
+    synchronizes user identities between on-premise AD and Entra ID
+  Micfosoft Entra Domain Services
+    provides managed domain services
+      domain join
+      group policy
+      LDAP
+      Kerveros/NTLM authentication
+    How does it work
+      You define a namespace which is your domain name
+      Two domain controllers are deployed in your selected Azure region known as replica set
+      Azure platform handles DCs management
+
+Authentication methods
+  Authentication is the process of establishing the identity of a person, services, or device
+  It just proves who you are
+  Single Sign-on
+    enables user to sign in one time and use that credential to access multiple resources and applicaitons
+  Multifactor authentication
+    is the process of prompting a user for an extra form of identification during the sign-in process
+    three categories
+      something the user knows
+      something the user has
+      something the user is, like a biometric property
+    Microsoft Entra multifactor authentication
+      service that provides multifactor authetication capabilities
+    Passwordless authentication
+      password is removed and replaced with somthing you have, plus something you are, or something you know.
+      example: your computer and a PIN or fingerprint
+      Azure offer the following three passwordless authentication
+        Windows Hello for Business
+          for workers with own designated Windows PC and their biometric and PIN credentials
+        Microsoft Authenticator app
+          matching a number displayed on screen with one on their phone
+          using their biometric or PIN to confirm
+        FIDO2 security keys
+          FIDO (Fast IDentity Online) is an open standard for passwordless authentication
+          By using an external security key or a platform key built into a device
+          A hardware device that handles the authentication
+          Typically USB devices but can be Bluetooth or NFC
+
+Azure external identities
+  a person, device, service, etc. that is outside your organization
+  ways you can securely interact with users outside of your organization
+  external users can bring their own identities
+    external user's identity provider manages their identity
+    Microsoft Entra ID or Azure AD B2C manages access to your apps and resources
+  External identity capabilities
+    Business to business (B2B) 
+      let external users use their preferred identity to sign-in 
+      represented as guest users
+    B2B direct connect
+      mutual two-way trust with another Microsoft Entra organization
+      supports Teams shared channels
+      visible within Teams shared channels and can be monitored in Teams admin center reports
+    Business to customer (B2C)
+      publish SaaS or custom-developed apps (non-Microsoft) to consumers and customers
+  
+Azure conditional access
+  allow access to resources based on identity signals
+    who the user is
+    where the user is
+    what device is requesting from
+    what application is trying to access
+  user might no be challenged if present at a known location
+  might be challenged for second authentication if signal is unusual or unexpected location
+  When conditional access is useful
+    MFA for administrators but not regular users or connecting outside network
+    access to services only thorugh approved client applications
+    access to applications only from managed devices that meets your standards for security and compliance
+    block access from utrusted sources like unknown or unexpected locations
+    
+Azure role-based access control
+  Principle of least privilege
+    only grant access up to the level needed to complete a task
+  Control access through Azure role-based access control (RBAC) which are hierarchical
+  Azure provides built-in roles for common access rules for cloud resources
+  can define own roles
+  Role-based access control for resources
+    Management group
+    Single subscription
+    Resource group
+    Single resource
+  Resource Manager
+    management service to organize and secure cloud resources
+    accessile through Azure portal, Azure Cloud Shell, PowerShell and Azure CLI
+    doesn't enforce application security which is handled by application
+  Zero trust model
+    security model that assumes the worst case scenario and protects resources
+    verifies each request as though it originated from an uncontrolled network
+    guiding principles
+      verify explicitly
+        always authenticate and authorize based on all available data points
+      least privilege access
+        user access to Just-In-Time and Just-Enough-Access (JIT/JEA)
+      assume breach
+        minimize blast radius and segment access
+        verify end-to-end encryption
+        use analytics for visibility, threat detection and improve defenses
+  Adjust to zero trust
+    instead of assuming a device is safe because within network, require everyone to authenticate
+    protect assets anywhere with central policy
+  
+Defense-in-depth
+  to protect information and prevent it from being stolen by unauthorized users
+  uses a series of mechanisms to slow the advance of an attack
+  removes reliance on any single layer of protection
+  Layers
+    Physical security
+      first line of defense
+    Identity & Access
+      controls access only to infrastructure needed and change control logged
+      use SSO and MFA
+      Audit event and changes
+    Perimeter
+      uses distributed denial of service (DDoS) protection
+      firewalls to identify and alert on malicious attacks
+    Network
+      limits communication between resources through segmentation and access controls
+      deny by default
+      restrict inbound internet and outbound access
+      implement secure connectivity to on-premises network
+    Compute     
+      secures access to VMs
+      implement endpoint protection on devices
+      keep systems patched and current
+    Application
+      ensure applications are secure and free of vulnerabilities
+      store sensitive secrets in secure storage medium
+      make security a design requirement
+    Data
+      controls access to data in
+        database data
+        VM disk data
+        SaaS application data
+      managed through cloud storage
+  
+Microsoft Defender for Cloud
+  Is a monitoring tool for cloud security posture management (CSPM) and threat protection
+  provides tools to harden your resources, track security posture, protect cyber attacks and streamline security management
+  natively integrated to Azure
+  Azure-native protections
+    Azure Paas services
+      detect threats targeting Azure services
+      anomaly detection on Azure activity logs
+    Azure data services
+      automatically classify data in Azure SQL
+      assessments for potential vulnerabilities across SQL and Storage services and recommendations
+    Networks
+      limit exposure to brute force attacks
+      reducing access to VM ports
+      secure access policies on selected ports only for authorized users
+      allow source IP addresses
+      limited amount of time
+  Defend hybrid resources
+    can add Defender for Cloud to hybrid cloud environment to protect non-Azure servers
+  Defend resources running on other clouds
+    Can also protect resources in other clouds like AWS and GCP
+      CSPM features extend to AWS resources
+      Defender for Containers in EKS Linux clusters
+      Defender for Servers in Windows and EC2 instances
+
+Assess, Secure, and Defend
+  Three vital needs for security
+    continuosly assess
+      know you security posture, identify and track vulnerabilities
+      regular, detailed vulnerability scans that cover compute, data and infrastructure
+    secure
+      harden resources and services with Azure Security Benchmark
+      security policies in place that are tailored to your environment and situation
+      apply secure configuration standards across your resources
+      secure score values for each control as an indicator of security posture health
+    defend
+      detect and resolve threats to resources, workloads and services
+  security alerts
+    describe details of the affected resources
+    suggest remediation steps
+    provide an option to trigger a logic app in response

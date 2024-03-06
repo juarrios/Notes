@@ -1,0 +1,163 @@
+Describe Azure storage services 12/22/2023
+https://learn.microsoft.com/en-us/training/modules/describe-azure-storage-services/
+
+Azure storage accounts
+  Storage account
+    provides unique namespace for Azure Storage data accessible from anywhere in the world
+    when creating storage account should pick storage account type
+    account type determines storage services and redundancy options
+      Standard general purpose
+        Blob, Queue, Table and Azure Files
+      Premium block blobs
+      Premium file shares
+      Premium page blobs
+  Storage account endpoints
+    Have a unique namespace in Azure for data
+    Combination of account name and storage service froms the endpoints
+    Storage account names
+      Between 3 and 24 characters
+      Unique in Azure
+    Endpoint format for Azure storage services
+      Blob        https://<account-name>.blob.core.windows.net
+      Date Lake   ...dfs...
+      Azure Files ...file...      
+      Queue       ...queue...
+      Table       ...table...
+Azure storage redundancy
+  Storing multiple copies of data to ensure availability and durability in the face of failures
+  Factors that help determine redundancy options
+    How data is replicated in primary region
+    Whether data replicated in second region
+    Whether application requires read access to second region
+  Redundancy in the primary region
+    Always replicated three times in primary region with two options
+      Locally redundant storage (LRS)
+        Replicate 3 times within a single data center in primary region
+        Provides 11 nines of durability 99.9999999% in a year
+        Lowest cost option
+      Zone-redundant storage (ZRS)
+        replicates accross three availability zones in primary region
+        provides 11 nines in a year
+        data accessible even if a zone becomes unavailable
+        recommended for high availability
+  Redundancy in a secondary region
+    For applications requiring high durability
+    Paired secondary region based on Azure Region Pairs
+    Data in secondary region not available unless there's a failover
+    Recovery point objective (RPO)
+      point in time to which data can be recovered
+      typically less than 15 minutes
+    Get-redundant storage (GRS)
+      Copies 3 times in primary LRS and three times in a secondary LRS
+      provides 16 nines in a year
+    Geo-zone redundant storage
+      In primare with ZRS and replicated in secondary with LRS
+      provids 16 nines in a year
+  Read access to data in secondary region
+    Has to be enabled for read only access
+    creates RA-GRS or RA-GZRS
+    Data in secondary might not be up to date due to RPO
+Azure storage services
+  Benefits
+    Durable and highly available
+      Redundancy ensures data is safe
+    Secure
+      All data encrypted and fine grained control over who has access
+    Scalable      
+    Managed
+      Azure handles hardware maintenance, updates and critical issues
+    Accessible
+      from anywhere in the world
+      client libraries support
+      scripting support in PowerShell and CLI
+      Azure portal and Azure Storage Explorer are visual solutions
+  Azure Blobs
+    Can store massive amounts of unstructured data such as text and binary
+    can manage thousands of simultaneous uploads
+    data uploaded as blobs and Azure takes care of storage needs
+    Ideal for
+      serving images or documents
+      storing files for distributed access
+      streaming video and audio
+      backup and restore, disaster recovery and archiving
+      data for analysis
+    Blob storage tiers
+      organize data on attributes like frequency of access or retention period
+      Access tiers to store data in the most cost-effective manner
+        Hot access tier
+          for data that is accessed frequently
+        Cool access tier
+          infrequntly accessed data and stored for at least 30 days
+        cold access tier
+          infrequntly accessed data and stored for at least 90 days
+         archive access tier
+          rarely access data and stored for at least 180 days
+  Azure Files
+    Fully managed file shares in the cloud
+    Standard Message Block (SMB) and Network File System (NFS) protocols
+    Benefits
+      shared access
+      fully managed
+      scripting and tooling
+      resiliency
+        always available
+      familiar programmability
+        access data via file system I/O APIs
+        also Azure Client Libraries and Azure Storage REST API
+  Azure Queues
+    For storing large number of messages accessible from anywhere
+    Messages up to 64K in size
+    can be combined with Azure Functions to take an action when a message is received
+  Azure Disks
+    blocl-level storage volumes for use with Azure VMs
+  Azure Tables
+    stores large amounts of non-relational structured data
+    NoSQL datastore
+    
+Exercise - Create a storage 
+  Create a storage account
+    Portal->Create a resource->Categories->Storage->Storage Account->Create
+  Work with blob storage
+    Create a blob container and upload a picture
+    Change the access level of blob
+      Select "Blob (anonymous read access for blobs only)
+    Use browser to look at image
+  Summary
+    Create storage account
+    Add container to storage account
+    Upload blob (image) to container
+    Change access level
+    View in browser
+
+Identify Azure data migration options
+  Azure Migrate
+    Helps migrate from on-premise environment to the cloud
+      Unified migration platform
+        A single portal to start, run and track migration
+      Range of tools
+        Azure Migrate: Discovery and assessment
+        Azure Migrate: Server Migration
+        Integrates with other Azure services and independent software vendor (ISV) offerings
+      Assessment and migration
+        Azure Migrate hub can assess and migrate on-premise infrastructure
+    Azure Data Box
+      Helps transfer large amounts of data in a quick, inexpensive and reliable way
+      Shipping a proprietary Data Box with 80 terabytes
+      Used for import or export data for on-premise or Azure
+      entire process tracked end-to-end by Data Box service in Azure portal
+      Use cases
+        To transfer data sizes > 40TB
+        Can be on-time, periodic
+Identify Azure file movement options
+  Tools to help move or interact with individual files or small file groups
+  AzCopy
+    CL utility to copy blobs or files to or form storage accounts
+    Can upload, download, copy and synchronize files
+    Can be configured to move files between cloud providers.
+  Azure Storage Explorer
+    Standalone GUI app to manage files and blobs
+    Uses AzCopy on the background to perform management tasks
+  Azure File Sync
+    For local Windows server to automatically stay bi-directionally synced with files in Azure
+  
+      

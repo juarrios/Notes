@@ -1,0 +1,136 @@
+Microsoft Azure Fundamentals 12/21/2023
+  
+
+Describe cloud concepts
+https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/
+
+What is Cloud computing
+  Is the delivery of computing services over the Internet.
+  Not constrained by physical infrastructure.
+  Use the cloud to rapidly expand the IT footprint.
+  Basic services 
+    Compute power
+      How much processing can do
+      Add and removed as needed, only paying for resources used
+    Storage
+      How much you can store
+      Request more as needed. Backups handler by provider.
+  
+Shared responsibility model
+  Responsibilities shared between cloud provider and the consumer
+  Cloud Provider responsibilities
+    Physical datacenter security, power, cooling, network connectivity, physical hosts
+  Consumer responsibilities
+    Data stored, devices allowed to connect, access security
+  Responsibility tied to cloud service type
+    IaaS
+      Most responsibility on consumer
+    PaaS
+      Middle ground, evenly distributed
+    SaaS
+      most responsibility on cloud provider
+
+Cloud Models
+  Private cloud 
+    Used by a single entity
+    provides greatest control but greatest cost
+    hosted on premises or a dedicated datacenter offsite
+  Public cloud
+    Third party cloud provider
+    Anyone can purchase cloud services
+  Hybrid cloud
+    Used both public and private
+    Provide extra layer of security choosing which services to keep private or public
+  Multi-cloud
+    Using multiple cloud providers
+  Azure Arc
+    Helps manage cloud environment or any model
+  Azure VMWare Solution
+    Lets run VMWare worklads in Azure with integration and scalability
+    
+Consumption-based model
+  Falls under operational expenditure (OpEx) because paying for IT resources used.
+    No upfront costs
+    No need to manage costly infrastructure
+    Ability to pay for more resources as needed
+    Ability to stop paying for resources no longer needed
+  You rent resource and are billed only for what you use.
+  
+Benefits of using cloud services
+  High availability
+    Resources are avilable when needed.
+    Ensuring maximum availability, regardless of disruptions or events that may occur.
+    Service availability guarantees part of sevice-level agreements (SLAs)
+      Formal service agreement between service provider and customer
+    Azure SLA
+      99%:    down 1.68 hrs/week or 432 min/month
+      99.99%  down 10 min/week or 43.2 min/month
+  Scalability
+    Ability to adjust resources to meet demand
+    Only pay for usage, not overpaying for services
+    Vertical scaling
+      Increasing or decreasing capabilities of resource: CPUs, RAM     
+    Horizontal scaling
+      Adding or substracting the number of resources
+      
+Benefits of reliability and predictability in the cloud
+  Reliability
+    Ability of a system to recover from failures and continue to function.
+    Decentrilized design enables having resources around the world (regions)
+    Applications automatically shift to a diferent region to keep running
+  Predictability
+    Cost and preformance is predictable to move foward with confidence.
+    Performance
+      Predicting the resources needed to deliver a positive experience.
+      Autoscaling, load balancing and high availability
+    Cost
+      Data analytics to find patterns that help better plan resource deployments
+      Can predict future costs and adjust as needed.
+      Tools help estimate potential cloud costs
+        Total Cost of Ownership (TCO)
+        Pricing Calculator
+        
+Benefits of security and governance in the cloud
+  Set templates ensure all deployed resources meet coorporate standards and regulatory requirements.
+  Ability to update resources to new standards as they change.
+  Cloud-based auditing help flag resource out of compliance and provide mitigation strategies
+  Patches and updates automatically applied for governance and security.
+  Cloud provider well suited to handle DDoS attacks
+  
+Benefits of manageability in the cloud
+  Management of the cloud
+    Automatically scale resource deployment based on need
+    Deploy base on preconfigured template, removing manual configuration
+    Monitor health of resources and automatically replace failing resources
+    Receive automatic alerts on configured metrics
+  Management in the cloud
+    Through a web portal
+    Using a CLI
+    Using APIs
+    Using PowerShell
+    
+Describe Cloud Service Types
+  Infrastructure as a Service
+    Provides maximum amount of control of cloud resources
+    Renting the hardware in a cloud datacenter.
+    Provider only responsible for maintaining the hardware, network and physical security.
+    Scenarios
+      Lift-and-shift migration
+        Having on cloud resources similar to on-prem datacenter and moving things from on-prem to cloud
+      Testing and development
+        Environments that need to rapidly replicate
+  Platform as a Service
+    Middle ground service
+    Provider also responsible for OS, middleware, databases, development tools and BI services
+    Provide a complete development environment without maintaining it.
+    Scenarios
+      Development framework
+      Analytics or BI tools
+  Software as a Service
+    Renting using fully developed applications
+    Least flexible but easiest to get up and running.
+    Least amount of technical knowledge needed.
+    Scenarios
+      Email and mesaging
+      Business productivity
+      Finance and expense tracking

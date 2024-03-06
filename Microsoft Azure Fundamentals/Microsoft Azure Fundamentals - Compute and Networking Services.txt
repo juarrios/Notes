@@ -1,0 +1,207 @@
+Azure compute and Networking Services 12/22/2023
+https://learn.microsoft.com/en-us/training/modules/describe-azure-compute-networking-services/
+
+Azure Virtual Machines
+  Provide IaaS that can be customized for software to run
+  Ideal for
+    Total control over OS
+    Ability to run custom software
+    Use custom hosting configurations
+  Customer responsible to configure, update and maintain the software
+  Can be created in minutes when using preconfigured VM image
+  Image is a template that already includes OS and other software
+Scale VMs in Azure
+  Grouping VMs together for high availability, scalability and redundancy
+  Virtual machine scale sets
+    Allows to centrally manage, configure and update a large number of VMs in minutes
+    Number of VMs can automatically increase or decrease in response to demand or schedule
+    Automatically deploy a load balancer for resource efficiency
+    Allow to build large-scale services for compute, big data and container workloads
+  Virtual machine availability sets
+    Ensure that VMs stagger updates and have varied power and network connectivity
+    Prevent from losing all VMs in a single network or power failure
+    Update domain
+      Group VMs can be rebooted one domain group at a time. 
+      A 30-minute recover time before moving to next domain update.
+    Fault domain
+      Groups by common power source and network switch.
+      Availability set split VMs into three fault domains.
+      Only pay for VM instances created.
+  Examples when to use VMs 
+    During testing and development
+    When running applications in the cloud
+    When extending local datacenter to the cloud
+    During disaster recovery
+      Using IaaS based approach to disaster recovery.
+  Move to the cloud with VMs
+    AKA "lift and shift" by creating an image of on premise physical server and hosting VM in cloud
+    Customer still is responsible for maintaining to installation
+  VM Resources
+    Size: processor cores and amount of RAM
+    Storage: hard disk drives or solid state drives
+    Networking: virtual network, public IP address, port configuration
+  Task 1: Create a Linux VM and install Nginx using CLI
+    >az vm create --resource-group learn-5e17ad5b-8216-4c26-be6d-3543c8a77144 \
+                  --name my-vm --public-ip-sku Standard --image Ubuntu2204 \
+                  --admin-username azureuser --generate-ssh-keys   
+    Use extension to configure Nginx
+    >az vm extension set --resource-group learn-5e17ad5b-8216-4c26-be6d-3543c8a77144 \
+                         --vm-name my-vm --name customScript --publisher Microsoft.Azure.Extensions \
+                         --version 2.1 \
+                         --settings '{"fileUris":["https://raw.githubusercontent.com/MicrosoftDocs/mslearn-welcome-to-azure/master/configure-nginx.sh"]}' \
+                         --protected-settings '{"commandToExecute": "./configure-nginx.sh"}'
+    Script runs these bash commands:                     
+      #!/bin/bash
+      # Update apt cache.
+      sudo apt-get update
+      # Install Nginx.
+      sudo apt-get install -y nginx
+      # Set the home page.
+      echo "<html><body><h2>Welcome to Azure! My name is $(hostname).</h2></body></html>" | sudo tee -a /var/www/html/index.html    
+Azure Virtual desktop
+  A desktop and application virtualization service running ont the cloud.
+  A cloud-hosted version of Windows
+  Works across devices and OSes to access remote desktops and on browsers.
+  Enhance security
+    Provides centrilized security management with Entra ID
+    Can enable multifactor authentication
+    RBAC to secure data access
+    Data and Apps separated from local hardware running in the cloud
+    User sesssions are isolated
+  Multi-session on Windows 10 or 11 deployment
+    Enables multiple concurrent users on a single VM
+    Provids a more consistent experience
+Azure Containers
+  An application and its dependencies inside a container host.
+  Allow to run multiple instances of an application in a single machine
+  Lightweight more agile designed to be created, scaled out and stopped dynamically
+  Docker is most popular engine
+  VMs virtualize the hardware vs Containers virtualize the OS
+  Faster to start since just waiting for App to launch and not OS to start
+  Better portability and performance
+  Cluster Orchestration
+    Deploy and manage multiple containerized applications
+    No worry about which server will host each container
+  Azure Container Instances
+    Fastest and simplest way to run a container in Azure
+    Is a PaaS offering
+    Allows to upload containers and service will run them.
+  Azure container Apps
+    Has extra benefits like load balancing and scaling
+  Azure Kubernetes Services (AKS)
+    A container orchestration service
+    Manages the lifecycle of a fleet of containers
+    Management is simpler and more efficient
+  Use containers in your solutions
+    Used to create solutions with microservice architecture
+    Breaking solutions into smaller independent pieces
+    That can be maintained, scaled and updated independently.
+Azure Functions
+  Event-driven, serverless compute
+  An event wakes the function, alleviating the need to keep resources provisioned when there are no events
+  Abstraction of servers to not worry about infrasctructure and focus on application development
+  Benefits
+    No infrastructure management
+      You only upload the code
+    Scalability
+      Scales automatically without any configuration
+    Only pay for what is used
+      Resource only allocated from a direct action
+        REST request, timer or message
+        work is completed quickly, within seconds or less
+      Pay only for time it takes to run the code
+        Only charged by CPU time used while function runs
+  Functions
+    Stateless
+      Behave as restarted every time to respond to an event
+    Stateful
+      AKA Durable functions
+      A context is passed to track prior activity
+Application Hosting Options
+  Azure App Service
+    Enables to build and host web apps, background jobs, RESTful APIs without managing infrastructure
+    Offers automatic scaling and high availability
+    Supporst Windows and Linux
+    Enables automated deployment from GitHub, Azure DevOps or any Git repo to suppor continuous deployment
+  Types of app services
+    Ideal choice to host web-oriented applications
+    Web Apps
+      Support ASP.NET, Java, Ruby, Node.js, PHP and Python
+      Windows or Linux
+    API apps
+      REST-based web APIs with full Swagger support
+      Ability to package and publish API in Azure Marketplace
+    WebJobs
+      Programs that can be scheduled or run by a trigger.
+      Used to run background tasks
+    Mobile apps
+      to quickly build a back end for iOS and Android apps
+      Store mobile app data in a cloud-based SQL database
+      authenticate 
+      send push notifications
+      execute custom back-end logic
+      SDK support for iOS, Android and React native apps
+Azure Virtual Networking
+  Extension of on-premise network that link to Azure resources
+  Support public and private endpoints
+    public: have public IP accessed from anywhere
+    private: within a virtual network with private IP within that address space
+  Provides
+    Isolation and segmentation
+      allows to create multiple isolated virtual networks
+      virtual network defines a private IP address space
+      IP range only exists within and can be divided into subnets
+      Name resolution service build into Azure or can use an external DNS server
+    Internet communication
+      enable incoming internet connections by assigning a public IP to a resource or a load balancer     
+    Communicate between Azure resources
+      virtual networks can connect with other VMs or Azure resources
+      service endpoints can connect to provice optimal routing between resources
+    Communicate with on-premise resources
+      Point-to-site virtual private network
+        Outside client computer initiates VPN connection to Azure virtual network
+      Site-to-site virtual private network
+        link on-premise VPN device or gateway to Azure VPN gateway
+        device in Azure appear to be on the local network
+      Azure ExpressRoute
+        dedicated private connectivity to Azure not over the internet
+        good for greater bandwith and higher security
+    Route network traffic
+      Route tables to define how traffic should be directed and customize how packets are routed between subnets
+      Border Gateway Protocol (BGP) to propagate on-premise BGP routes to Azure virtual networks
+    Filter network traffic
+      Between subnets with two approaches
+      Network security groups
+        contain multiple inbound and outbound security rules
+        allow or block traffic based on IP, port or protocol
+      Network virtual appliances
+        Specialized VMs
+        Carries out particular network functions: firewall, WAN optimization
+    Connect virtual networks
+      Link virtual networks together with network peering and is private
+      Enables resources in each network to communicate with each other
+      Can be in separate regions for a global interconnected network
+      User-defined routes (UDR) allows greated control over network traffic flow    
+  Exercise - Configure network access
+    >az vm list
+    >IPADDRESS="$(az vm list-ip-addresses --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --name my-vm --query "[].virtualMachine.network.publicIpAddresses[*].ipAddress" --output tsv)"
+    >echo $IPADDRESS
+    >curl --connect-timeout 5 http://$IPADDRESS
+      curl: (28) Failed to connect to 23.100.47.54 port 80 after 5001 ms: Timeout was reached    
+    >az network nsg list --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --query '[].name' --output tsv
+      my-vmNSG
+    >az network nsg rule list --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --nsg-name my-vmNSG
+    >az network nsg rule list --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --nsg-name my-vmNSG --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' --output table
+      Name               Priority    Port    Access
+      -----------------  ----------  ------  --------
+      default-allow-ssh  1000        22      Allow
+    >az network nsg rule create --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --nsg-name my-vmNSG --name allow-http --protocol tcp --priority 100 --destination-port-range 80 --access Allow
+    >az network nsg rule list --resource-group learn-6848b118-8345-4b78-bced-fbbbb0c43a64 --nsg-name my-vmNSG --query '[].{Name:name, Priority:priority, Port:destinationPortRange, Access:access}' --output table
+      Name               Priority    Port    Access
+      -----------------  ----------  ------  --------
+      default-allow-ssh  1000        22      Allow
+      allow-http         100         80      Allow    
+    >curl --connect-timeout 5 http://$IPADDRESS
+      <html><body><h2>Welcome to Azure! My name is my-vm.</h2></body></html>
+    Also check at browser with URL http://23.100.47.54/
+      Welcome to Azure! My name is my-vm.

@@ -1,0 +1,105 @@
+Microsoft Azure Fundamentals: Describe Azure architecture and services 12/21/2023
+https://learn.microsoft.com/en-us/training/paths/azure-fundamentals-describe-azure-architecture-services/
+
+What is Microsoft Azure
+  Provides more than 100 services
+    Applictions, AI, ML
+Azure accounts
+  To create and use Azure services an Azure subscription is needed.
+  Need an Azure account to create a subscription. 
+    Azure Account -> Subscriptions -> Resource Groups -> Resources
+  Azure Free Account
+    access to 20 products for 12 months and $200 credit for 30 days
+    Access to more than 25 products always free
+    more info: azure.microsoft.com/free
+  Learn sandbox
+    Temporary subscription added to Azure account
+    Preferred because allows to create and test Azure resources at no cost.
+Sandbox
+  PowerShell CLI
+    >Get-Date
+    >az version
+      { 
+        "azure-cli": "2.55.0",
+        "azure-cli-core": "2.55.0",
+        "azure-cli-telemetry": "1.1.0",
+        "extensions": {
+          "ai-examples": "0.2.5",
+          "ml": "2.22.0",
+          "ssh": "2.0.2"
+        }
+      }
+  Bash CLI
+    >bash
+    >az upgrade
+    >pwsh
+      PowerShell 7.4.0
+  Azure CLI Interactive
+    Closely resembles an IDE
+    Provides autocompletion, command descriptions and examples
+    Same "az" commands but without the "az " prefix
+    >az interactive
+      >version
+      >upgrade
+      >exit
+  Azure Portal
+    Web portal to see all the services Azure has to offer
+    
+Physical Infrastructure
+  Datacenter grouped into Azure Regions or Availability Zones
+  https://datacenters.microsoft.com/
+  Regions
+    Geographical area on the planet with at least one datacenters
+    Potentially multiple datacenters networked together with low-latency
+  Availability Zones
+    Physically separate datacenters within a Region
+    Set up to be an isolation boundary
+    If one zone goes down the others continue working
+    A minimum of 3 per Region for resiliency
+    Categories
+      Zonal services
+        Pin resources to a specific zone
+      Zone-redundant services
+        platform replicates automatically across zones
+      Non-regional services
+        always available and resilient to zone-wide and region-wide outages
+  Region pairs
+    Region paired with another region at least 300 miles away
+    Allows for replication of resources
+    In case of region outage service automatically fail over to other region
+  Sovereign Regions
+    Regions isolated from main instance of Azure for compliance or legal purposes.
+    Mostly goverment regions
+Management Infrastructure
+  Azure resources and resouce groups
+    Resource is basic building block
+    Resource group is grouping of resources
+    All resources must be created within a group
+    Resource groups can not be nested
+  Azure subscriptions
+    Unit of management, billing and scale
+    Logically organize resource groups for billing and links to an Azure account
+    Provides authenticated and authorized access to products and services
+    Billing boundary
+      Azure generates separate billing report and invoice per subscription to manage costs
+    Accesss control boundary
+      Access management policies at the subscription level
+      Example is business with different departments have different policies
+  Azure management groups
+    Are subscription containers to apply governance conditions
+    Give enterprise-grade management at a large scale and they can be nested
+    Create a hierarchy that applies a policy
+    Provide user access to multiple subscription
+      Azure role-based access control (RBAC)
+    Facts
+      Up to 10K mgmt groups in a single directory
+      Mgmt group tree up to six levels of depth not including root
+      each mgmt group can support only one parent
+  Excercise - Create Azure virtual machine
+    Create a Resource -> Compute -> Virtual Machine -> Create
+    Enter pane basic information
+      Subscription, Resource group, Machine name, authentication type, usermane, password
+    Review seven resources created
+      Storage account, virtual machine, Public IP address, Network security group,
+      Virtual Network, Network Interface, Disk
+    

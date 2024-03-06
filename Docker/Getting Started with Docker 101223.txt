@@ -1,0 +1,249 @@
+Getting Started with Docker 10/12/2023
+by Nigel Poulton
+https://app.pluralsight.com/library/courses/docker-getting-started-2023/table-of-contents
+
+WSL: Windows Subsystem for Linux
+>wsl --install
+
+Deploying a container
+OCI: Open Container Initiative
+  Image spec
+  Runtime spec
+  Distribution spec ( registries )
+
+>git clone https://github.com/nigelpoulton/gsd.git
+>cd container
+
+>docker image build -t juarmen/gsd:ctr2023 .
+or
+>docker buildx build -t juarmen/gsd:ctr2023 .
+
+>docker image ls
+
+juarmen/gsd:ctr2023
+  juarmen: Docker Hub ID or Registry
+  gsd: Repo
+  ctr2023: Image
+  
+>docker image push juarmen/gsd:ctr2023
+or 
+>docker buildx build --platform linux/amd64 --tag juarmen/gsd:ctr2023 --push  .
+
+an image is like a stopped container
+
+>docker image rm juarmen/gsd:ctr2023
+
+Pulling container from docker hub and running it with name "web" on port 8000:
+>docker container run -d --name web -p 8000:8080 juarmen/gsd:ctr2023
+
+$ docker image ls
+REPOSITORY    TAG       IMAGE ID       CREATED          SIZE
+juarmen/gsd   ctr2023   7560b908e49a   17 minutes ago   201MB
+$ docker container ls
+CONTAINER ID   IMAGE                 COMMAND         CREATED          STATUS          PORTS                    NAMES
+1cfaa6a77fae   juarmen/gsd:ctr2023   "node app.js"   55 seconds ago   Up 53 seconds   0.0.0.0:8000->8080/tcp   web
+
+Browser URL: http://localhost:8000/
+
+Stop container:
+$ docker container stop web
+web
+$ docker container ls -a
+CONTAINER ID   IMAGE                 COMMAND         CREATED          STATUS                        PORTS     NAMES
+1cfaa6a77fae   juarmen/gsd:ctr2023   "node app.js"   48 minutes ago   Exited (137) 19 minutes ago             web
+$ docker container start web
+web
+
+Delete container:
+$ docker container stop web
+$ docker container rm web
+$ docker container ls -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+$ docker container start web
+Error response from daemon: No such container: web
+Error: failed to start containers: web
+
+Run container in the foreground attached to the terminal the alpine image and shell application:
+$ docker container run -it --name test alpine sh
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+96526aa774ef: Already exists
+Digest: sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978
+Status: Downloaded newer image for alpine:latest
+/ #
+
+To exit this alpine shell enter keys: Ctr+P+Q
+$ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+c2c368a7f54b   alpine    "sh"      5 minutes ago   Up 5 minutes             test
+$ docker container rm test -f
+test
+$ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+Microservices:
+  Building, deploying and managing each application feature as its own small app
+  Each microservice usually runs in its own container
+  Communicate between each other to provide same application experience
+Cloud Native:
+  Capabilities such as self-healing, auto-scaling, rolling updateds, and more ...
+  In can run on the desktop
+  
+Declarative:
+  Describe an application in a configuration file
+  Use that file to deploy the application
+  Define everything: 
+    all microservices
+    all networks
+    all volumes
+    whole caboodle
+  Swarm will deploy and manage it
+  
+>cd compose
+$ docker compose up --detach
+[+] Running 8/8
+ ✔ redis 7 layers [⣿⣿⣿⣿⣿⣿⣿]      0B/0B      Pulled                                                                                                                                    4.6s
+   ✔ 96526aa774ef Already exists                                                                                                                                                      0.0s
+...
+   ✔ 3c27b2421cc2 Pull complete                                                                                                                                                       1.1s
+...
+ => [web-fe 2/4] COPY . /app                                                                                       0.1s
+ => [web-fe 3/4] WORKDIR /app                                                                                      0.0s
+ => [web-fe 4/4] RUN pip install -r requirements.txt                                                               3.6s
+...
+ => => naming to docker.io/library/compose-web-fe                                                                  0.0s
+[+] Running 4/4
+ ✔ Network compose_counter-net   Created                                                                                                                                               0.8s
+ ✔ Volume "compose_counter-vol"  Created                                                                                                                                               0.0s
+ ✔ Container compose-web-fe-1    Started                                                                                                                                               0.0s
+ ✔ Container compose-redis-1     Started
+
+$ docker container ls
+CONTAINER ID   IMAGE            COMMAND                  CREATED         STATUS         PORTS                    NAMES
+d2cc92456050   redis:alpine     "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   6379/tcp                 compose-redis-1
+e5bc3e135d4f   compose-web-fe   "python app/app.py p…"   3 minutes ago   Up 3 minutes   0.0.0.0:5001->8080/tcp   compose-web-fe-1
+
+$ docker compose down --volumes
+[+] Running 4/4
+ ✔ Container compose-redis-1    Removed                                                                                                                                                0.6s
+ ✔ Container compose-web-fe-1   Removed                                                                                                                                                0.8s
+ ✔ Volume compose_counter-vol   Removed                                                                                                                                                0.0s
+ ✔ Network compose_counter-net  Removed 
+$ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+Docker Swarm
+Canonical Multipass: for lightweight virtual machines
+Cluster or Swarm: 
+  one or more machines called nodes interconnected
+  nodes are 
+    managers: control plane, intelligence of the cluster like cluster store and scheduler
+      Need 3 or 5 for high availability or any odd number to avoid frozen cluster
+    workers: where business apps run
+
+$ docker swarm init --advertise-addr 192.168.0.13
+Swarm initialized: current node ... is now a manager.
+To add a worker to this swarm, run the following command:
+  docker swarm join --tocken [tokenForWorker] 192.168.0.13:2377
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instrucdtions
+
+$ docker swarm join-token manager
+To add a manager to this swarm, run the following command:
+  docker swarm join --token [tokenForManager] 192.168.0.13:2377
+On other 2 manager nodes:
+$ docker swarm join --token SWMTKN-1-0so11zy5uwo9pxqup54xwtwjm7lemfzehs1lytypgnpaick7tq-9i5tbbq5oy2ynd0dog6ti5hff 192.168.0.8:2377
+This node joined a swarm as a manager
+
+$ docker swarm join-token worker
+To add a worker to this swarm, run the following command:
+    docker swarm join --token SWMTKN-1-0so11zy5uwo9pxqup54xwtwjm7lemfzehs1lytypgnpaick7tq-58erap4pv3t5eh35gtt9z7emq 192.168.0.8:2377
+On last 2 worker nodes:
+$ docker swarm join --token SWMTKN-1-0so11zy5uwo9pxqup54xwtwjm7lemfzehs1lytypgnpaick7tq-58erap4pv3t5eh35gtt9z7emq 192.168.0.8:2377
+This node joined a swarm as a worker.
+
+$ docker node ls
+ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+75xju0x51zkjfl66gf5zg8ryk *   node1      Ready     Active         Leader           24.0.2
+yabkyvpop42tk61fxh42m5lqe     node2      Ready     Active         Reachable        24.0.2
+l1b9ou4air8mnorv0pdq09dx9     node3      Ready     Active         Reachable        24.0.2
+wgzi7g0zo88ye6ljb807m783j     node4      Ready     Active                          24.0.2
+bcaxd3mito35yre4i2k35mgo1     node5      Ready     Active                          24.0.2
+
+Command to stop business apps being scheduled to the managers
+$ docker node update --availability drain node1
+node1
+$ docker node update --availability drain node2
+node2
+$ docker node update --availability drain node3
+node3
+
+$ docker node ls
+ID                            HOSTNAME   STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+75xju0x51zkjfl66gf5zg8ryk *   node1      Ready     Drain          Leader           24.0.2
+yabkyvpop42tk61fxh42m5lqe     node2      Ready     Drain          Reachable        24.0.2
+l1b9ou4air8mnorv0pdq09dx9     node3      Ready     Drain          Reachable        24.0.2
+wgzi7g0zo88ye6ljb807m783j     node4      Ready     Active                          24.0.2
+bcaxd3mito35yre4i2k35mgo1     node5      Ready     Active                          24.0.2
+
+For swarm create services
+$ docker service create --name web -p 8080:8080 --replicas 3 juarmen/gsd:web2023
+$ docker service ls
+ID             NAME      MODE         REPLICAS   IMAGE                 PORTS
+g60cijmo36dh   web       replicated   3/3        juarmen/gsd:ctr2023   *:8080->8080/tcp
+
+$ docker service ps web
+ID             NAME      IMAGE                 NODE      DESIRED STATE   CURRENT STATE           ERROR     PORTS
+40es5vcpz47i   web.1     juarmen/gsd:ctr2023   node5     Running         Running 3 minutes ago             
+0hvhuji68fdw   web.2     juarmen/gsd:ctr2023   node5     Running         Running 3 minutes ago             
+sfazzs1succw   web.3     juarmen/gsd:ctr2023   node4     Running         Running 3 minutes ago             
+
+$ docker service scale web=10
+will show 10 containers
+on node 5:
+$ docker container ls
+will show 5 containers
+$ docker container rm containerID -f
+will remove that container
+but managers "self-healing reconciliation" will create a new one again to have 10!
+on node 1
+$ docker service ls
+ID             NAME      MODE         REPLICAS   IMAGE                 PORTS
+g60cijmo36dh   web       replicated   10/10      juarmen/gsd:ctr2023   *:8080-&gt;8080/tcp
+
+Declarative Swarm
+Stack: containers run in Docker swarm mode
+Remove previous services:
+  $ docker service rm web
+
+Images need to be prebuilt
+$ cd ../swarm
+$ docker image build -t juarmen/gsd:swarm2023 .
+$ docker image push juarmen/gsd:swarm2023
+$ docker stack deploy -c compose.yml counter
+$ docker stack ls
+NAME    SERVICES
+counter 2
+$ docker stack services counter
+ID             NAME             MODE         REPLICAS   IMAGE                        PORTS
+3cwv2jksmuwh   counter_redis    replicated   1/1        redis:alpine                 
+9usv29kh1wwd   counter_web-fe   replicated   10/10      nigelpoulton/gsd:swarm2023   *:5001-&gt;8080/tcp
+
+to change number of replicas to 4 modify compose.yml file and re-deploy
+$ vi compose.yml
+$ docker stack deploy -c compose.yml counter
+$ docker stack services counter
+ID             NAME             MODE         REPLICAS   IMAGE                        PORTS
+3cwv2jksmuwh   counter_redis    replicated   1/1        redis:alpine                 
+9usv29kh1wwd   counter_web-fe   replicated   4/4      nigelpoulton/gsd:swarm2023   *:5001-&gt;8080/tcp
+$ docker stack ps counter
+ID             NAME               IMAGE                        NODE      DESIRED STATE   CURRENT STATE            ERROR     PORTS
+tj3h22uc9d1u   counter_redis.1    redis:alpine                 node4     Running         Running 21 minutes ago             
+jrovdw37v4sb   counter_web-fe.1   nigelpoulton/gsd:swarm2023   node5     Running         Running 21 minutes ago             
+pq0dm9t0i1ro   counter_web-fe.2   nigelpoulton/gsd:swarm2023   node4     Running         Running 21 minutes ago             
+vtzbieuqzx5a   counter_web-fe.3   nigelpoulton/gsd:swarm2023   node4     Running         Running 21 minutes ago             
+q68ta2pygp6t   counter_web-fe.5   nigelpoulton/gsd:swarm2023   node5     Running         Running 21 minutes ago             
+
+Delete node4 and all 4 replicas move to node4
+
+Clean up:
+$ docker stack rm counter

@@ -60,7 +60,7 @@ Design Pattern
         Unaware of classes being implemented
       Implementation
         Use abstract class when needed to provide a basic functionality that can potentially be overriden
-        Use interface if only need to specify the expected functionality of  class
+        Use interface if only need to specify the expected functionality of class
       SOLID
         software entities should be open for extension, but closed for modification
     Favor object composition over class inheritance

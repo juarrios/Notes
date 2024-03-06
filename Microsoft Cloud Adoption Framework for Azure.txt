@@ -1,0 +1,199 @@
+Microsoft Cloud Adoption Framework for Azure 01/09/2024
+https://learn.microsoft.com/en-us/training/modules/microsoft-cloud-adoption-framework-for-azure/
+
+Introduction
+  Ensure that organization takes full advantage of Azure to meet your digital transformation goals.
+  Identify where organization is in the digital transformation journey
+  Identify triggers and opportunities for cloud adoption
+  Recognize components needed to develop a digital transformation strategy around business, people and technology
+  Can help business easily identify
+    when to move to the cloud
+    how to create an effective migration strategy
+    which approach to technology migration and modernization business should take
+  
+What is Microsoft Cloud Adoption Framework for Azure
+  Is a collection of documentation, technical guidance, best practices, and tools that enables a clear and actionable journey to the cloud.
+  Help guide decisions throughout cloud adoption to accelerate a specific business objective.
+Structure
+  Define Strategy
+    Understand Motivations
+    Business outcomes
+    business justification
+    first adoption project
+    Plan
+      rationalize digital state
+      initial organization alignment
+      skills readiness plan
+      cloud adoption plan
+    Ready
+      Azure readiness guide
+      first landing zone
+      expand the blueprint
+      best practice validation
+    Adopt
+      Migrate
+        first workload migration
+        expanded scenarios
+        best practice validation
+        process improvements
+      Innovate
+        innovation guide
+        expanded scenarios
+        best practice validation
+        process improvements
+  Govern
+    Methodology, benchmark, initial best practice, governance maturity
+  Manage
+    Business commitments, operations baseline, ops maturity
+    
+Define Strategy
+  Motivations
+    Migration triggers
+      Increase business agility
+      optimize operations
+      reduce complexity
+      save costs
+      new technical capabilities
+    Innovation triggers
+      improve experiences and engagements
+      transform products and services
+      disrupt markets
+      scale to meet demand
+  Strategy
+    consider business impact, turnaround time, global reach, performance
+    establish clear business outcomes
+      drive transparency and engagement for your journey
+    define business justification
+      identify business value opportunities
+    business criteria
+      identify application currently in operation that has strong motivation to move to the cloud
+    technical criteria
+      select application that has minimum dependencies and can be moved
+      that doesn't interact with secure data
+    overtime continue to shape the optiomal environment for future deployments
+  Establish clear business outcomes
+    business outcome
+      is a concise, defined, and observable result or change in business performance that's captured by a specific measure
+    cloud strategy team
+      reviews business outcomes and creates justification plan for possible use cases for cloud adoption
+      selects first application and managing subsequent prioritized backlogs
+      manages communication with stakeholders promoting cloud adoption journey success and learnings
+    tools
+      Azure Total Cost of Ownership (TCO) Calculator
+        to estimate cost savings by migrating application workloads to Azure
+      Azure Pricing Calculator
+        estimate expected monthly bill
+      Microsoft Cost Management + Billing
+        use and manage Azure and other cloud resources
+  Define business justification
+    Common cloud computing business value areas
+      Cost
+        Eliminate capital expense
+      Scale
+        delivering the rigth amount of IT resources
+      Productivity
+        remove need of many IT management chores
+      Reliability
+        eases burden of data backup, disaster recovery and business continuity
+    
+Plan
+  Rationalize digital state
+    understand current digital state to maximize return and minimize risks by running a workload assessment
+    inventory all digital assests and evaluate each to determine best way to migrate or modernize each component to the cloud
+    proceed incrementally
+    Five Rs options 
+      Rehost
+        AKA lift-and-shift migration
+        moves current asset to the chosen cloud provider
+        minimal change to overall architecture
+        Outcome
+          reduce capital expense
+          free up datacenter space
+          rapid ROM in the cloud
+      Refactor
+        application development process of refactoring to deliver on new business opportunities
+        Outcome
+          experience faster and shorter updates
+          benefit from code portability
+          greater cloud efficiency in the areas of resources, speed, cost
+      Rearchitect
+        if application not compatible with the cloud
+        to produce cost and operational efficiencies in the cloud
+        Outcome
+          gain application scale and agility
+          adopt new cloud capabilities more easily
+          use a mix of technology stacks
+      Rebuild/New
+        a new code base with a cloud-native design might be the most appropriate and efficient path
+        Outcome
+          accelerate innovation
+          build applications faster
+          reduce operational cost
+      Replace
+        replace current application with a hosted application that meets all functionality required in the cloud
+        Outcome
+          standardize around industry best practices
+          accelerate adoption of business process-driven approches
+          reallocate development investments 
+  Create cloud adoption plan
+    prioritize workloads defined and aligned with business outcomes
+    key steps
+      review sample business outcomes
+      identify leading metrics that best represent progress toward identified business outcomes
+      establish financial model that aligns with outcomes and leading metrics
+
+Ready
+  Define skills and support readiness
+    address current gaps
+    ensure IT and business people are ready for the change and the new technologies
+    define support needs
+    Azure readiness guide
+      help you organize resources, control costs, and secure and manage your organization
+  Create your landing zone
+    set up a migration target in the cloud to handle prioritized applications
+    a safe place for your environment and ready to be monitored
+    an environment provisioned and prepared to host workloads in the cloud
+    Resources include
+      management groups
+      resource groups
+      subscriptions
+      
+Adopt
+  Migration
+    Moving existing assests to a cloud platform with minimal modifications
+    fastest and most agile in short term
+    benefits of cloud might not be realized without additional future modifications
+  Innovation
+    cloud-native applications and data accelerate development and experimentation cycles
+    DevOps shorten the time from idea to product transformation
+    shorter feedback loops and better customer experience
+    
+Govern and manage
+  adopting the cloud is a journey, not a destination
+  Define governance solutions
+    Governance
+      understanding business risks that may be faced when moving into the cloud
+      can be mitigating by documenting any business risk
+      convert risk decisions into policies
+      process in place to monitor policy violations
+    meet organization's business needs, provide agility and control risks
+    creates guardrails to keep organization on a safe path
+    Disciplines of Cloud Governance
+      Cost Management
+        who is accountable
+        how much to spend
+        who will add new elements to be paid for
+      Security Baseline
+        make sure covering all security aspects related to the project
+      Resource Consistency
+        reduces number of operational tasks to deal with
+      Identity Baseline
+        who has access to resources to enable them to do exactly what they need to do in the cloud environment
+      Deployment Acceleration
+        provisioning new resources is easy as a production line
+  Manage cloud environment based on governance solutions
+    allow it to evolve, grow, and adapt to organization's changing business needs
+    create balance between stability and operational costs
+    reduce overhead to drive more profit from the business process
+    understanding the services
+    having right reporting to show 

@@ -1,4 +1,4 @@
-AZ-900 Micosoft Azure Fundamental by Mathew Ulasien 03/05/2024
+AZ-900 Micosoft Azure Fundamental by Mathew Ulasien and Lars Klint 03/05/2024
 https://app.pluralsight.com/library/courses/az-900-microsoft-azure-fundamentals-2/table-of-contents
 
 Overview of Training
@@ -308,6 +308,848 @@ Cloud Concepts
       Cons
         complex infrastructure
         
+Azure Architecture
+  Regions
+    Set of datacenters deployed within a latency-defined perimeter and connected through a dedicated regional low-latency network
+      Set of datacenters
+        Each region has more than one data center
+      Latency defined perimeter
+        time it takes data to travel
+        datacenters are not too far from each other
+      Regional low-latency network
+        a fiber connection between data centers in the region
+    Choose Region
+      Location
+        closest to your users to minimize latency
+      Features
+        Some features aren't in all regions
+      Price
+        price of services vary from region to region
+    Paired Region
+      Each region is paired
+      Outage failover
+        if primary region has an outage you can failover to the secondary region
+      planned outages
+        only one region in a pair is updated at any one time
+      replication
+        some services used paired regions for replication      
+  Availability Zones
+    Physical location
+      is a physical location within a region
+    Independent
+      each zone has its own power, cooling and networking
+    Zones
+      each region has a minimum of three zones to be as resilient as possible
+      each zone made up of one or more datacenters
+  Resource Groups
+    everything in Azure is inside a resource group
+    it is a container that holdes related resources for an Azure solution
+    Facts
+      Each resource can only exist in a single resource group
+      can add or remove resources to any resource group at any time
+      can move a resource from one resource group to another
+      resources from multiple regions can be in one resource group
+      can give users access to a resource group for access control
+      resources can interact with other resources in different resource groups
+      has a location, or region, as it stores meta data about the resources in it   
+  Azure Resource Manager (ARM)
+    Single entry point for managing resources
+      Handles any interaction with Azure resources
+      Creating, updating, deleting, deploying and management of resources
+    Benefits
+      Group resource handling
+        can deploy, manage and monitor resources as a group
+      Consistency
+        deploying from various tools will always result in the same content state
+      Dependencies
+        define dependencies between resources to make sure they don't conflict
+      Access Control
+        easy to assing access rights to users
+      Tagging
+        tag resources to easily identify them for future scenarios
+        a way to label individual resources
+      Billing
+        use tagging to stay on top of billing for groups of resources
+    
+Compute
+  Virtual Machines
+    a computer or server that you have access to exclusively
+    IaaS offering
+      manage everything except the hardware, includes the networking components
+    Tools
+      use Azure Portal to manage large numbers of VMs and even hybrid clouds
+    Compliance
+      use Azure blueprints to make VMs comply with company guidelines
+    Recomendations
+      Azure will recommend improvements to ensure better security, higher availability and greater performance
+    Choice
+      choose amount of RAM, number of CPUs, Windows or Linux
+    Pricing
+      calculated hourly
+      depend on VM configuration: the more CPUs, GPUs and RAM size, the more you pay per hour
+    Pros
+      Control
+        when you need to control all aspects of an environment or machine
+      Application
+        install specific applications on Windows or Linux machines
+      Existing Infrastructure
+    Cons
+      Not for everything
+        you can use another Azure service instead, it is often worth it
+      Maintenance
+        a lot of maintenance with VMs: OS updates, patches and security concerns
+    
+        can move existing resources and VMs to Azure from on-premises or another cloud provider
+  Scale Sets
+    let you create and manage a group of identical load-balanced VMs
+      identical VMs that can be activated or deactivated as needed
+      a baseline VM ensures application stability, it's what you copy to make up the scale set VMs
       
-      
+    automatically but also schedule the scaling if you know the behavior of your applicaiton
+    a way to ensure high availability and applicaiton resiliency
+    Benefits
+      Multiple VMs
+        simple to manage multiple identical VMs using a load balancer
+      High Availability
+        if on VM fails or stops, others in the scale set will keep working
+      Auto scaling
+        automatically match demand by adding or removing VMs from the scale set
+      Large scale
+        run up to 1000 VMs in a single scale set
+      No Extra Cost
+        no added costs for using scale sets, only pay for added VMs, storage, load balancers and networking resources
+  App Services
+    A PaaS offering on Azure
+    A fully managed platform
+      Servers, Network and Storage managed by Azure
+    You focus on Business Value and Logic
+    Three main categories
+      Web Apps
+        Website and online applications hosted on Azure's managed platform
+        Runs on both Windows and Linux platforms
+        Support a lot of languages
+          .NET, Java, Node.js, PHP, Python and Ruby
+        Azure integration for easier deployment
+        Auto-scaling and load balancing
+      Web Apps for Containers
+        deploy and run containerized applications in Azure
+        a container is completely self-contained
+        all dependencies are shipped inside the container
+        deploy anywhere with a consistent experience
+        reliable between environments
+      API Apps
+        expose and connect your data backend
+        no graphical component, no user interface
+        connect other applications programatically
+        use range of programming languages
+        range ways to secure the access
+  Azure Container Instances
+    Features
+      Manage Application Dependencies
+        all dependencies included in the container image
+      Increase Portability
+        can be deployed easily to multiple different OS and hardware platforms
+      Consistency
+        can rely on containers being the same every time, no matter which target to deploy
+      less overhead
+        don't have any components relating to OS that require maintenance
+      Efficiency
+        development, deployment and maintenance are move efficient
+        scaling and patching is much simpler
+    Workflow
+      Software development cycle
+      application placed in a container
+      deployed to Azure container instances (ACI)
+    ACI
+      primary Azure service for running container workloads
+      a workload is your process or application
+      process data on demand by only creating container image when needed
+  Azure Kubernetes Service
+    Kubernetes is greek for "governor" or "captain"
+      for managing a ship with many containers
+      AKA "K8s"
+      An open-source container orchestration system for automating application deployment, scaling and management
+        Open Source
+          public code base and community involvement in the product
+        Orchestration
+          keeps track of lots of parts of a system
+          makes sure containers are configured correctly to work together
+        Automatic application deployment
+          will deploy more images of containers as needed
+        Automatic scaling
+          automatic monitoring of application load to determine when to scale the number of containers used
+    AKS
+      Replicate Container architectures
+        setup quicker and confidence
+      Standard Azure Services included
+        not worry about infrastructure and hardware
+        identity and access management, elastic provisioning and much more
+      Global Reach
+        Azure regions and on-premises installations using Azure Stack
+    Azure Container Registry (ACR)
+      Keeps track of current valid container images
+      manages files and artifacts for containers
+      feeds container images to ACI and AKS
+      use Azure identity and security features
+    AKS Cluster
+      Set of machines called Nodes to run containerized applications managed by Kubernetes
+      Pod
+        group of one or more containers with shared storage network and a specification on how to run
+  Azure Virtual Desktop
+    An option for working remotely
+    Complete Windows platform running on Azure
+    access from any device that has web access and modern web client
+    Benefits
+      Reuse Windows licenses to reduce cost
+      Multiple users can use same instance concurrently
+      Use from anywhere on almost any device
+      Use Azure Storage to secure data instead of individual device
+  Functions
+    Smallest compute service on Azure
+    A single function of compute
+    Invoked via a standard web address (URL)
+    runs once and stops
+    Benefits
+      only runs when needed
+        when there is data to process
+        no traffic = no resource usage  
+      saves money
+        don't pay for the function when it is not used
+      resilience
+        if functions fails, doesn't affect other function instances
         
+Networking
+  Virtual Network (VNet)
+    Enables many types of Azure resources to securely communicate with each other, internet or on-premise networks
+    Virtual because no access to hardware
+    Address space
+      range of IP addresses that are available
+      every resource gets its own IP address
+    Subnets
+      segment the VNet into one or more subnetworks
+      Resource grouping
+        group resources onto the same subnet to make it easier to keep an overview
+      Address allocation
+        more efficient to allocation addresses to resources on a smaller subnet
+      Subnet Security
+        use network security groups to secure individual subnets      
+    A VNet belongs to a single region
+    A VNet belongs to just one subscription but a subscription can have multiple VNets
+    Advantages
+      Scaling
+        adding more VNets or more addresses
+      High Availability
+        peering VNets, using a load balancer or using a VPN gateway
+      Isolation
+        manage and organize resources with subnets and network security groups
+    VNet Peering
+      lets connect two or more VNets
+      traffic uses private Microsoft backbone and does not pass through public internet
+      Benefits
+        Low latency, high bandwidth
+        link separate networks
+        data transfer easier between subscriptions and regions
+  Load Balancer
+    distributes new inbound flows that arrive to backend pool instances, according to rules and health probes
+    Scenarios
+      internet traffic into a system or application
+      internal networks
+      port forwarding
+        traffic can be forwarded to a specific machine in the backend pool
+      outbound traffic
+        allow outbound connectivity for backend pool VMs
+  VPN Gateway
+    To secure communicatios between on-premise network and Azure
+    Sends encryped traffic
+    Site-to-Site connection three components
+      Azure Vnet with VPN Gateway attached
+      Tunnel, a secure connection with encryption
+      On-premise network with a complementary gateway that accepts encrypted data
+    instrumental in a hybrid cloud architecture  
+  Application Gateway
+    A higher level load balancer
+    Works on the HTTP request of the traffic instead of the IP address and port
+    traffic from a specific web address can go to a specific machine
+    supports auto-scaling, end-to-end encryption, zone redundancy and multisite hosting
+    Benefits
+      scaling
+        scale up or down on based on the amount of traffic received
+      encryption
+        disable or enable traffic encryption to the backend
+      zone redundancy
+        span multiple availabitlity zones and improve fault resiliency
+      multi-site hosting
+        use same applicaiton gateway for up to 100 websites
+  Content Delivery Network (CDN)
+    A distributed network of servers that can deliver web content close to users to minimize latency
+    Benefits
+      Better performance
+      Scaling
+        protect backend server instance from high loads
+      distribution
+        Edge servers will serve requests closes to the user
+        less traffic sent to hosting application server
+    Cache
+      collection of temporary copies of original files
+      purpose is to optimize speed for an application
+      when a copy expires a new copy is retrieved
+    Orign server
+      original location of the files
+      it is the master copy of your application
+  ExpressRoute
+    Private super-fast connection into Azure
+    Dont go over public internet
+    security of data
+
+Storage
+  Storage Account
+    Unique Azure Namespace for you data
+    globally unique
+    Every object in Azure has its own web address
+      acloudguru.<storage-type>.core.windows.net
+  Blob 
+    Binary Large Object
+    data stored in containers inside the storage account
+    versatile and suit a ton of scenarios
+      Images
+      All Types
+        any kind of files
+      Streaming
+        stream audio and video directly from blob storage
+      Log Files
+        wirte to log files regardless of size and frequency
+      Data Store
+        any kind of data such as for archiving, backup, restore and DR
+    Blob Types
+      Block
+        text and binary data up to 4.7TB
+        made up of individually managed blocks of data
+      Append
+        optimized for append operations
+        well for logging
+      Page
+        files up to 8TM
+        any part of the could be access any time
+        example a virtual hard disk
+    Pricing Tiers
+      Hot
+        frequently accesed files
+        lower access times and higher access cost
+      Cool
+        lower storage cost and higher access times
+        data remains for at least 30 days
+      Archive
+        lowest cost and highest access times
+  Disk
+    What is attached to VMs
+    Managed
+      Azure will look after, don't worry about backup and uptime
+    Size and Peformance
+      guarantee size and performance as per agreement
+    Upgrade
+      easy to upgrade size and type
+    Disk types
+      HDD
+        spinning hard drive
+        low cost and suitable for backups
+      Standard SSD
+        standard for production
+        higher reliability, scalability and lower latency than HDD
+      Premium SSD
+        Super fast and high performance
+        very low latency
+        used for critical workloads
+      Ultra Disk
+        for most demanding, data intensive workloads
+          complex analytical modeling, gaming, rendering
+        up tu 64TB  
+  File
+    Benefits
+      Sharing
+        share access to Azure file storage across machines and provide access to your on-premises infrastructure
+      Managed
+        don't have to worry about hardware or operating system
+      Resilient
+        network and power outages won't affect your storage, assume always on
+    Scenarios
+      Hybrid
+        supplement or replace your existing on-premises file storage solution
+      Lift and Shift
+        move your existing file storages and related services to Azure 
+  Archive
+    Requirements
+      policies, legislation and recovery can be requirements for archiving data
+      these can be very large amounts of data
+    Lowest price 
+      archive tier is the lowest price for storage in Azure
+      a few dollars a month can get you terabytes of space
+    Features
+      Durable, encrypted and stable
+      suited for data that is accessed infrenquently
+    Free Up permium storage
+      free up you more premium on-premises storage
+    Secure
+      fully secure to allow for any personal data such as financial records, medical data and more
+    Blob
+      archive storage in blob storage, same tools will work for both
+  Storage Redundancy
+    creates multiple replicated copies of your data across multiple disks
+    Azure storage always creates multiple copies of your data
+      Automatic
+      Minimum of three copies in primary region and for multi-region also three copies
+      Invisible to end user
+    Multiple redundancy options
+      Locally-redundant storage (LRS)
+        lowest cost with basic protection against server rack and drive failures
+        for non-critical scenarios
+        single data center or single availability zone
+      Zone-redundant storage (ZRS)
+        protection against datacenter-level failures
+        for high availability scenarios
+        each copy in each zone
+      Geo-redundant storage (GRS)
+        failover capabilities in a secondary region
+        for backup scenarios
+        three copies in each region but primary copies in single zone
+        can configure read access from secondary region for HA
+      Geo-zone redundant storage (GZRS)
+        optimal protection solution includes both GRS and ZRS
+        three copies in each region and primary copies in three zones
+        for critical data scenarios
+  Moving Data
+    different solutions based on
+      transfer frequency: occasional vs continuous
+      data size
+      network bandwidth
+    AZ-900 focus
+      AzCopy
+        CLI utility for occasional data transfers
+        transfer blobs and azure files formats
+        useful for scripting data transfers
+          >ascopy cp "myVideo.mp4" "https://mystorageaccount.blob.core.windows.net/my-container       
+      Azure Storage Explorer
+        a GUI interaction
+        download application
+        more user friendly with drag-and-drop interaction
+        can move all storage accounts formats
+      Azure File Sync
+        automatically synchronize the Azure File with on-premise file servers
+        use cases
+          back up local file server
+          synchronize files between multiple on-premise locations
+          remote users access Azure Files by mapping their network drives
+          transition to only Azure Files for file server
+  Additional Migration Options
+    For larger scale scenarios
+    Azure Data Box
+      Lots of data to transfer over the internet
+      relative to available network bandwith
+      Offline data transfer to/from Azure
+        Copy data to physical data storage device (Data Box)
+        Encrypted
+        Rugged
+        Ship To Azure
+          Data Box data transferred to storage account
+        From Azure
+          Data box delivered to on-premise location for on-site transfer
+      Use cases
+        Initial bulk data migration
+        disaster recovery
+          restore Azure backup to on-premise location
+        security requirements
+          sensitive data that cannot be sent over internet
+    Azure Migrate
+      Migrate non-Azure resources into Azure
+        servers
+        databases
+        applicaitons and dependencies     
+  Premium Performance Options
+    Low-latency
+      stored on SSDs
+      considerations
+        available storage types for each performance option
+        redundancy options
+          trade more performance for less redundancy
+    Options
+      Standard
+        default, supports all storage types
+        all redundancy options
+      Premium block blobs
+        for high transaction rates or low storage latency 
+          AI applicaitons
+          IoT analytics
+        Redundancy 
+          LRS/ZRS only
+      Premium page blobs
+        for enterprise or high-performance applications that need to scale
+        unmanaged virtual disks (IaaS)
+        Redundancy
+          LRS only
+      Premium file shares
+        for random read and write operations
+        Azure files
+        Windows/Linux file shares
+        Redundancy
+          LRS/ZRS only
+          
+Database
+  Cosmo DB
+    ability to be global from the start
+    Synchronization
+      easy with cosmos to set up across multiple regions
+      one click to add regions
+      continued synchronization between regions
+    single digit latency 0-9 milliseconds
+    Scalability
+      automated
+      infinite resources
+      lowest price
+        only pay for resources used
+    Connectivity
+      Developer
+        SDKs and APIs
+      Languages
+        C#, Java and Node.js
+      Platforms
+        SQL, MongoDB, Cassandra
+    Warning
+      costs can run up quickly
+  Azure SQL
+    is a database as a service (DaaS)
+    built-in Machine Learning
+      Optimization
+        suggestions on how to optimize and improve performance on Azure SQL instances
+      Warnings
+        warnings of degrading instances or if anything out of the ordinary is happening
+    Scalability
+      for HA
+    Space
+      up to 100 TB
+    Security
+      built-in security
+    Two products
+      Azure SQL Database
+        most like traditional SQL Server
+      Azure SQL Managed Instance
+        aimed at migrating from on-premises
+  MySQL
+    Open source, relational DB, Mature and Stable
+    Azure advantages
+      PaaS
+        service infrastructrue managed by Microsoft
+      Development focus
+      Choice of language
+        such as PHP and WordPress
+      High Availability
+        can handle increasing number of users
+      Azure security
+      Cloud capabilities
+        all PaaS features included
+        
+  PostgreSQL
+    Open source, "post Ingres"
+    Free and very stable
+    Features
+      Extensions
+        JSONB, geospatioan functions, indexing, integration with tools
+      Horizontal scaling
+        high performant access to distributed data sets
+        use data faster across hundreds of servers
+      Performance recommendations
+        based on usage how to make perform better
+        notifications of disruptive events
+      Fully managed
+        automatic patching, backups and built-in monitoring
+    Use Cases
+      Finanacial
+        integrates with mathematical software
+      Government
+        GIS data with PostGIS
+      Manufacturing
+        automated failoever and full redundancy
+  Database Migration Services
+    Azure dedicated tool to transfer your database to Azure
+    Single tool
+      one step migration from Microsoft SQL to Azure SQL
+    Documentation
+      step-by-step guides to help migrate
+    Guides for non-MS
+      for migrating non-Microsoft databases
+    
+Authentication and Authorization
+  Identity Services
+    Authentication
+      Making sure you are you
+      Confirmint identity
+      first test for access
+    Authorization
+      comes after authentication
+      granular part of identity services
+  Azure Active Directory (AAD)
+    Main tool to manage users and permissions
+    Not same as on-premise AD
+    Mandatory
+      Can't have an Azure account without an ADD service
+    First User
+      Is the initial ADD instance
+    Tenant
+      represents your organization
+      tenant is a dedicated instance of AAD that a organization receives when signing up for Azure
+      saparate and distinct from other ADD tenants
+      a user can be a member or guest of up to 500 AAD tenants
+    Subscription
+      billing entity
+        all resources withing a subscription are billed together
+      cost separation
+        multiple subscriptions within a tenant to separate costs
+      payment
+        all resources and services stopped if subscription is not paid   
+  Zero Trust Concepts
+    All users assumed untrustworthy unless proven otherwise
+    trusted by identity, not location
+    least privilege access
+      just enough permissions to perform job
+    simplified, centrilized management (AAD)
+    can have conditional access policies
+    allow access from approved managed devices   
+  Multi-Factor Authentication (MFA)
+    Using more than one form of authentication
+    Approach
+      Something you know
+        user name and password
+      Something you have
+        phone or key fob
+      Something you are
+        fingerprint or retina scan, biometircs
+    MFA enabled through AAD    
+  Conditional Access
+    Using if/then policy to grant access
+      meet conditions to grant or block access to defined applications
+    Often paired with MFA
+    Assign conditions
+      users/groups
+      application grant/deny access
+      location (IP)
+      approved devices
+    Access decisions
+      grant
+      block
+      require MFA
+  Passwordless Authentication
+    Security vs Convenience conflict
+    increase the convenience of logging while still staying secure
+    remove password form system login
+    replace with
+      something you have
+      something you know/are
+    Methods
+      Microsoft authenticator app
+      Windows Hello
+      FIDO2 Security Key
+  External Guest Access
+    adding a guest user
+      invite using a variety of account types
+        identity providers like Microsoft, Google, Facebook
+      assign permissions for guest account
+        principle of least privilege
+        different between AAD and Azure subscription
+      Optional
+        assing guest user to application
+        apply cross-tenant
+        conditional access policy
+          MFA
+          approved devices     
+  Azure Active Directory Domain Services (AAD DS)
+    Used to migrate legacy applications (that don't use OAuth 2.0) to the cloud
+    managed instance of AD DS
+    requires separate domain
+    one-way sync with AAD
+    Require traditional AD DS
+      group policy
+      LDAP
+      NTLM
+      Kerberos
+    AAD DS
+      provides classic AD features in a managed service   
+  Single Sign-On
+    One login for multiple applicaitons and services
+    Enable SSO in AAD
+    
+Azure Solutions
+  Internet of Things
+    A system of interrelated computing devices, mechanical and digital machines
+    provided with unique identifiers
+    ability to transfer data over a network without human interaction
+    IoT Hub
+      to collect data feeds from all devices
+      it is the backend that receives data and manages it
+      managed and secure
+      ease of deployment
+      PaaS
+      scaling and authentication
+    IoT Central
+      SaaS offering for IoT
+      Simplify and speed up the implementation of IoT solution
+      No coding needed
+      Receive feeds from devices and focus on metrics and business value
+      Pre-made connectors ready to use in IoT Central
+    Azure Sphere
+      All-in one solution for IoT devices on Azure
+      Specific Hardware
+        hardware and chipsets certified by Microsoft for use on Azure
+      Security
+        specialize security service that manages maintenance, updates and general control
+      Operating System
+        custom made for Azure Sphere devices
+        connects to the Sphere Security Service     
+  Big Data
+    Data collection easy but getting value from it is hard
+    Data from million of devices
+    Business value
+      better service
+      better products
+      more profits
+    Offerings
+      Data Lake Analytics
+        large amounts of data
+        parallel processing
+        ready to go from the start
+        jump straight into the data analytics
+      HDInsights
+        Similar to Data Lake Analytics
+        Uses all open-source frameworks
+        includes 
+          Apache Hadoop
+            allows many computers to work together to solve problems with massive amounts of data
+          Apache Spark 
+            allows parallel program between clusters of computers
+          Apache Kafka
+            allows processing of real-time data feeds
+      Azure Databricks
+        based on Apache Spark
+        run and process a dataset on many computers simultaneously
+        provide all the computing power
+        integrates with other Azure Storage services
+      Azure Synapse Analytics
+        Azure's data warehouse offering
+        used for reporting and data analysis
+        only limited by your scope
+        use Synapse SQL language to manipulate the data
+    Outcomes
+      Speed
+        efficiency of processing large amounts of data, provides real value
+      Cost reduction
+        save large amounts of money on storage and processing
+      Better decision making
+        make better decisions faster
+      New products and services
+        understand what customers want 
+        provide them with much better products and services    
+  Machine Learning
+    teaching machines to make decisions based on what they learn
+    Models
+      set of rules of how to use the data provided
+      finds patterns based on the rules
+    Knowledge mining
+      use Azure Search to find existing insights in your data
+      find relationships, geography connections and more
+    Built-in Apps
+      cognitive services and bot services
+    Azure Bot Service
+      PaaS offering to build bots for Q&A services, virtual assistance and more
+      Code or Visual
+        using visual editor or programming
+      Language
+        using natural language to talk with bot
+        speech integration
+      Integration
+        with other services like Facebook messenger, Teams, Twilio and more
+      Branding
+        use own branding and own data bot uses and produces
+        a way to add extra layer of customer service
+    Azure Cognitive Services
+      collection of tools to use in your own applications
+      Vision service
+        to recognize, identify and caption your videos and images automatically
+      Decision service
+        make decisions based on content
+        detect potential offensive language
+        detect IoT anomalies
+        leverage data analytics
+      Speech service
+        automatic speech-to-text transcription
+        speaker identification and verification
+     Azure Machine Learning Studio
+      visual tool to help manage all ML needs
+      supports all Azure ML tools
+      pre-made models for your projects
+      use for real-world scenarios
+        Twitter sentiment analysis
+        photo grouping
+        movie recommendations
+    Machine Learning Service
+      End-to-End Service
+        to use AI and ML almost anywhere on Azure
+      Tooling
+        collection of tools to help build AI applications
+      Automation
+        automatically recognize trends in your applications
+        create models for you  
+  Serverless
+    refers to the fact that you aren't managing any servers yourself
+    Azure functions
+      single task performed every time
+      only runs once for each invocation
+      fundamental compute action 
+      can be run millions of times per second if needed
+    Logic Apps
+      connect systems both inside and outside of Azure
+      integrate apps, data flows, services and entire systems
+      a lot of ways to schedule, automate and orchestrate tasks and processes
+      no coding required, just need access to your apps to integrate
+    Event Grid
+      a routing service for sending and receiving events between applicaitons
+  DevOps
+    work between a developer finishing a code feature to the production being in production
+    how developers, engineers and system admins organize themselves and work as a team to deliver better products faster
+    Tools
+      Azure Boards
+        keep track of work tasks, timelines, issues, planning
+        PMs love this part
+      Azure Pipelines
+        produce and test software automatically and continuously when a change is made
+      Azure Repos
+        store source code securely in a managed way
+        developers are big fans of this part
+      Azure Test Plans
+        designs test of applications to implement automatically
+        QA engineers love this part
+      Azure Artifacts
+        share applications and code libraries with other teams
+    Azure DevTest Labs
+      Environment management
+        allow developers and engineers to create environments for test and development
+      cost management
+        won't incur unexpected costs and will minimize waste of resources
+      templates
+        tailor your development and test environments and reuse them with templated deployments
+    GitHub
+      Acquired in 2018 by Microsoft
+      Code repository service for lots of big and small projects
+      a favourite among open-source communities
+      Microsoft themselves on of biggest users
+    GitHub Actions
+      very similar of Azure Pipelines
+      build code, test and publish
+      works with almost any platform such as AWS and GCP
+      
+Security
+  Defense in Depth
+  Securing Network Connectivity
+  Public and Private Endpoints
+  Microsfot Defender for Cloud
+  Azure Key Vault
+  Azure Information Protection
+  Azure Sentinel
+  Azure Dedicated Hosts
+  Midcrosoft Defender for Identity

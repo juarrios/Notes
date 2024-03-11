@@ -1145,11 +1145,150 @@ Azure Solutions
       
 Security
   Defense in Depth
+    Multiple layers of security for your cloud infrastructure
+    Sevent Layers of Security
+    Physical
+      Actual data center
+      Only authorized personnel has access
+    Identity access
+      Relates to AAD
+      controls all Azure access nad identity of users, applications and connections
+    Perimeter
+      Protection against DDoS attacks, volumetric attacks, protocl attaces and more
+    Network
+      filter of traffic to and from Azure using virtual networks and applying security standards
+    Compute
+      protects against intrudes trying to get into VMs or DBs
+    Gateways and Firewalls
+      provide security to your Azure applications
+    Data
+      encrypted and protected agains anyone unauthorized reading it or making sense of it
   Securing Network Connectivity
+    Firewall
+      Certain rules protect the network from traffic that is not allowed
+      As hardware or software versions
+      critical part of any network
+    DDos Protection Service
+      Detects the DDoS and deflects it.
+      No Downtime
+    Network Security Group (NSG)
+      Like personal firewalls for resources
+      attach to virtual network, subnet or network interface
+      determines who can access the resources attached to it
+      using rules for inbound and outbound traffic
+      Application Security Group 
+        protects application infrastructure
+        focus on application rather than the IP endpoint        
   Public and Private Endpoints
+    Public Endpoints = Publicly reachable PaaS services
+      Managed services reachable over the public internet
+      exposed to the public
+      problem with sensitive resources
+    Service Endpoints ="Good" solution
+      privately connect VNet subnet to Azure PaaS services
+      connects over Microsoft's private backbone
+      configure service to only allow traffic from service endpoint-enabled subnet
+      can also restrict access to specific public IP addresses
+    Private endoint = "Better" solution
+      private connection to specific instance of a service
+        e.g. single storage account, SQL instance, etc
+      available over connected networks
+        hybrid/on-premises networks over VPN or express route connection
+        peered virtual networks
+        can completely disable public access to a connected service
+          truly private
+          public endpoint disabled       
   Microsfot Defender for Cloud
+    Alerts you to threats and anomalies that Azure detects and helps you protect against them
+    works in a hybrid cloud setup with each VM having an agent to send data back to Defender for Cloud
+    Highlights
+      policy and compliance metrics and results shown in security portal
+      assigns a secure score to encourage great security hygiene
+      integrate with other cloud providers using SIEM tool( requires Azure Arc)
+      alerts for resources that aren't secure
+    Three step process to take full advantage
+      define policies
+        policy is a set of rules to evaluate a resource
+        use predefined or create your own
+      protect resources
+        through monitoring your policies and their outcomes
+      respond
+        to any security alerts
+        investigate and go back to define new policies to account for the alert
   Azure Key Vault
+    secure way to store passwords and other secrets
+    can share secrets with others without revealing actual secret
+    Features
+      secure hardware
+        not even Microsoft can access the keys in it
+      Application isolation
+        an application can't pass on secrets, nor access another application's secrets
+      global scaling
+        scale globally like any other managed Azure service
   Azure Information Protection
-  Azure Sentinel
-  Azure Dedicated Hosts
+    secure documents, emails and data outside of the company network
+    works in conjunction with Office 365
+    Classify data
+      according to how sensitive it is either using policies or manually
+    Track activities
+      track what is happening with shared data and revoke access if needed
+    Share data
+      safely share data as you can control who edits, views, prints and fowards it
+    Integration
+      controls are integrated with common applications and tools such as Microsoft Office
   Midcrosoft Defender for Identity
+    How 
+      Monitor users
+        analyze user activity and information
+        includs permissions and memberships of groups
+      Baseline behavior
+        records what a user's normal behavior and routing is
+        any activity outside this routine will be logged as suspicious
+      Suggest changes
+        to conform with security best practives in order to reduce risks
+    Monitors the Cyber-attack kill chain
+      the ways that attackers get into your systems
+      Reconnaissance
+        if a user is searching information about other users or device IP addresses
+        will raise an alert
+      Brute force
+        any attemps to guess user credentials will be identified and flagged
+      Increasing privileges
+        any attempt to gain more privileges will be flagged
+  Azure Sentinel
+    a security information and event management (SIEM) tool
+    How
+      data collection
+        from network controllers, VMs, DNS traffic managers and more
+      aggregation and normalization
+        sorted and made more usable
+      analyzis and threat detection
+        any threats are detected
+      things happen
+        breaches and threats are identified
+      take action
+        you investigate and take appropiate action
+    Features
+      Behavior Analytics
+        uses AI to learn if a detected behavior is unusual
+      AWS integration
+        data from AWS services can be fed directly into Sentinel
+        threat detection across multi-cloud infrastructure
+      Cloud scale
+        take advantage of the Azure cloud scale and deliver more accurate results fast
+  Azure Dedicated Hosts
+    Hardware control
+      Full physical server that you get full control over
+    Yours Alone
+      won't get any "foreign" VMs on your dedicated server
+    Maintenance
+      choose when to install updates
+    Benefits
+      Compliance
+        take advantage of stringent Azure compliance
+      Global infrastructure
+        availability zones, fault isolation, HA and scale sets are standards
+        no optional extras
+      OS of your choice
+        Windows, Linux or SQL Server
+        Use your own licenses

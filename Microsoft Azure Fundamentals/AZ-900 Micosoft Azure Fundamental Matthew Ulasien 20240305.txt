@@ -2,34 +2,35 @@ AZ-900 Micosoft Azure Fundamental by Mathew Ulasien and Lars Klint 03/05/2024
 https://app.pluralsight.com/library/courses/az-900-microsoft-azure-fundamentals-2/table-of-contents
 
 Overview of Training
-  Cloud concepts
+  Introduction #1
+  Cloud concepts #2
     advantages such as high availability and scalability
-  Azure architecture
+  Azure architecture #3
     how Azure is put together
-  Compute
+  Compute #4
     how to use Azure to run applications
-  Networking
+  Networking #5
     how each server on Azure can talk to each other
-  Storage
+  Storage #6
     where you put all your data in different ways
-  Database
+  Database #7
     a way to store your data
-  Authentication and Authorization
+  Authentication and Authorization #8
     make sure only the right users get into your services
-  Solutions
+  Solutions #9
     look at more complex scenario Azure can provide
-  Security
+  Security #10
     various parts of Azure to make most secure choice for your business functions
-  Privacy, Compliance and Trust
+  Privacy, Compliance and Trust #11
     how services ensure privacy for user and how to stay compliant with regulations and standards
-  Pricing
+  Pricing #12
     various facets of how pricing is made up and how to stay on top of the cost
-  Support
+  Support #13
     many ways to get help and assistance using Azure from Microsoft and community
-  Exam preparation
+  Exam preparation #14
     what to expect on the day of the exam
     
-Introduction
+Introduction #1
   Course Overview
     Proficiency
       Skills have been tested
@@ -134,7 +135,7 @@ Introduction
       need to provide a valid credit card
       it will open with "Quickstart Center"
       
-Cloud Concepts
+Cloud Concepts #2
   Cloud computing
     On-demand availability of computer system resources split into three main catories
       compute
@@ -308,7 +309,7 @@ Cloud Concepts
       Cons
         complex infrastructure
         
-Azure Architecture
+Azure Architecture #3
   Regions
     Set of datacenters deployed within a latency-defined perimeter and connected through a dedicated regional low-latency network
       Set of datacenters
@@ -371,7 +372,7 @@ Azure Architecture
       Billing
         use tagging to stay on top of billing for groups of resources
     
-Compute
+Compute #4
   Virtual Machines
     a computer or server that you have access to exclusively
     IaaS offering
@@ -518,7 +519,7 @@ Compute
       resilience
         if functions fails, doesn't affect other function instances
         
-Networking
+Networking #5
   Virtual Network (VNet)
     Enables many types of Azure resources to securely communicate with each other, internet or on-premise networks
     Virtual because no access to hardware
@@ -587,7 +588,7 @@ Networking
       Scaling
         protect backend server instance from high loads
       distribution
-        Edge servers will serve requests closes to the user
+        Edge servers will serve requests closer to the user
         less traffic sent to hosting application server
     Cache
       collection of temporary copies of original files
@@ -601,7 +602,7 @@ Networking
     Dont go over public internet
     security of data
 
-Storage
+Storage #6
   Storage Account
     Unique Azure Namespace for you data
     globally unique
@@ -617,7 +618,7 @@ Storage
       Streaming
         stream audio and video directly from blob storage
       Log Files
-        wirte to log files regardless of size and frequency
+        write to log files regardless of size and frequency
       Data Store
         any kind of data such as for archiving, backup, restore and DR
     Blob Types
@@ -744,6 +745,8 @@ Storage
     Azure Data Box
       Lots of data to transfer over the internet
       relative to available network bandwith
+      80 TB on RAID-5
+      100 TB after RAID-5 protection
       Offline data transfer to/from Azure
         Copy data to physical data storage device (Data Box)
         Encrypted
@@ -792,7 +795,7 @@ Storage
         Redundancy
           LRS/ZRS only
           
-Database
+Database #7
   Cosmo DB
     ability to be global from the start
     Synchronization
@@ -876,7 +879,7 @@ Database
     Guides for non-MS
       for migrating non-Microsoft databases
     
-Authentication and Authorization
+Authentication and Authorization #8
   Identity Services
     Authentication
       Making sure you are you
@@ -975,7 +978,7 @@ Authentication and Authorization
     One login for multiple applicaitons and services
     Enable SSO in AAD
     
-Azure Solutions
+Solutions #9
   Internet of Things
     A system of interrelated computing devices, mechanical and digital machines
     provided with unique identifiers
@@ -1143,7 +1146,7 @@ Azure Solutions
       build code, test and publish
       works with almost any platform such as AWS and GCP
       
-Security
+Security #10
   Defense in Depth
     Multiple layers of security for your cloud infrastructure
     Sevent Layers of Security
@@ -1292,3 +1295,499 @@ Security
       OS of your choice
         Windows, Linux or SQL Server
         Use your own licenses
+
+Privacy, Compliance and Trust #11
+  Governance
+    A set of rules, policies and roles to define acceptable use of Azure resources
+    Validates that your organization can achieve its goals through effective and efficient use of IT
+    Azure Policy Service
+      To create policies
+        Set of rules to make sure that standards and agreements are followed 
+        and that resources are compliant with these policies
+      Is the enforcer: ensures that resources are complying with the policies
+    Role-Based Access Control (RBAC)
+      Define user access
+        specific user access to individual resources
+      Minimum access
+        only users with valid access can manage resources
+      Target specific use cases
+        be very explicit about uses and access
+      Role Assignment
+        Security Principal
+          an object representing an entity such as a user or group
+        Role definition
+          a collection of permissions such as read, write and delete
+        Scope
+          the resources the access applies to
+          which role can access a resource or resource group
+    Locks
+      to ensure a resource can not be changed or removed
+      Assigning
+        to a subscription, resource group or resource
+      Types
+        Delete
+          when you can't delete the locked object
+        Read-Only
+          where you can't make any changes to the object
+        Locked means locked
+          needs to be removed to perform locked actions
+    Azure Blueprints
+      templates for creating standard Azure environments
+      packs everythin needed
+        resource templates
+        RBAC
+        Policies
+        samples for common regulations
+    Cloud Adoption Framework
+      Aimed at the organization considering moving to the cloud
+      Collection of documents
+        to guide you through the cloud adoption process
+      Guidance
+        to define strategies for adoption
+        planning the move for 
+          "being ready" for the cloud
+          adoption reasons
+          governance practices
+          managing a living cloud architecture
+      Governance
+        key to the cloud adoption process
+    Azure Advisor for Security Assistance
+      Part of the Azure Security Center
+  Azure Monitor
+    Helps find resources that aren't performing 100%
+    Telemetry
+      collection of measurements and data at remote of inaccessible points
+      and their automatic transmission to receiving equipment for monitoring
+      Information about how services or devices are performing
+      passed to a central point for further analysis
+    Azure monitor provides dashboards in Azure Portal
+    Constant Feed
+      services feed telemetry data into Azure Monitor
+      even on-premises services can send it
+    Fully Managed
+      can analyze all the data from one place
+    Query Language
+      interactive query language to learn about the data
+    Machine learning
+      predict and recognize problems faster
+    Outcomes
+      maximize performance
+      maximize availability
+      identify issues  
+  Monitoring Tools
+    Log Analytics
+      Stores and analyzes log data to gain valuable insights
+        VM disk sizes
+        VPN connection logs
+        Long term analysis
+        Combine metrics for complex queries
+      large number of pre-built queries
+      can create custom queries
+        Kusto Query Language (KQL) format
+    Application Insights
+      performance insights for web applications
+        how are users using the application
+        where are performance bottlenecks
+        why getting website errors
+      Available for
+        Web Apps
+        App Service, Azure VMs and non-Azure resources
+    Azure Monitor Alerts
+      send notifications in response to unexpected events
+      informs the right group to do something about it
+        VM unresponsive
+        VM using excessive CPU
+        latency over 500 ms
+      Components
+        Alert rule
+          trigger to meet to send notification
+          monitored resource: VM
+          monitored telemetry: CPU utilization
+          condition: 90% CPU for 5 minutes
+          severity: 2 - warning
+        Action group
+          action(s) taken when rule is triggered
+          notification targets
+            Email/SMS to support personnel
+            automation workflows
+              logic apps
+              Azure functions
+  Azure Service Health
+    To be notified when Azure plans maintenance or service incident
+    A Service Health dashboard
+    Dashboard
+      personalized to highlght services issues affecting your resources
+    Custom Alerts
+      notified of planned and non-planned outages
+      simple to set up and customize
+    Real-Time tracking
+      track any alert and issues in real-time
+      get full report once resolved
+    Free Service
+      is completely free
+  Compliance (Supplemental)
+    Regulations, legislation, rules and guidelines needed to adhere to, follow and implement
+    Industry Regulations
+      General Data Protection Regulation (GDPR)
+        to protect individuals and processing of their data
+        gives control of personal data back to the individual instead of the company
+        companies required to control consumers data
+      ISO  Standard
+        most common ISO 9001:2008
+        compliance with quality and customer satisfaction
+      NIST
+        National Institute of Standards and Technology
+        focuses on tech industry
+        primarily for US Federal agencies
+        compliance with multiple Federal US regulations
+          like Cybersecurity Framework
+    Azure Compliance Manager
+      knows about compliance and resources
+      can give recommendations
+      Benefits
+        Recommendations
+         for ensuring compliance with GDPR, ISO, NIST and others
+        Tasks
+          assign compliance tasks to team members and track progress
+        Compliance Score
+          chase the perfect 100% compliant
+        Securee Storage
+          upload docs to prove compliance and store them securely
+        Reports
+          to provide to managers and auditors
+    Azure Government Cloud
+      Dedicated regions
+        separated data regions
+      Exclusivity
+        only screened personnel from US fedral, state and local government have access
+      Compliance
+        with required US government agencies and level 5 Department of Defense approval
+      Azure benefits
+        HA, scalability and managed resources
+    China Region
+      Located in China
+        physiscally located in China and no connectivity outside of China
+      Data Kept in China
+        kept inside China
+        Some global Azure services won{t work fully
+      Complilant
+        ensured compliant with Chinese regulations at all times
+  Privacy (Supplemental)
+    Azure Information Protection
+      classify, label and protect data based on data sensitivity
+    Azure Policy
+      define and enforce rules to ensure privacy and external regulations
+    Guides
+      to respond and comply with GDPR privacy requests
+    Compliance Manager
+      make sure following privacy guidelines
+    Microsoft Privacy Statement
+      explains how Microsoft is going to collect and treat your private data   
+  Trust (Supplemental)
+    Trust Center
+      Microsoft's effort on security, privacy, GDPR, data location, compliance and more
+      A hub for more information about trust in each product and service
+    Service Trust Portal
+      Review all independent reports and audits performed on Microsoft's products and services
+      Azure complies with more standards than any other cloud provider
+  Azure Arc
+    Centrilized governance and management of on-premises and multi-cloud computing resources
+    Simplifies process of managing complex computing environments on Azure or other places in a single unified interface
+    Apply Azure governance policies to non-Azure resources
+    Benefits
+      Manage Azure and non-Azure resources in same place
+      Manage non-Azure Kubernetes clusters
+      Deploy Azure-managed databases services to non-Azure locations
+      Manage and protect non-Azure servers
+        Monitor non-Azure OSs alongside Azure VMs
+        Protect with Microsoft Defender for Cloud
+        Apply Azure Automation runbooks
+      Apply Azure governance
+        RBAC
+        Azure Policies
+        Azure Blueprints
+      Deploy Azure serverless services to non-Azure hardware
+        Azure App Service
+        Azure Functions
+        Azure Logic Apps
+
+Pricing #12
+  Subscriptions
+    Is the root of every invoice
+    Every resource in Azure lives within a subscription
+    Multiple subscriptions for an account
+      useful for organizing who pays for what
+    Billing Admin
+      one or more users
+      manage anything to do with billing and invoicing
+      ensure separation of responsibility
+    Billing Cycle
+      is either 30 or 60 days
+    Offer Types
+      type of subscription
+      many different ones
+        Pay-as-you-go
+        Free trial
+        Visual Sturdio Professional subscribers
+        etc
+    Management Groups
+      Group Subscriptions
+        take action across subscriptions in bulk
+        useful in large organizations with many subscriptions
+      Organize
+        manage access, policies and compliance in bulk
+        eg: management group per country or department
+      Billing logic
+        maintain billing associated with the right budgets
+        nest management groups to indicate hierarchy and relationships
+  Cost Management
+    Free Accounts
+      many free services to get a taste
+      VMs, DBs, storage and more
+      Always Free
+        some services are always free for everyone
+        some partially free up to a threshold
+      valid credit card because there may be costs after first 30 days
+      only one free account per Microsoft account which is an email address
+    Azure Cost Management
+      In Azure Portal
+        Get a detailed view of current and projected costs
+        free and included with all Azure subscriptions
+      Reports and Recommendations
+        on how to save on costs and analyze them
+      Optimization
+        optimize current resources to save money
+        also monitor AWS charges
+        useful for multi-cloud setup
+    Spot VM Usage
+      Deep discounts up to 90% off price
+      no guarantee to run always, can evict you at any time
+      use for interruptible non-critical workloads
+      use with Azure scale sets
+      excellent for development testing
+      can set a max price for the Spot VM
+  Pricing Factor
+    Influences on Pricing
+      Resource Size
+      Resource Type
+      Location
+      Bandwidth
+    Zones & Bandwidth
+      transfer between services in same billing zone is free
+      transfer between two different billing zones is charged
+      Ingress data is free
+      Egress data is charged
+    Pricing Calculator
+      configure and estimate the costs for Azure products
+      calculate from any scenario
+        choose from all available Azure services
+        select resources porperties
+        monthly cost estimate
+        can export as part of proposals
+    Total Cost of Ownership Calculator
+      get an estimate of the total savings from moving on-premises resources to Azure
+      comprehensive reports to share with stakeholders      
+  Best Practices
+    Spending Limits
+      Monthly credits to use will have default spending limits
+      when limit kicks in, stops using resource that incur a cost
+    No Increase
+      either remove the limit entirely or leave it in effect
+    No Spending Limit
+      Pay-as-you-go have no spending limit functionality
+    Quotas
+      Property limit
+        a limit on a certain property of an Azure service
+        eg: a maximum of 100 namespaces for Event Hub
+      Ensure Service Level
+        necessary to maintain a high service level
+      quota change
+        can ask Microsoft to increase them
+    Tags
+      a simple yet efficient way to manage where each resource belongs
+      non-functional labels for resources or resource groups
+      use as many tags as needed
+      best practices
+        identify roles
+          defining which roles can access a resource
+        related resources
+          identify related resources for bulk automation processes
+        filter
+          filter resources per project, customer or for reporting purposes
+        unambiguous
+          create list for tags used
+          include
+            description
+            tag name
+            potential value
+    Pay-as-you-go
+      Only pay per month for what you use
+      the most expensive option
+      you pay a premium for making little commitment to Azure
+    Reserved Instances
+      for 1 to 3 years
+      save you a lot of cash
+      not all services can be reserved
+    Reserved Capacity
+      1 or 3 year commitment
+      Azure SQL
+      Cosmos DB
+      Synapse Analytics
+      Redis Cache
+    Azure Hybrid Benefit
+      a way to save on VMs if you already have licenses for them
+      using existing licenses instead of purchasing new ones
+    Advisor
+      gives you best practices advice in general through recommendations
+
+Support #13
+  Plans
+    Basic
+    Developer
+    Standard
+    Professional Direct
+    Premier
+    Inclusions in all support plans
+      Same as the "Basic" plan
+      24/7 access
+        around the clock access to billing and subscription support
+      Online self-help
+        documentation and white papers
+      Forums
+        a great way to ask other users what they use and how
+      Azure Advisor
+        best practices recommendations
+      Service Health
+        access to current issues and future planned maintenance on the Azure platform
+  Tickets
+    a support enquiry with a unique identifier
+    a single reference to an issue
+    submit through Azure portal
+    Choose one of four support ticket types
+      Billing
+      Service and Subscription limits
+      Subscription management
+      Technical
+    Fill in details about issue
+    Request is processed according to support plan
+  Channels
+    Azure Documentation
+      a collection of thousands of product and service articles
+      written by the people that made the product
+      the community contributes
+    Forums
+      ask questions
+      answer some
+      search for past knowledge being shared
+    Social Media
+      direct support from Azure and the teams behind each service
+      ask Microsoft experts and community heroes   
+  Knowledge Center
+    aims to answer many common questions
+    no new questions or add to an existing one
+    search by category, product and free text
+    links to Azure documentation
+    complements other channels
+  Service Level Agreements
+    a form of guarantee that servers will be running and stable
+    you pay for an SLA to ensure the least possible downtime of a service
+    it's like an insurance, if there's a breach of the SLA, you can claim compensation
+    Properties
+      Confidence
+        to ensure confidence in the uptime and reliability of services
+      Contract
+        stating Microsoft's commitment for uptime and connectivity
+      Multiple SLAs
+        generally one per product
+        you automatically use the SLA for the service you use
+      Complex
+        can have various levels depending on the number and variety of services
+      Mandatory
+        if you have an Azure account, the various SLAs apply
+        no SLAs for free product and services
+      Improve SLA
+        can improve the value of it
+  Service Lifecycles
+    Stages
+      Preview
+        Private
+          Only to specific customers invited by the productt team behind the service
+        Public
+          available to all Azure customers
+          enable preview features in the Azure portal
+      General Availability
+        available to all Azure customers as a normal service, including SLA
+        available when they are ready
+        can be gradual rollout to some regions first
+      
+Exam preparation #14
+  Time and Length
+    60 minutes to complete exam
+    44 various questions in total
+    Type of Questions
+      Multiple-Choice
+        3-6 options but generally 4
+      Statement
+        Decide if statement is correct or not
+        Replace underlined part with another answer if incorrect
+      Drag and Drop
+        Drag number of steps into a correct order of use or execution
+      Hotspot
+        Click on an image to select the right area
+      Multiple True/False
+        Three questions, one at the time
+        Can't go back and must answer each true or false
+    Exam Parts
+      Describe Cloud Concepts
+        25-30%
+        Section #2
+      Describe Azure Architecture and Services
+        35-40%
+        Sections #3 to #6, #8 and #10
+      Describe Azure Management and Governance
+        30-35%
+        Sections #1, #11 and #12
+    Practice Exam
+      Costs 
+      URL:
+    Options for Taking Exam
+      Test Center
+        Select preferred test center and book time and date online
+      Home or Office
+        Protored exam using webcam.
+        Need to have appropiate microphone, webcam and bandwidth.
+    Exam Outcome
+      Immediate Results
+        Know if failed or passed straight away
+        Need 700 out of 1000 points to pass
+      Official Record
+        Your official Microsoft Learning profile will record your certificates.
+        Get access to official certificates and badges
+      Retake an Exam
+        Can retake any Microsoft exam 5 times per 12 month period
+        Certain mandatory wait periods apply between attempts
+    Afterwards
+      Mastering the Basics
+        Portal and CLI
+          get good understanding of the Portal and Azure CLI to manage resources
+        Labs
+          short courses on learning how to perform a single task in Azure and cloud in general
+        Explore
+          Get familiar with Azure service design and how to use them
+      Learing Direction
+        Infrastructure
+          Managing resources
+          setting up networkds and VMs
+          IaaS configuration
+          Managing access to Azure resources
+        Development
+          Launching websites
+          implementing security solutions
+          troubleshooting issues on Azure
+          connect to Azure services
+          using PaaS offerings
+        ACG Projects
+          longer courses that build a project from start to finish
+    Next Certifications
+      AZ-104 Microsoft Azure Administrator Rapid Track
+      AZ-204 Developing Solutions for Microsoft Azure

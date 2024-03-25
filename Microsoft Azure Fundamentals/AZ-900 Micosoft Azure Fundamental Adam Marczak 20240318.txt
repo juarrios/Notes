@@ -1,0 +1,1585 @@
+Microsoft Azure Fundamentals by Adam Marczak 03/18/2024
+Episode 1
+Cloud Computing and Vocabulary
+  Cloud Computing
+    Delivery model for services over the internet (cloud)
+      Storage
+        Files
+        Databases
+      Compute Power
+        Windows
+        Linux
+        hosting environments (web)
+      Networking
+        connecting components securely
+      Analytics
+        visualization and telemetry data
+      More services ...
+  Characteristics
+    Scalability
+      ability to allocate and deallocate resources at any time
+      Vertical
+        Related to a resource size
+        Scaling Up
+          Increase size, adding more power
+            CPU
+            Memory
+            Storage
+        Scaling Down
+          Decrease size
+      Horizontal
+        Related to amount of resources
+        Scaling Out
+          adding amount of resources
+        Scaling In
+          removing amount of resources
+    Elasticity
+      ability to scale dynamically
+      automatic scaling
+      ability to add or remove resources depending on work load
+    Agility
+      ability to react quickly
+      allocate and deallocate (scale) resources quickly
+    Fault Tolerance
+      ability to remain up and running during component and service failures
+    Disaster Recovery
+      ability to recover from an event that has taken down the service (disaster)
+        Disaster is a serious disruption of services caused by natural or human-induced causes
+        Having two copies of same application in two different regions with replication between them
+        Having a frontal DNS routing between those two regions
+        If a region fails it automatically redirects to other region
+    High Availability
+      ability to keep services running for extended periods of time with very little downtime
+      Availability
+        measure of system uptime for users/services
+      Metric that measures how much uptime of the system
+        uptime / (uptime + downtime )
+        99%     = 3.65 days / year
+        99.9%   = 8.77 hours / year
+        99.99%  = 52.6 minutes / year
+
+Episode 2
+Economies of Scale
+  As companies grow they become more effective at managing shared operations.
+  Can save and earn more which allows for reduction in cost of their services to their customers.
+  
+Episode 3
+CapEx vs OpEx
+  CapEx
+    being able to commit resources up front and make a big initial investment
+    Buying you own infrastructure
+    Big initial investment
+    Maintenance cost
+      support staff
+      power & networking
+      hardware failures
+      others
+    Server Capacity is static
+  OpEx
+    Renting infrastructure
+    no intitial investment
+      paying only for what you use
+    minimal maintenance
+      small operations team
+      
+Episode 4
+Consumption-based Model
+  Pricing model of paying for resources used.
+    no upfront cost
+    no wasted resources
+    pay for additional resources when needed
+    stop paying when you don't
+  Key characteristics
+    multiple pricing components per service
+    vary granular usage measurement
+  Example to show cost by day and service name
+    Cost Management + Billing
+    Select subscription
+      Visual Studio Enterprise
+    Cost analysis
+      Last Month
+      Granularity: Daily
+      Column chart
+      Group by: Service Name
+    
+    
+Episode 5
+IaaS vs PaaS vs SaaS cloud service models
+  IT Layers
+    Infrastructure
+      Storage
+        HDD
+        SDD
+      Networking
+        Routers & switches
+        Internet
+      Servers
+        Memory
+        Motherboards
+        CPU
+      Virtualization
+        VMs
+    Platform
+      Operating System
+        Windows
+        Linux
+      Middleware Software
+        supporting software
+      Runtime
+        IIS
+        Docker
+    Software
+      Applications
+      Application's Data
+  On-Premises 
+    You manage all IT layers
+  IaaS
+    Outsource to cloud provider Infrastructure layer
+    You are responsible for Platform and Software
+    Use cases
+      Migration of workloads
+      Test & development
+      Storage, backups and recovery
+      Extending on-premise environment to the cloud
+  PaaS
+    Outsource Infrastructure and Platform layers
+    You manage software
+    Use cases
+      development framework
+      analytics & business intelligence
+    Developer uses
+      SQL for relational DBs
+      App Services for web hosting
+      Logic Apps for enterprise integrations
+      Function Apps for serverless
+  SaaS
+    Outsource Infrastructure, Platform and Software layers to cloud provider
+    You manage nothing and just use the applications
+    Use cases
+      buying of-the-shell applications
+        One drive
+        Outlook
+        Skype
+        Business applications
+  
+Episode 6
+Public, Private & Hybrid Cloud Deployment Models
+  
+Episode 7 
+Azure Regions and Availability Zones
+  Data Center
+    Physical facility
+    Hosting for groups of networked services
+    Own power, cooling & networking infrastructure
+  Regions
+    Geographical area on the planet
+    One but usually more data centers connected with low latency network < 2ms
+    location for your services
+    some services are available only in certain regions
+    some services are global services, not assigned/deployed in specific region
+      traffic manager for dns routing
+      azure AD
+    Globally available with 50+ regions
+    special govenment regions (US DoD Central, US Gov Virginia, etc)
+    special partnered regions (China East, China North)
+    Example location field to select region
+      Azure Speed Test
+        website to know lowest latency region
+        https://azurespeedtest.azurewebsites.net/
+      Products Available per Region
+        website to see available services per region
+        https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/
+  Region Pairs
+    each region is paired with another region making it a region pair
+    they are static and cannot be chosen
+    each pair resides within same geography
+      except Brazil South replication with US
+    Physical isolation at least 300 miles distance to recover from natural disasters
+    some services have platform-provided replication
+    planned updates across the pairs
+    data residency maintained for disaster recovery
+  Availability Zones
+    Regional feature 
+    Grouping of physically separate facilities
+    Designed to protect from data center failures
+    If zone goes down others continue working
+    Two service categories
+      Zonal services
+        To which zone doing deployment
+      Zone-redundant
+        SQL & storage will replicate automatically
+    Not all regions are supported
+    Supported regions has three or more zones
+    A zone is one or more data centers
+      Each zone gets a number
+  Geographies
+    Discrete market
+    typically contains two or more regions
+    ensures data residency, sovereignty, resilency, and compliance requirements are met
+    fault tolerant to protect from region wide failures
+    broken up into areas
+      Americas
+      Europe
+      Asia Pacific
+      Middle East and Africa
+    Each region belongs only to one Geography
+  
+Episode 8
+Resources, Resource Groups & Resource Manager
+  Resource
+    Object used to manage services in Azure
+    represent service lifecycle
+    saved as JSON definition
+      has all the configuration that you need for your service
+        type
+        APIversion
+        Name
+        Location
+        ...
+  Resource Group
+    Grouping of resources
+    holds logically related resources
+    Organized by
+      type
+      lifecycle (app, environment)
+        most common
+          myapp-dev-rg
+          myapp-prod-rg
+        apply different scripts/policies per environment
+      department, location or combination
+        for billing purposes
+    They are free
+    Creation options
+      In Portal
+      In CLI
+        >az login
+        >az group create --name az-900-2 --location "north europe"
+        >az storage account create --name amdemostorage123b --resource-group az-900-2 --location "north europe"
+    each resource must be in only one resource group
+    resource groups have their own location assigned
+    resources in the resource group can reside in a different locations
+    resources can be moved between the resource groups
+    resource groups can't be nested
+    Organize base on your organization needs 
+      Billing
+      Security and access management
+      Application lifecycle
+  Resource Manager
+    Management layer for all resources and resource groups
+      Centralize service governing all resources in Azure
+      responsible for creating all services in Azure
+    Unified language
+      always same properties and validations
+      everthing is consistent across all interfaces
+        Portal
+        REST API
+        PowerShell
+        CLI
+        SDKs
+    Controls access and resources
+      responsible for checking the privileges in Azure Active Directory
+    
+Episode 09
+Azure Compute Services
+  Category of on-demand services used to run cloud-based applications
+  Virtual Machines
+    Emulation of physical machine using virtualization software
+    Each application has its own environment and won't impact other VM applications
+    Different virtual hardware configuration per machine/app
+    Different operating system per machine/app
+    Total separation of environments
+      file systems
+      services
+      ports
+      middleware
+      configuration
+    Azure VMs
+      Creates VMs from Images
+      From Marketplace
+        Ubuntu
+        Windows
+        Oracle
+      Own Configuation
+        Create image and save on Storage
+    Characteristics
+      IaaS
+      Total control over OS and software
+      Supports marketplace and custom images
+      Best suite for
+        custom softare requiring custom system configuration
+        lift-and-shift scenarios
+      Can run application/scenario
+        web apps & web services
+        databases
+        desktop applications
+        jumpboxes
+        gateways, etc
+    High Maintenance
+    No Autoscaling
+    Only manual vertical scaling
+  Virtual Machine Scale Sets
+    Automatic scale accross multiplet VMs behind a load balancer
+    Characteristics
+      IaaS
+      Set of VMs from same image
+      Built-in auto scaling features
+      Designed for manual and auto-scaled workloads
+        web services
+        batch processing
+    High Maintenance
+    Autoscaling
+    From 1 to Up to 1000/600 nodes
+  Container Instances (ACI)
+    Container
+      Sandbox environment for each application
+      Emulate OS by Container Runtime, uses host OS
+      Lightweight
+        Development effort
+        maintenance
+        compute & storage requirements
+      Respond quicker to demand changes
+      designed for almost any scenario
+    ACI
+      Grabs container images from
+        container repository
+        public repository
+      Hosts container in a container group (VM)
+    Characteristics
+      Simplest and fastest way to run a container in Azure
+      PaaS
+      Serveless Containers
+      Designed for
+        Small and simple web apps/services
+        background jobs
+        scheduled scripts
+    No autoscaling
+    No need to run a server
+    From 0 to Max of 20 nodes
+  Kubernetes Service (AKS)
+    Containers spreaded across nodes (VMs) behind a load balancer
+    Characteristics
+      Open-source container orchestration platform
+      PaaS
+      Highly scalable and customizable
+      designed for high scale container deployments (anything really!)
+    Autoscaling
+    Min 3 nodes to up 100
+  App Services
+    For web applications or web services
+    Create a package and send it to App Services
+    Option to deploy to multiple nodes and exposed to users
+    Characteristics
+      Designed as enterprise grade web application service
+      PaaS
+      supports multiple programming languages and containers
+    Low Maintenance
+    Less hardware control
+    Autoscaling from 1 to 20/100
+  Azure Functions ( Function Apps )
+    To run small piece of code as a web service
+    deploy small package to Function App
+    FA deploys across multiple nodes and exposes to users as web service
+    Characteristics
+      PaaS
+      Serverless
+        no traffic, no service, no charges
+      two hosting/pricing models
+        consumption-based plan
+        dedicated plan
+      designed for micro/nano-services
+    Lowest degree of control
+    Autoscaling
+    Nodes from 0 to 200
+  Summary
+    VM (IaaS)
+      Custom software
+      Custom requirements
+      very specialized
+      high degree of control
+    VM Scale Sets (IasS)
+      Auto-scaled workloads for VMs
+    Container Instances (PaaS)
+      Simple container hosting
+      easy to start
+    Kubernetes Services (PaaS)
+      Highly scalable and customizable container hosting platform
+    App Services (PaaS)
+      Web applications
+      a lot of enterprise web hosting features
+    Functions (PaaS) (FaaS) (Serverless)
+      micro/nano-services,
+      excellent consumption-based pricing
+      easy to start
+      
+Episode 10
+Azure Networking Services
+  Category of services with capability to
+    connect cloud and on-premise resources
+    protect & monitor services
+    halp with application delivery
+  Azure Virtual Network
+    Allow to create, monitor and secure connectivity between Azure resources and on-premise environments
+    Can be segmented into Subnets
+      allows to manage IP address allocations efficiently
+      group related resources together
+      apply filters and security groups across multiple resources in the same 
+      example all web applications in same subnet
+    can only reside in a single region
+    can connect cross region virtual networks
+      VNET peering
+      VPN Gateway
+    Summary
+      emulation of physical networking infrastructure
+      designed for isolation, segmentation, communication, filtering, routing between resources
+      scoped to a single region
+      VNet Peering or VPN Gateway allow cross VNet communication
+      segmented into one or more subnets
+        effective address allocation
+        network filtering via Network Security Groups (NSG) or Application Security Groups (ASG)
+      "Diagram" on Azure portal shows a VN's graphic representation
+  Load Balancer
+    distribution of traffic across multiple resources
+    provides 
+      scalability out and in
+      availability
+        99.9%
+        99.99% if between different availability zones
+    help separate app components into tiers
+      balancer for web tier (public)
+      balancer for data tier (internal)
+    Characteristics
+      even traffic distribution
+      supports both inbound and outbound scenarios
+      high-availability and scalability scenarios
+      both TCP and UDP applications
+      external and internal traffic
+      port forwarding
+      high scale up to millions of flows
+  Application Gateway
+    Better balancer for web traffic (HTTP)
+    Has more feature to manage web traffic
+      Web traffic load balancer
+      web application firewall
+      redirection
+      session affinity
+        ensuring user always directed to same server
+      URL routing
+      SSL termination
+        send unencrypted traffic to backend service to reduce processing power
+  VPN Gateway
+    allows to connect to on-premise environment over public internet but encrypted
+    less common for cross-regional VNets communication
+  Content Delivery Network (CDN)
+    allows to distribute content all around the world
+    users will connect to closer location of content available
+    reduces latency and workload of front end services
+    Characteristics
+      deliver web content to users
+      minimize latency
+      POP (points of presence) locations ( ~120 )
+  Summary
+    Azure Virtual Network
+      Emulation/representation of physical networking in the cloud
+      grouping, filtering and segmentation of network related resources
+    Azure VPN Gateway
+      Connection On-Premises with the Virtual Network
+      Virtual Network with each other ( VNet Peering also )
+    Azure Load Balancer
+      Even traffic distribution for non-HTTP (non-web) traffic
+    Azure Application Gateway
+      Even traffic distribution for HTTP (web) traffic
+    Azure Content Delivery Network (CDN)
+      Global content caching
+      distribution to offload web applications
+      reduce latency and better user experience
+      
+Episode 11
+Azure Storage Services
+  Data
+    Structured
+      Is defined by a schema
+      Each table has properties and types for each
+      Can have relationships between tables
+      Example is relational databases
+    Semi-structured
+      Still a table with a key per item
+      the other fields can be anything
+    Unstructured
+      Like images, movies, binary files, text files
+  Blob or Binary Large Object
+    Blob is any kind of unstructure data
+    Azure Blob Storage
+      Stores blobs in containers which is are buckets
+    Designed for storage of files of any kind
+    Three storage tiers
+      Hot 
+        frequently accessed data
+        provides best performance for files
+      Cool
+        infrequently accessed data
+        lower availability and performance
+        maintain high durability
+        good for versions and backups of applications
+      Archive
+        rarely (if-ever) accessed data
+        lowest availability
+        retrieval made take hours
+        lowest price
+  Queue
+    Storage for small pieces of data (messages)
+    Designed for scalable asynchronous processing
+  Table
+    Storage for semi-structured data (NoSQL)
+      no need for foreign joins,keys or relationships
+    designed for fast access
+    many programming interfaces and SDKs
+  File
+    Similar as Blob storage but for files
+    Storage for files accessed via shared drive protocols
+      Accessed by SMB (Serial Message Block) protocol
+    designed to extend on-premise file shares or implement lift-and-shift scenarios
+  Azure Storage Account
+    Group of services
+      include Blob, Table, Queue and File storage
+    Highly scalable (up to petabytes of data)
+    Highly durable (99.99... 11 nines up to 16 nines)
+    Cheapest per GM storage
+  Azure Disk Storage
+    Disk emulation in the cloud
+    persisten storage for VMs
+      for OS
+      for Application data
+    different
+      sizes
+      types
+        SSD
+        HDD
+      performance tiers
+    disk can be 
+      unmanaged
+        stored as a file in blob storage
+        customer responsible for managing those blobs
+      managed
+        Microsoft manages those blobs
+    
+Episode 12
+Database Services
+  Cosmo DB
+    Semi-structured data stored in collections
+    ability to replicate geographically
+    low latency < 10ms
+    globally distributed NoSQL database service
+    Schema-less
+    Multiple APIs
+      SQL
+      MongoDB
+      Cassandra
+      Gremlin ( for graphs )
+      Table Storage
+    Designed for
+      Highly responsive (real time) applications
+      Multi-regional applications
+      perfect for serverless
+  Azure SQL
+    SQL Database
+      Relational database service in the cloud (PaaS) (DBaaS)
+      Strutured data service defined using schema and relationships
+      Rich Query Capabilities (SQL)
+      High-performance, reliable, fully managed and secure for building applications
+      Services
+        SQL Database
+        Power BI (SSRS)
+        Data Factory (SSIS)
+        Analysis services (SSAS)
+    Managed Instance
+      Full capabilities of SQL Server in the cloud
+      More expensive
+    SQL Data Warehouse (Synapse )
+      For big data warehousing
+      massively parallel processing (MPP) version of SQL Server
+    SQL VM
+      fully fledged SQL Server on IaaS
+    DB for MySQL
+      Azure version for MySQL DB engine
+    DB for PostgreSQL
+      Azure version for PostgreSQL DB engine
+
+Episode 13
+Azure Marketplace
+  Similar to an online shop
+  Azure "shop"
+  First and third party products
+  You can build own templates and publish to marketplace
+  IaaS, PaaS, SaaS
+  Commercial Marketplace
+    Microsoft App Source
+      Business Users
+    Azure Marketplace
+      Developers and IT Pros
+      
+Episode 14
+Internet of Things (IoT) Services
+  Internet of Things
+    a network of internet connected devices (IoT Devices)
+    embedded in everyday objects
+    enabling sending and receiving data such as settings and telemetry
+  Azure IoT Hub
+    Allows bidirectional communication between IoT devices and the cloud
+    Managed service for bi-directional communication
+    PaaS
+    Highly secure, scalable and reliable
+    Integrates with a lot of Azure Services
+    Programmable SDKs for popular languages
+      C, C#, Java, Python, Node.js
+    Multiple protocols
+      HTTPS
+      AMQP Advance Message Queuing Protocol
+      MQTT MQ Telemetry Transport
+    Demo
+      Using Raspberry PI emulator
+  Azure IoT Central
+    IoT app platform SaaS
+    Industry specific app templates
+    No deep technical knowledge required
+    Service for connecting, management and monitoring IoT devices
+    Highly secure, scalable and reliable
+    Build on top of IoT Hub service and 30+ other services
+  Azure Sphere
+    Set of tools for IoT solution
+    Secure end-2-end IoT solutions
+    Azure Sphere certified chips (MCUs)
+    Azure Sphere OS based on Linux
+    Azure Security Service trusted device-to-cloud communication
+    
+Episode 15
+Azure Big Data and Analytics Services
+  Big Data
+    technology that helps with extraction, processing and analysis of information
+    that is too large or complext to deal with traditional software
+    Three V's characteristics
+      Velocity
+        How fast data arrives and how fast to process it
+          Batch
+          Periodic
+          Near real time
+          real time
+      Volume
+        How much data to process
+          MB, GB, TB or PB
+      Variety
+        How structured or complext is the data
+          Table
+          Database
+          Photo/Audio
+          Video/Social
+  Azure Synapse Analytics
+    PaaS for Big Data analytics
+    Workspace for end-2-end enterprise data warehousing & analytics
+    Multiple components
+      Apache Spark
+        lead technology for big data and transformation
+      Synapse SQL
+        for parallel processing database clusters based on SQL server
+        SQL pools
+          dedicated
+          pay for provisioned performance
+        SQL on-demand
+          ad-hoc
+          pay for TB processed
+      Synapse Pipelines
+        Data Factory ETL
+        using visual workflow
+      Studio
+        Unified experience
+    Integrated with Azure Data Lake Storage Gen2
+  Azure HDInsight
+    PaaS fully managed open source analytics service
+    Provisions big data clusters
+    Multiple technologies supported
+      Hive
+      Hadoop
+      Spark
+      Storm
+      HBase
+      Kafka
+      Maching Learning
+  Azure Databricks
+    Big data collaboration platform PaaS
+    Unified workspace for notebook, cluster, data, access management and collaboration
+    Apache Spark based analytics platform
+    Integrates very well with common Azure data services
+    
+Episode 16
+Azure Artificial Intelligence (AI) Services
+  Definitions
+    AI
+      simulation of human intelligence & capabilities by computer software
+    ML
+      subcategory of AI where software is "taught" 
+      to draw conclusions and make predictions from data
+      process is called "building a model"
+  Azure Machine Learning Service
+    Train -> Package -> Validate -> Deploy as WS -> Monitor WS -> retrain model
+    Tools
+      Notebooks
+        Python
+        R
+      Designer
+        graphical interface for no-code development
+      Compute
+        management of storage and compute resources
+        for train, package, validate and deploy models
+      Auto ML
+        run multiple algorithms/parameters combinations
+        choose the best model 
+        deploy as web service
+      Pipelines
+        to build entire process end-to-end
+        orchestrate model training, deployment and management tasks
+  Cloud based platform for creating, managing and publishining machine learning models
+  PaaS
+  Machine Learning Workspace
+    top level resource that manages everything
+    ties everything together
+      computer resources
+      permissions
+      runs
+      pipelines
+      experiments
+      history
+      connection to external services
+        azure storage accounts
+      models       
+  Azure Machine Learning Studio
+    web portal for end-2-end development
+
+Episode 17
+Azure Serverless Computing Services
+  Serverless Computing
+    cloud-based execution environment
+    allows to run applications in the cloud
+    completely abstracts underlying infrastructure
+  Azure Functions
+    application development platform for nano-services and event-based applcations
+    Serverless coding platform 
+    Functions as a Services FaaS
+    Designer for nano-service architectures and event-based applications
+    Highly scalable
+    supports popular languages and frameworks
+      .NET, Java, Node.js, Python, PowerShell, etc
+  Logic Apps
+    enterprise integration services for orchestration of business and app workflows
+    more than 200+ connectors available
+    designed for orchestration of
+      business processes
+      integration workflows for applications, data, systems and services
+    no-code solution
+  Event Grid
+    scalable event routing service for integration and near real time applications
+    fully managed serverless event routing service
+    uses publish-subscribe model
+    designed for event-based and near real time applications
+    supports dozen of built-in events from most common Azure services
+    
+Episode 18
+Azure DevOps Solutions
+  DevOps
+    set of practices that combine both development (Dev) and operations (Ops)
+    aims to shorten the development life cycle
+      provides CI/CD
+        coninuous integration (CI)
+        continuous deliver (CD)
+      ensures high quality of deliverables
+    deliver faster while ensuring high quality
+  Azure DevOps
+    end to end platform for 
+      building CI/CD pipelines, 
+      code versioning, 
+      tracking work
+      manage project deliverables
+    Collections of services for building solutions using DevOps practices
+      Boards
+        allows to track the work
+        progress across team members
+        manage deliverables and work status
+      Repos
+        code collaborations
+        versions for project and deliverables with Git
+      Pipelines
+        building CI/CD workflows
+          automated builds
+          automated testing
+          automated deployments
+      Artifacts
+        manage project deliverables
+          create hosts
+          share packages with team
+          add artifacts to ci/cd pipeline
+      Test Plans
+        manual and exploratory testing
+        track testing progress
+    Marketplace extensible
+      additions to azure devops
+      extend basic functionalities
+    Evolved from TFS
+  Azure DevTest Labs
+    Service sandbox environment for developers/testers within Azure (PaaS)
+    Quick setup of self-managed VMs
+    Preconfigured templates for VMs
+    Plenty of additional artifacts
+      tools, apps, custom actions
+    Lab policies
+      quotas, sizes, auto-shutdowns
+    Share and automate labs via custom images
+    Premade plugins/API/tools for CI/CD pipeline automation
+    Admins
+      configure resources available to use
+        OS, DBs, VM sizes, Quotas ...
+        
+Episode 19
+Azure Tools
+  Azure Portal
+    web based interface for management of Azure platform
+    designed for self-service
+    Customizable
+    Simple tasks
+  Azure PowerShell
+    PowerShell module
+    Designed for automation
+    Multi-platform with PowerShell core
+    Simple to use
+      >Connect-AzAccount - log into Azure
+      >Get-AzResourceGroup - list resource groups
+      >New-AzResourceGroup - create new resource group
+      >New-AzVm - create virtual machine
+    For professionals used to work with Windows servers
+  Azure CLI
+    command line interface for Azure
+    designed for automation
+    Multi-platform (Python)
+    Simple to use
+      >az login - log into Azure
+      >az group list - list resource groups
+      >az group create - create new resource group
+      >az vm create - create virtual machine
+    Native OS terminal scripting
+  Azure Cloud Shell
+    cloud-based scripting environment
+    completely free
+    supports both Azure PowerShell and Azure CLI
+    Dozen of additional tools
+    Multiple client interfaces
+      Azure Portal integration ( portal.azure.com )
+      Shell Portal (shell.azure.com )
+      Visual Studio Code Extension
+      Windows Terminal
+      Azure Mobile App
+      Microsoft Docs integration
+      
+Episode 20
+Azure Advisor
+  Personalized consultant service
+    continuosly scans all services for improvements according to Azure best practices
+  Designed to provide recommendations and best practices for
+    Cost
+      SKU sizes
+      Idle services
+      reserved instances
+    Security
+      MFA settings
+      vulnerability settings
+      agent installations
+    Reliability
+      redundancy settings
+      soft delete on blobs
+    Performance
+      SKU sizes
+      SDK versions
+      IO throttling
+    Operational Excellence
+      service health
+      subscription limits
+  Actionable recommendations
+  Free
+
+Episode 21
+Security Groups
+  Network Security Groups (NSG)
+    Filtering of incoming and outgoing traffic for virutal network resource
+    Designed to filter traffic to (inbound) and from (outbound) Azure resources located in Azure Virtual Network
+    Filtering controlled by rules
+    Ability to have multiple inbound and outbound rules
+    Rules are created by specifying
+      Source/Destination
+        IP adresses
+        service tags
+        application security groups
+      Protocol
+        TCP
+        UDP
+        any
+      Port
+        or port ranges
+        ex 3389 RDP, 22 SSH, 80 HTTP, 443 HTTPS
+      Direction
+        inbound
+        outbound
+      Priority
+        order of evaluation
+  Application Security Groups (ASG)
+    logical grouping of virtual network resources for easier maintenance
+    Allows grouping of virtual machines located in Azure virtual networks
+    designed to reduce the maintenance effort
+      assigne ASG instead of explicit IP addresses
+      
+Episode 22
+User-defined Routes (UDR)
+  Routing
+    Process of finding/selecting a path for a traffic in one or across multiple networks
+    example: redirecting to an NVA ( with a firewall ) before hitting destination
+  Custom, user-defined and static routes (UDRs)
+  Designed to override Azure default routing or add new routes
+  Managed via Azure Route Table resource
+  Associated with zero or more Virtual Network subnets
+  
+Episode 23
+Azure Firewall
+  Firewall
+    a network security service that monitors and controls incoming and outgoing traffic
+  Managed, cloud-based firewall service (PaaS, Firewall as a Service)
+  Built-in high availability
+  Highly scalable
+  Inbound & outbound traffic filtering rules
+  Support for FQDN
+  Fully integrated with Azure monitor for logging and analysis
+  
+Episode 24
+Azure DDoS Protection
+  DDoS
+    DoS attack that is originating from multiple servers
+  DDoS protection service in Azure
+  Designed to
+    Detect malicious traffic and block it while allowing legitimate users to connect
+    Prevent additional costs for auto-scaling environments
+  Two tiers
+    Basic
+      automatically enabled for Azure platform
+    Standard
+      additional mitigation & monitoring capabilities for Azure Virtual Network resources
+  Standard tier uses machine learning to analyze traffic patterns for better accuracy
+  
+Episode 25
+Azure Identity Services
+  Identity
+    The fact of being something or someone
+      ex: A user with a username and password
+    Also applications or other servers with secret keys or certificates
+  Authentication
+    The process of verification/assertion of identity
+  Authorization
+    The process of ensuring that only authenticated identities get
+    access to the resource for which they have been granted access
+  Access Management
+    The process of controlling, verifying, tracking and managing access
+    to authorized users and applications
+  Azure AD
+    Identity and Access Management service in Azure
+    Identities management
+      users
+      groups
+      applications
+    Access management
+      subscriptions
+      resource groups
+      roles
+      role assignments
+      authentication
+      authorization settings
+    Used by multiple Microsoft cloud platforms
+      Azure
+      Microsoft 365
+      Office 365
+      Live.com services
+        Skype
+        OneDrive
+    Syncs witn on-premises AD via sync services
+  Multi-factor Authentication (MFA)
+    Process of authentication using more than on factor (evidence) to prove identity
+    Factor types
+      Knowledge
+        Something you know
+        ex: password
+      Possession
+        Something you have
+        ex: phone, token, card key
+      Physical Characteristic
+        Something you are
+        ex: fingerprint, voice, face, eye iris
+      Location
+        Somewhere you are
+        ex: GPS location
+    Supported by Azure AD by default
+      simple on-off switch
+      
+Episode 26
+Azure Security Center
+  Centrilized/unified infrastructure and platform security management service
+  Natively embedded in Azure services
+  Integrated with Azure Advizor
+  Two tiers
+    Free
+      Azure Defender OFF
+      included in all Azure services
+      provides continuous assessments
+      security score
+      actinable security recommendations
+    Paid
+      Azure Defender ON
+      hybrid security
+      threat protection alerts
+      vulnerability scanning
+      JIT VM access
+      
+Episode 27
+Azure Key Vault
+  Managed service for securing sensitive information
+    for application
+    for platform
+    PaaS
+  Secure storage service for
+    Keys
+    Secrets
+    Certificates
+  Highly integrated with other Azure services
+    VMs
+    Logic Apps
+    Data Factory
+    Web Apps
+    etc
+  Centralization
+  Access monitoring and logging
+  
+Episode 28
+Role-Based Access Control (RBAC)
+  Authorization system built on Azure Resource Manager (ARM)
+  Designed for fine-grained access management of Azure Resources
+  Role assignment is a combination of
+    Role Definition
+      collection of actions that the assigned identity will be able to perform
+        create VM
+        delete SQL
+        assign permissions
+        etc
+      answers question "What can be done?"
+        which actions can be perform on Azure resources
+      example
+        VM Operator
+        Web Developer
+        DB Operator
+      Azure has many built-in roles
+    Security Principal are identities
+      Azure object (identity) that can be assigned to a role or group of roles
+        User
+        Group
+          group of users
+        Service principal
+          application accounts in Azure
+        Managed Identity
+          accounts attached for specific service
+      answers question "Who can do it?"
+    Scope
+      One or more Azure resources that the access applies to
+        resource
+        resource groups
+        subscription
+        management group
+      answers the question
+        "Where cat it be done?"
+  Scopes are hierarchical
+    Management Groups -> Subscriptions -> Resource Groups -> Resources
+  Built-in and Custom roles are supported
+  
+Episode 29
+Resource Locks
+  Designed to prevent accidental deletion and/or modification
+  Used in conjunction with RBAC
+  Two types of locks
+    Read-only
+      only read actions are allowed
+    Delete
+      can not delete
+      all actions except delete are allowed
+  Scopes are hirarchical (inherited)
+    Subscriptions -> Resource Groups -> Resources
+  Management Groups can't be locked
+  Only Owner and User Access Administrator roles can manage locks
+  
+Episode 30
+Tags
+  Tags are simple Name(key) - Value pairs
+  Designed to help with organization of Azure resources
+  They don't do anything, is just extra information for you
+  What you do with those tags is where the power is
+  Used for
+    resource governance
+    security
+    Operations management
+    cost management
+    automation
+    etc
+  Typical tagging strategies
+    Functional
+      mark by function
+      ex: environment = production
+    Classification
+      mark by policies used
+      ex: classification = restricted
+    Finance/Accounting
+      mark for billing purposes
+      ex: department = finance
+    Partnership
+      mark by association of users/groups
+      ex: owner = adam
+  Applicable for
+    resources
+    resource groups
+    subscriptions
+  NOT inherited by default
+  CLI command to see resources with tags assigned
+    >az resource list --query "[?tags].{name:name,group:resourceGroup,tags:tags}" -o jsonc
+
+Episode 31
+Azure Policy
+  Designed to help with resource
+    governance
+    security
+    compliance
+    cost management
+    etc
+  Policies focus on resource properties
+    RBAC focused on user actions
+  Policy definition
+    defines what should happen
+      define the condition
+        if/else
+      and the effect
+        deny
+        audit
+        append
+        modify
+        etc
+    Built-in and custom are supported
+    examples
+      allowed resurce types
+      allowed locations
+      allowed SKUs
+      inherit resource tags
+  Policy initiative
+    a group of policy definitions
+  Policy assignment
+    assignment of a policy definition/initiative to a scope
+      Scopes
+        management groups
+        subscriptions
+        resource groups
+        resources
+  Policies allow for exclusions of scopes
+  Checked during resource creation or updates
+    existing ones are added with remediation tasks
+    
+Episode 32
+Azure Blueprints
+  Blueprint
+    a guide, pattern or design for making something
+  Package of various Azure components called artifacts
+    Resource Groups
+    ARM Templates
+    Policy Assignments
+    Role Assignments
+  Centralized storage for organizationally approved design patterns
+  Blueprint definition
+    describing what should happen 
+    reusable package
+  Blueprint assignment
+    describing where it should happen
+      package deployment
+      
+Episode 33
+Cloud Adoption Framework (CAF)
+  Cloud adoption
+    a strategic move by an organization to leverage cloud in their business
+    cloud has a lot of things to offer
+      accelerate business
+      allow to innovate and build solutions faster
+      become global
+  Is a set of 
+      tools
+      best practices
+      guidelines
+      documentation 
+    prepared by Microsoft to help companies with their cloud adoption journey
+  Strategy
+    building organization alignment to begin cloud adoption
+    understand why move and how to provide business value
+    defining business justification and outcomes
+    1) Motivations
+      answer question "Why move?"
+      meet with key stakeholders and executives to document motivations behind cloud adoption
+      Migration triggers
+        Cost savings on infrastructure
+        Reduction in complexity
+        Operation optimization
+        increased business agility
+      Innovation triggers
+        Reaching a Global scale
+        customer experience improvements
+        transformation of products or services
+        market disruption
+    2) Business Outcome
+      answer question "What to measure?"
+      criteria of success that would support move to the cloud
+      Defined, concise and observable outcome by a specific measure
+        Increase in Revenue
+        Increase in Profit
+        Cost reduction
+        Global access to customers
+        Reaching new markets
+    3) Business Justification
+      anser question "What is my return on investment (ROI)?"
+      develop a business case to validate the financial model that supports motivations and outcomes
+      Tools
+        Azure Total Cost of Ownership (TCO) calculator
+          calculates cost of current on-premise infrastructure
+        Azure Pricing Calculator
+          estimate future monthly cost of Azure infrastructure
+        Azure Cost Management
+          full visibility on current Azure resources and their cost
+    4) First Project
+      to validate your strategy, Proof of concept (POC) based on
+        Business criteria
+          Currently operating
+          Dedicated owner
+          Strong motivation to move
+        Technical criteria
+          Minimum dependencies and assets
+          avoiding taking too long to validate strategy
+  Plan
+    create actionable plan based on current digital assets for cloud adoption
+    supporting current strategy
+    1) Digital estate
+      Inventory of assets
+      what you currently have and what to do with it
+      Five R's of rationalization
+        Rehost
+          Move current application to the cloud without modifications
+          moving into IaaS
+        Refactor
+          do small changes to application code base to fit it into PaaS offering in Azure
+        Rearchitect
+          make complex changes to code base to introduce new services or fix incompatible applications
+        Rebuild
+          create new application from scratch to take full advantage of what cloud has to offer
+        Replace
+          review available SaaS offerings that can replace legacy or unneeded applications
+    2) Initial Organization Alignment
+      make sure everyone is align and key persons support adoption plan
+      map people to capabilities
+      know who should be engaged when
+    3) Skills Readiness Plan
+      review current skills in the company
+      create a plan to address the gaps for new cloud skills
+      across different teams and different people
+    4) Cloud Adoption Plan
+      Put previous three steps into a single cloud adoption plan
+      used to manage the change across 
+        digital estate, 
+        skills 
+        organization
+        processes
+  Ready
+    prepare first Azure environment and align
+      users
+      processes
+      environment
+    1) Azure Setup Guide
+      Read Azure documentation about
+        How initial environment should look like
+        become familiar with tools and approaches that will help
+      choose type of subscription to use that is best for company
+    2) Azure Landing Zone
+      will be first Azure environment 
+      created out of Microsoft guidelines
+      allow to set up a code base for future improvements
+      use Infrastructure as a code approach for everything to later
+        be changed
+        expanded
+        updated
+        consistent
+        easily to redeploy if needed
+    3) Extend Landing Zone
+      extend further to match organizational needs
+      allow for smooth cloud transition
+    4) Best Practices
+      Always check best practices for all previous steps
+      very hard to make changes if first creating a bad platform architecture
+  Adopt
+    implement based on the plan
+    1) Migrate
+      migrate first project to the cloud
+      familiarize with native tools and approaches in Azure
+      Migration scenarios
+          VMs
+            Windows
+            Linux
+          Apps
+            .NET
+            Java
+            Python
+            NodeJS
+          Data
+            SQL Server
+            Postgre SQL
+            File Servers
+          Other
+            Azure stack
+            VMWare
+      Best Practices
+        Make sure architecture decision follows consistent best practices for each tool
+        it will help accelerate other migrations
+      Process Improvements
+        evaluate how migration is going
+        what are the things that should be improved
+    2) Innovate
+      Business Value consensus
+        value of strategy
+        decision to make on a technical solution
+        identify hypothetical customer need
+        map it to a business value you can provide by building this solution
+        match it and map that value to your cloud strategy
+      Innovation Guide
+        Decide on tools available in the cloud to accelerate development of this solution
+        how to build this minimum valuable product (MVP)
+      Best Practices
+      Process Improvements
+        make sure customers and teams provide feedback to improve architectural decisions and future products
+        devops and github help with these
+  Govern
+    comply, control & secure
+    align compliance and security standards and tools
+    Define governance solutions
+      Business needs
+      Agility
+      Control Risks
+        make sure environment is compliant and secure at all times
+  Manage cloud environment
+    Monitor on going Operations & Optimizations
+      Stability
+      Cost
+  Organize
+    ensure everyone knows what to do and when
+    make sure that people will have assigned roles and responsibilities
+    RACI matrix
+      Responsible
+      Accountable
+      Consulted
+      Informed
+  Documentation and communication of every stage is critical requirement for the process
+  Living document
+    constantly changing
+    make sure to see if anything has changed
+      because new practices
+      because new tools to support you better
+      
+Episode 34
+Core Tenets of Security, Privacy and Compliance
+  Microsoft Privacy Statement
+    collection, purpose and usage of personal data for all MS offers
+      services
+      apps
+      websites
+      software
+      servers
+      devices
+    audience is everyone
+  Online Services Terms (OST)
+    license terms (user rights) for Microsoft online products and services
+      Azure
+      Dynamics 365
+      Office 365
+      Bing Maps
+    describe what you are allowed or disallowed to do when using those services
+    audience is organizations, legal teams
+  Data Protection Addendum (DPA)
+    in-depth specification on processing and security of personal and customer data
+    also obligations of the customer and Microsoft
+    audience is organizations, legal teams
+  Trust Center
+    single place for organizations to review
+      security
+      privacy
+      compliance
+      policies
+      practices
+    for Microsoft online services
+    audience is
+      business managers
+      administrators
+      security teams
+      legal teams
+  Azure compliance documentation
+    compliance documentation for Azure services
+  Azure Sovereign Regions
+    provide Azure services in markets with very strict regulatory requirements
+      Azure Government designed for the US government
+        Separate instance
+        Physically isolated
+        Authorized personel only
+      Azure China designed for the Chinese market
+        Separate instance
+        Physically isolated
+        Operated by 24Vianet
+        
+Episode 35
+Cost Affecting Factors
+  Resource types
+    "What kind of service do we use?"
+      VM
+      SQL
+      Functions
+      Storage
+      Logic App
+    all Azure services (resources) have resource-specific pricing models
+    typically consisting of one or more metrics
+    Azure Pricing Calculator
+      Helps estimating cost per resource/service to use
+  Services
+    Azure specific offers 
+      Web Direct
+        Azure Free
+        Pay as You Go
+        MPN
+        Visual Studio
+        More ...
+      Enterprise
+      Cloud Solution Partner (CSP)
+    have different costs and billing components like prepaids, billing cycles, discounts
+  Location
+    price vary between Azure regions
+  Bandwidth
+    How much data do we move in and out of Azure?
+      inbound/ingress is free
+      outbound/egress has a cost
+    Pricing scenarios across data centers or across regions
+    
+Episode 36
+Cost Reduction Methods and Pricing, TCO Calculators
+  Cost Reduction
+    Reservations
+      purchase Azure services for 1 or 3 years in advance with significant discounts
+      Types
+        reserved instances
+          VMs
+        reserved capacity
+          Azure Storage
+          SQL Database vCores
+          Databricks DBUs
+          Cosmo DB
+        software plans
+          Red Hat
+          Red Hat OpenShift
+          SUSE Linux
+    Spot pricing
+      purchase unused VM capacity for significant discount
+      capacity can be taken away at any time
+      customer can set maximum price after discount
+      best for interruptable workloads
+        batch processing
+        dev/test environments
+        large compute workloads
+        non-critical tasks
+    Hybrid use benefit
+      use existing licenses in the cloud
+        Windows Server
+        RedHat
+        SUS Linux
+        SQL Server
+  Tools
+    Pricing calculator
+      estimate the cost of Azure services
+    Total Cost of Ownership (TCO) calculator
+      estimate and compare the cost of running workloads in datacenter vs Azure
+      
+Episode 37
+Azure Cost Management
+  Centrilized service for reporting usage and billing of Azure environment
+  Self-service cost exploration capabilities
+    allows to decentrilize responsibilities
+  Budgets & alerts
+  Cost recommendations
+    integrated with Azure Advizor
+  Automated reports
+  Minimizing costs
+    Azure Pricing Calculator to choose the low-cost region
+      Good latency
+      all required services are available
+      data sovereignty/compliance requirements
+    Hybrid use benefit and Azure Reservations
+    Azure Cost Management
+      monitoring
+      budgets
+      alerts
+      recommendations
+    Understand service lifecycle and automate environments
+    Use autoscaling features to your advantage
+    Azure Monitor to find and scale down underutilized resources
+    Use tags & policies for effective governance
+      prevent allocating expensive resources
+      
+Episode 38
+Azure Service Level Agreement (SLA)
+  Formal agreement between Microsoft and the customer
+    SLA is a promise of a service's availability (uptime & connectivity) per month
+    availability is a measure of time that a service remains operational
+    each service has its own SLA
+    ranges from 99% to 99.999%
+  Calculated as a percentage of service availability
+    Breaking the SQL provides a discount from the final monthly bill ( service credit )
+  Higher tier services offer better SLAs
+  Free services typically have no SLA (0% SLA)
+  Preview services have no SLA
+  Composite SLA is a combined SLA of all application components
+    Logical AND
+      adding dependency
+      Multiply availability SLAs to get composite SLA
+    Logical OR
+      adding redundancy
+      100% - (Unvailability(S1)*Unvailability(S2)) to get composite SLA
+      
+Episode 39
+Service Lifecycle in Azure
+  Every service in Azure follows its own service lifecycle
+  Development->private preview->public preview->general availability
+    private preview
+      internal released covered with a NDA
+      only for 
+        high profile customers who need that feature
+        Microsoft employees
+        MVPs
+      allow to proof the value before releasing to wider audience
+  Public preview 
+    most functionality ready to be tested by public
+    is a 'beta' stage of the service available to general public use
+      Features can also be in preview stages
+      designed for testing, not production solutions
+    allow customers to experiment with service and provide feedback
+    Microsoft incorporate feedback to improve service before final release
+      No SLA
+      some service have no support coverage
+      limited region availability
+      limited functionality
+      pricing changes
+      direction changes
+      Azure portal previews
+        https://preview.portal.azure.com
+  General Availability (GA)
+    production ready service
